@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MadeEA Hub Work Report, 7 October</title>
+<meta name="description" content="Work report for the MadeEA Hub, 7 October 2026: the client portal end to end, client calendars, the staff panel, and shared Outlook mail.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Same look as the 30 September report, so the series reads as one. */
+  :root {
+    --bg: #f5f6f8; --surface: #ffffff; --ink: #151821; --muted: #5a6172; --line: #e0e3e9;
+    --accent: #d84e0f; --accent-soft: #fdeee6;
+    --live: #17804f; --live-soft: #e3f4ec;
+    --wait: #946200; --wait-soft: #fbf1d6;
+    --prog: #2557b8; --prog-soft: #e6eefc;
+    --shadow: 0 1px 2px rgba(21, 24, 33, 0.05), 0 8px 24px rgba(21, 24, 33, 0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+      --accent: #ff7036; --accent-soft: #3a2116;
+      --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+    --accent: #ff7036; --accent-soft: #3a2116;
+    --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+    --shadow: none;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, sans-serif; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 820px; margin: 0 auto; padding-inline: 20px; padding-block: 48px 72px; display: flex; flex-direction: column; gap: 40px; }
+  h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; }
+  p { margin: 0; }
+  a { color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: 0.86em; }
+
+  header { display: flex; flex-direction: column; gap: 14px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-size: clamp(30px, 5vw, 42px); font-weight: 800; letter-spacing: -0.02em; }
+  .lede { font-size: 18px; color: var(--muted); max-width: 62ch; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: var(--muted); }
+  .meta strong { color: var(--ink); font-weight: 600; }
+
+  .summary, .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+  .summary h2, .panel h2 { font-size: 20px; font-weight: 700; }
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .stat { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
+  .stat b { font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .stat span { font-size: 13px; color: var(--muted); }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 540px; }
+  th { text-align: left; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 0 12px 10px 0; border-bottom: 1px solid var(--line); }
+  td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td.num { font-variant-numeric: tabular-nums; color: var(--muted); width: 28px; }
+  td a { color: inherit; text-decoration: none; font-weight: 600; }
+  td a:hover { color: var(--accent); }
+
+  .pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+  .p-live { color: var(--live); background: var(--live-soft); }
+  .p-live::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 6px; vertical-align: 1px; }
+  .p-wait { color: var(--wait); background: var(--wait-soft); }
+  .p-prog { color: var(--prog); background: var(--prog-soft); }
+  .p-src { color: var(--muted); background: var(--bg); border: 1px solid var(--line); }
+
+  section.item { display: flex; flex-direction: column; gap: 16px; border-top: 1px solid var(--line); }
+  .item-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 24px; }
+  .item-head .num { font-size: 14px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .item h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; width: 100%; }
+  .item h3 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .block { display: flex; flex-direction: column; gap: 8px; }
+  .block p, .block li { max-width: 66ch; }
+  ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  li::marker { color: var(--accent); }
+
+  .notice { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; font-size: 15px; display: flex; flex-direction: column; gap: 4px; }
+
+  .compare { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  .compare > div { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: var(--surface); display: flex; flex-direction: column; gap: 10px; }
+  .compare h4 { margin: 0; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .compare .before h4 { color: var(--muted); }
+  .compare .after { border-color: var(--accent); }
+  .compare .after h4 { color: var(--accent); }
+  .compare ul { font-size: 15px; }
+  .compare .before li { color: var(--muted); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 13px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 4px 11px; }
+
+  .chat { display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
+  .bubble { padding: 10px 14px; border-radius: 14px; max-width: 520px; }
+  .bubble.you { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+  .bubble.her { align-self: flex-start; background: var(--surface); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+  .chat-label { font-size: 12px; color: var(--muted); }
+
+  .steps { counter-reset: s; list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; }
+  .steps li::before { content: counter(s); font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .steps li.done::before { content: "✓"; color: var(--live); }
+  td.hash { white-space: nowrap; }
+  td.hash a { font-weight: 500; color: var(--accent); }
+  footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 20px; }
+
+  /* Screenshots */
+  figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  figure img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: var(--shadow); }
+  figcaption { font-size: 14px; color: var(--muted); }
+  .shots { display: grid; gap: 16px; }
+  .shots.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 560px) {
+    .page { padding-block: 32px 56px; gap: 32px; }
+    .stats { grid-template-columns: 1fr; }
+    .compare { grid-template-columns: 1fr; }
+    .summary, .panel { padding: 18px; }
+    .shots.two { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <span class="eyebrow">MadeEA Hub · Work report</span>
+    <h1>The client portal, end to end</h1>
+    <p class="lede">Today the client portal went from a page that showed blank screens to a full workspace. Clients see their own calendar, connect Google or Outlook, and can share their Outlook mail with their EA. Their own staff get a proper working space. Everything below is live at <a href="https://hub.madeeas.com">hub.madeeas.com</a> and was tested on the live site after each release.</p>
+    <div class="meta">
+      <span>Work done <strong>7 October 2026</strong></span>
+      <span>Previous report <strong><a href="madeea-hub-report-2026-10-06.html">6 October</a></strong></span>
+      <span>Status <span class="pill p-live">Live</span></span>
+    </div>
+  </header>
+
+  <section class="summary" aria-labelledby="sum-h">
+    <h2 id="sum-h">At a glance</h2>
+    <div class="stats">
+      <div class="stat"><b>9</b><span>updates released and tested live today</span></div>
+      <div class="stat"><b>3</b><span>kinds of people with a better portal: clients, their staff, and their EA</span></div>
+      <div class="stat"><b>2</b><span>security gaps found and closed along the way</span></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>What was done</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td><a href="#item-1">Client portal: blank pages fixed, everything the Hub had, plus Madeline</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">2</td><td><a href="#item-2">Set a client's Lead EA, and the right name for Prince</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">3</td><td><a href="#item-3">A real calendar in the client portal</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">4</td><td><a href="#item-4">Clients connect their Google or Outlook / Teams calendar</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">5</td><td><a href="#item-5">The staff panel: a working space for a client's own team</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">6</td><td><a href="#item-6">Clients share their Outlook mail with their EA</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">+</td><td><a href="#item-7">Two security gaps closed</a></td><td><span class="pill p-live">Live</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 1 -->
+  <section class="item" id="item-1" aria-labelledby="h-1">
+    <div class="item-head"><span class="num">1</span><span class="pill p-live">Live</span>
+      <h2 id="h-1">Client portal: blank pages fixed, everything the Hub had, plus Madeline</h2>
+    </div>
+    <div class="block">
+      <p>Several portal pages looked empty: the content was there, but the page's background was drawn over it. That's fixed everywhere in the portal. Then everything the client side was missing compared with the Hub was added:</p>
+      <ul>
+        <li><b>A richer Overview:</b> a one-line summary of where the account stands, hours this week, what's coming up and what was done today.</li>
+        <li><b>Tasks</b> as a board, by status, so a client sees their work the way their EA does.</li>
+        <li><b>Daily reports</b> from their EA: done, blocked, and next.</li>
+        <li><b>Header tools:</b> search, a short guide, light/dark theme and notifications.</li>
+        <li><b>Madeline in the portal.</b> She answers from the client's own account only (tasks, meetings, hours, shared notes) and can turn a request into a task for their EA in one click.</li>
+        <li>Every page works on a phone.</li>
+      </ul>
+    </div>
+    <div class="shots two">
+      <figure><img src="img/2026-10-07/portal-before.png" alt="Client portal Delegate page with most of the page empty" loading="lazy"><figcaption><b>Before:</b> pages looked empty because the background covered the content.</figcaption></figure>
+      <figure><img src="img/2026-10-07/portal-madeline.png" alt="Client portal Overview with Madeline answering 'What's waiting on me?'" loading="lazy"><figcaption><b>Now:</b> the full Overview, with Madeline answering from the client's own account.</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="item" id="item-2" aria-labelledby="h-2">
+    <div class="item-head"><span class="num">2</span><span class="pill p-live">Live</span>
+      <h2 id="h-2">Set a client's Lead EA, and the right name for Prince</h2>
+    </div>
+    <div class="block">
+      <p>The portal says "Your assistant, …", but there was no way to choose who that is. <b>Client Vault → Edit client</b> now has a <b>Lead EA</b> picker. The Lead EA is also who sees the client's calendar and, if the client agrees, their mail (items 4 and 6).</p>
+      <p>Prince's name showed as "Princeacquahandam". It now reads <b>Prince Acquah Andam</b> everywhere, including his past daily reports, and it stays correct even if his account is re-invited.</p>
+    </div>
+    <div class="shots two">
+      <figure><img src="img/2026-10-07/lead-ea-picker.png" alt="Edit client form with a Lead EA dropdown listing the team" loading="lazy"><figcaption>The new Lead EA picker in Client Vault.</figcaption></figure>
+      <figure><img src="img/2026-10-07/name-before.png" alt="Client Overview reading 'Your assistant, Princeacquahandam'" loading="lazy"><figcaption><b>Before:</b> "Princeacquahandam". It now reads "Prince Acquah Andam".</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="item" id="item-3" aria-labelledby="h-3">
+    <div class="item-head"><span class="num">3</span><span class="pill p-live">Live</span>
+      <h2 id="h-3">A real calendar in the client portal</h2>
+    </div>
+    <div class="block">
+      <p>The portal calendar was a plain list. It now uses the same <b>Month</b> and <b>Week</b> views as the Hub, with <b>Agenda</b> as a third view and the default on phones. Clicking a meeting opens its details, with a <b>Join the call</b> button when there's a video link. The client's choice of view is remembered.</p>
+    </div>
+    <figure><img src="img/2026-10-07/portal-calendar.png" alt="Client portal calendar in month view, October 2026, with recurring meetings" loading="lazy"><figcaption>The client's calendar in Month view, filled from their connected Google Calendar.</figcaption></figure>
+  </section>
+
+  <!-- 4 -->
+  <section class="item" id="item-4" aria-labelledby="h-4">
+    <div class="item-head"><span class="num">4</span><span class="pill p-live">Live</span>
+      <h2 id="h-4">Clients connect their Google or Outlook / Teams calendar</h2>
+    </div>
+    <div class="block">
+      <p>A new <b>Connected accounts</b> page lets a client connect their own calendar, from <b>Google</b> or <b>Outlook / Microsoft 365</b>. Teams meetings come through with their Join link. Their real schedule then shows in their portal, and their <b>Lead EA</b> sees it in the Hub Calendar, labelled with the client's name, so they can plan the day and book around it.</p>
+      <ul>
+        <li><b>Who sees it:</b> the client, their Lead EA and MadeEA admins. Not the rest of the team.</li>
+        <li><b>Calendar only.</b> Connecting a calendar never gives access to email.</li>
+        <li>It refreshes itself when the client opens their calendar, and a moved or cancelled meeting disappears on the next refresh.</li>
+        <li><b>Disconnect</b> removes every one of their events from MadeEA.</li>
+        <li>Only the client's primary contact can connect accounts. Viewers and staff can't.</li>
+      </ul>
+      <p>Also fixed: Google meetings weren't keeping their Meet links, so there was no Join button. They now keep them.</p>
+    </div>
+    <figure><img src="img/2026-10-07/connected-accounts-preview.png" alt="Connected accounts page with Google Calendar and Outlook cards and a 'Who sees what' box" loading="lazy"><figcaption>Connected accounts. <i>Preview with sample data from our test environment.</i></figcaption></figure>
+  </section>
+
+  <!-- 5 -->
+  <section class="item" id="item-5" aria-labelledby="h-5">
+    <div class="item-head"><span class="num">5</span><span class="pill p-live">Live</span>
+      <h2 id="h-5">The staff panel: a working space for a client's own team</h2>
+    </div>
+    <div class="block">
+      <p>A client's own staff had three pages: a clock, a calendar and notes. They now have a full working space, connected to the client's side so work flows both ways:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Staff member sees</th><th>The client sees</th></tr></thead>
+          <tbody>
+            <tr><td><b>My Work</b> with "today" tiles: open and stuck tasks, done today, next meeting, report status</td><td>—</td></tr>
+            <tr><td><b>Tasks board</b>: To do, In progress, Done. <b>I'm stuck</b> sends a note to the client</td><td>Their staff's work in the <b>Staff</b> tab, stuck items first; staff tasks labelled on the Tasks board</td></tr>
+            <tr><td><b>Daily report</b>: done, blocked, next. <b>Fill from my tasks</b> drafts it</td><td>Each staff member's daily report in the <b>Staff</b> tab</td></tr>
+            <tr><td><b>Messages</b>: a private thread with the account owner</td><td><b>Messages → Your staff</b>: a thread per person</td></tr>
+            <tr><td>Search, guide, theme and notifications for new work and messages</td><td>Notifications when staff message, report or get stuck</td></tr>
+            <tr><td><b>Madeline</b> for their own work: "What's on my plate?", drafts their daily report</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The agency isn't in the staff threads: these are the client's own people. Staff see only their own tasks, not the rest of the account.</p>
+    </div>
+    <div class="shots two">
+      <figure><img src="img/2026-10-07/staff-before.png" alt="Staff panel with only My Work, Calendar and Notes" loading="lazy"><figcaption><b>Before:</b> three pages.</figcaption></figure>
+      <figure><img src="img/2026-10-07/staff-report.png" alt="Staff Daily report page with a sent report" loading="lazy"><figcaption><b>Now:</b> the staff member's daily report, sent to the client.</figcaption></figure>
+      <figure><img src="img/2026-10-07/owner-staff-tab.png" alt="Client's Staff tab showing the staff member's daily report" loading="lazy"><figcaption>The client sees that report in their Staff tab, with the staff member's work.</figcaption></figure>
+      <figure><img src="img/2026-10-07/owner-staff-thread.png" alt="Client's Your staff messages with a thread per staff member" loading="lazy"><figcaption>The client's side of the staff messages, with a thread per person.</figcaption></figure>
+      <figure><img src="img/2026-10-07/staff-tasks.png" alt="Staff Tasks page" loading="lazy"><figcaption>The staff Tasks board. Work the client assigns appears here.</figcaption></figure>
+      <figure><img src="img/2026-10-07/staff-madeline.png" alt="Madeline answering a staff member's 'What's on my plate today?'" loading="lazy"><figcaption>Madeline for staff, answering from their own work only.</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="item" id="item-6" aria-labelledby="h-6">
+    <div class="item-head"><span class="num">6</span><span class="pill p-live">Live</span>
+      <h2 id="h-6">Clients share their Outlook mail with their EA</h2>
+    </div>
+    <div class="block">
+      <p>A client can now let their Lead EA handle their Outlook inbox. On <b>Connected accounts</b> they click <b>Share my Outlook mail with [their EA]</b>, and Microsoft asks for their permission. In the Hub, a <b>Client mailboxes</b> button appears in the Communication Center, where the EA can read the client's mail, <b>reply as the client</b>, or send a new email from the client's address.</p>
+      <h3>What the client is promised, and what the system enforces</h3>
+      <ul>
+        <li><b>Only their EA</b> can see their mail. Not other staff, not admins, and not MadeEA's AI tools. Their mail is kept apart from everything else in the Hub.</li>
+        <li><b>A "Sent on your behalf" list</b> shows every email the EA sent or replied to, with who sent it, to whom and when.</li>
+        <li><b>Nothing changes in their Outlook:</b> nothing is marked read or deleted.</li>
+        <li><b>Shared with a person, not a role:</b> if MadeEA changes their EA, sharing pauses until the client agrees again.</li>
+        <li><b>Stop sharing</b> at any time. Access ends at once, and MadeEA's copies of their mail are deleted.</li>
+      </ul>
+    </div>
+    <div class="shots two">
+      <figure><img src="img/2026-10-07/mail-sharing-preview.png" alt="Client's 'Outlook mail for your assistant' card showing Shared and a 'Sent on your behalf' list" loading="lazy"><figcaption>The client's view: shared, with the record of what was sent. <i>Sample data.</i></figcaption></figure>
+      <figure><img src="img/2026-10-07/client-mailbox-preview.png" alt="Hub client mailbox panel with an opened email and a 'Reply as the client' box" loading="lazy"><figcaption>The EA's view in the Hub, with a clear "You're in the client's own mailbox" banner. <i>Sample data.</i></figcaption></figure>
+    </div>
+    <div class="notice">
+      <b>Gmail next</b>
+      <span>The same for Gmail is ready to build, but Google requires a paid security assessment (CASA) before any app can read client Gmail. Outlook went first for that reason.</span>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="item" id="item-7" aria-labelledby="h-7">
+    <div class="item-head"><span class="num">+</span><span class="pill p-live">Live</span>
+      <h2 id="h-7">Two security gaps closed</h2>
+    </div>
+    <div class="block">
+      <ul>
+        <li><b>Sending from someone else's mailbox.</b> While building item 6, we found that any signed-in account could send email from another person's connected Gmail or Outlook by naming them. That is now refused: you can only send from your own mailbox, or, for an EA, from a client mailbox the client has shared with them.</li>
+        <li><b>A client's staff could see the client's private calendar.</b> Once a client connected their own calendar, their staff saw it too, against what the client was told. Staff and viewers now see only meetings booked on the account. Staff can also no longer read the account's full task list, only their own tasks.</li>
+      </ul>
+    </div>
+    <div class="shots two">
+      <figure><img src="img/2026-10-07/staff-calendar-before.png" alt="Staff calendar showing the client's private events" loading="lazy"><figcaption><b>Before:</b> a staff member saw the client's private calendar.</figcaption></figure>
+      <figure><img src="img/2026-10-07/staff-calendar-after.png" alt="Staff calendar with the client's private events gone" loading="lazy"><figcaption><b>Now:</b> only meetings booked on the account.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="next-h">
+    <h2 id="next-h">What's next</h2>
+    <ol class="steps">
+      <li><span><b>Gmail for the client's EA</b>, once Google's security assessment (CASA) is arranged.</span></li>
+      <li><span><b>Finish Google verification:</b> the demo video and permission notes. This removes Google's "unverified app" warning for clients and the 100-account limit.</span></li>
+      <li><span><b>Microsoft publisher verification</b> (free), so clients at larger companies can connect Outlook without asking their IT team first.</span></li>
+    </ol>
+  </section>
+
+  <section class="panel" aria-labelledby="log-h">
+    <h2 id="log-h">Change log</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Update</th><th>What went live</th></tr></thead>
+        <tbody>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/6825fc5">6825fc5</a></td><td>Client portal: content visible again, Tasks and Daily reports, header tools, Madeline</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/2094577">2094577</a></td><td>Client Vault: set a client's Lead EA</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/2521831">2521831</a></td><td>Client portal calendar views; send-from-your-own-mailbox rule</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/ea22c17">ea22c17</a></td><td>Clients connect their Google Calendar</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/261d5b3">261d5b3</a></td><td>Clients connect their Outlook / Teams calendar; Meet links kept</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/0ddac37">0ddac37</a></td><td>Staff panel, joined to the client; staff calendar privacy fix</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/1e4507e">1e4507e</a></td><td>Madeline for staff: release fix</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/27c3058">27c3058</a></td><td>Staff daily report: date in the heading</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/b314897">b314897</a></td><td>Clients share their Outlook mail with their EA</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>MadeEA Hub work report, 7 October 2026. Previous report: <a href="madeea-hub-report-2026-10-06.html">6 October 2026</a>.</footer>
+</div>
+</body>
+</html>
