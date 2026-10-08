@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MadeEA Hub Work Report, 8 October</title>
+<meta name="description" content="Work report for the MadeEA Hub, 8 October 2026: Clients &amp; Files removed from EA accounts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Same look as the 30 September report, so the series reads as one. */
+  :root {
+    --bg: #f5f6f8; --surface: #ffffff; --ink: #151821; --muted: #5a6172; --line: #e0e3e9;
+    --accent: #d84e0f; --accent-soft: #fdeee6;
+    --live: #17804f; --live-soft: #e3f4ec;
+    --wait: #946200; --wait-soft: #fbf1d6;
+    --prog: #2557b8; --prog-soft: #e6eefc;
+    --shadow: 0 1px 2px rgba(21, 24, 33, 0.05), 0 8px 24px rgba(21, 24, 33, 0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+      --accent: #ff7036; --accent-soft: #3a2116;
+      --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+    --accent: #ff7036; --accent-soft: #3a2116;
+    --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+    --shadow: none;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, sans-serif; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 820px; margin: 0 auto; padding-inline: 20px; padding-block: 48px 72px; display: flex; flex-direction: column; gap: 40px; }
+  h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; }
+  p { margin: 0; }
+  a { color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: 0.86em; }
+
+  header { display: flex; flex-direction: column; gap: 14px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-size: clamp(30px, 5vw, 42px); font-weight: 800; letter-spacing: -0.02em; }
+  .lede { font-size: 18px; color: var(--muted); max-width: 62ch; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: var(--muted); }
+  .meta strong { color: var(--ink); font-weight: 600; }
+
+  .summary, .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+  .summary h2, .panel h2 { font-size: 20px; font-weight: 700; }
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .stat { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
+  .stat b { font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .stat span { font-size: 13px; color: var(--muted); }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 540px; }
+  th { text-align: left; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 0 12px 10px 0; border-bottom: 1px solid var(--line); }
+  td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td.num { font-variant-numeric: tabular-nums; color: var(--muted); width: 28px; }
+  td a { color: inherit; text-decoration: none; font-weight: 600; }
+  td a:hover { color: var(--accent); }
+
+  .pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+  .p-live { color: var(--live); background: var(--live-soft); }
+  .p-live::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 6px; vertical-align: 1px; }
+  .p-wait { color: var(--wait); background: var(--wait-soft); }
+  .p-prog { color: var(--prog); background: var(--prog-soft); }
+  .p-src { color: var(--muted); background: var(--bg); border: 1px solid var(--line); }
+
+  section.item { display: flex; flex-direction: column; gap: 16px; border-top: 1px solid var(--line); }
+  .item-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 24px; }
+  .item-head .num { font-size: 14px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .item h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; width: 100%; }
+  .item h3 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .block { display: flex; flex-direction: column; gap: 8px; }
+  .block p, .block li { max-width: 66ch; }
+  ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  li::marker { color: var(--accent); }
+
+  .notice { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; font-size: 15px; display: flex; flex-direction: column; gap: 4px; }
+
+  .compare { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  .compare > div { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: var(--surface); display: flex; flex-direction: column; gap: 10px; }
+  .compare h4 { margin: 0; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .compare .before h4 { color: var(--muted); }
+  .compare .after { border-color: var(--accent); }
+  .compare .after h4 { color: var(--accent); }
+  .compare ul { font-size: 15px; }
+  .compare .before li { color: var(--muted); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 13px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 4px 11px; }
+
+  .chat { display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
+  .bubble { padding: 10px 14px; border-radius: 14px; max-width: 520px; }
+  .bubble.you { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+  .bubble.her { align-self: flex-start; background: var(--surface); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+  .chat-label { font-size: 12px; color: var(--muted); }
+
+  .steps { counter-reset: s; list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; }
+  .steps li::before { content: counter(s); font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .steps li.done::before { content: "✓"; color: var(--live); }
+  td.hash { white-space: nowrap; }
+  td.hash a { font-weight: 500; color: var(--accent); }
+  footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 20px; }
+
+  /* Screenshots */
+  figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  figure img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: var(--shadow); }
+  figcaption { font-size: 14px; color: var(--muted); }
+  .shots { display: grid; gap: 16px; }
+  .shots.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 560px) {
+    .page { padding-block: 32px 56px; gap: 32px; }
+    .stats { grid-template-columns: 1fr; }
+    .compare { grid-template-columns: 1fr; }
+    .summary, .panel { padding: 18px; }
+    .shots.two { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <span class="eyebrow">MadeEA Hub · Work report</span>
+    <h1>A focused EA account: Clients &amp; Files removed</h1>
+    <p class="lede">As requested, EA accounts no longer have the Clients &amp; Files section: Client Vault, Password Manager and Notes &amp; Files are gone from their sidebar, and nothing else in their Hub points there. Managers, admins and owners keep everything as before. Both changes are live at <a href="https://hub.madeeas.com">hub.madeeas.com</a>.</p>
+    <div class="meta">
+      <span>Work done <strong>8 October 2026</strong></span>
+      <span>Previous report <strong><a href="madeea-hub-report-2026-10-07.html">7 October</a></strong></span>
+      <span>Status <span class="pill p-live">Live</span></span>
+    </div>
+  </header>
+
+  <section class="summary" aria-labelledby="sum-h">
+    <h2 id="sum-h">At a glance</h2>
+    <div class="stats">
+      <div class="stat"><b>5</b><span>pages removed from EA accounts: Client Vault, Password Manager, Notes &amp; Files, Uploads, Saved</span></div>
+      <div class="stat"><b>6</b><span>ways in closed: sidebar, search, guided tour, client switcher, and two Dashboard links</span></div>
+      <div class="stat"><b>0</b><span>changes for managers, admins and owners</span></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>What was done</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td><a href="#item-1">Clients &amp; Files removed from EA accounts</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">2</td><td><a href="#item-2">EA Dashboard: no links to the removed pages</a></td><td><span class="pill p-live">Live</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 1 -->
+  <section class="item" id="item-1" aria-labelledby="h-1">
+    <div class="item-head"><span class="num">1</span><span class="pill p-live">Live</span>
+      <h2 id="h-1">Clients &amp; Files removed from EA accounts</h2>
+    </div>
+    <div class="compare">
+      <div class="before"><h4>Before</h4><ul><li>An EA's sidebar had a Clients &amp; Files section: Client Vault, Password Manager, Notes &amp; Files</li></ul></div>
+      <div class="after"><h4>Now</h4><ul><li>An EA's sidebar goes from <b>My Day</b> straight to <b>Playbook</b></li><li>Managers, admins and owners still see the section</li></ul></div>
+    </div>
+    <div class="block">
+      <h3>Every other way in is closed too</h3>
+      <ul>
+        <li><b>Search (Ctrl+K)</b> no longer offers those pages to an EA.</li>
+        <li><b>The first-login guided tour</b> skips its Clients &amp; Files stop for EAs.</li>
+        <li><b>The client switcher</b> at the top of the sidebar no longer shows "Open the Client Vault" to EAs.</li>
+        <li><b>Old links and bookmarks:</b> an EA who opens one of those pages sees "isn't part of your access. Ask an admin if you need it." instead of the page.</li>
+      </ul>
+    </div>
+    <div class="shots two">
+      <figure><img src="img/2026-10-08/ea-before.png" alt="EA account on Client Vault, with the Clients &amp; Files section in the sidebar" loading="lazy"><figcaption><b>Before:</b> an EA account with the Clients &amp; Files section.</figcaption></figure>
+      <figure><img src="img/2026-10-08/ea-sidebar-after.png" alt="EA account sidebar without Clients &amp; Files, showing 'Password Manager isn't part of your access'" loading="lazy"><figcaption><b>Now:</b> the section is gone, and an old link to Password Manager shows the access message. <i>Test account.</i></figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="item" id="item-2" aria-labelledby="h-2">
+    <div class="item-head"><span class="num">2</span><span class="pill p-live">Live</span>
+      <h2 id="h-2">EA Dashboard: no links to the removed pages</h2>
+    </div>
+    <div class="block">
+      <p>Two Dashboard pieces only led to Client Vault: the <b>Clients At Risk</b> tile and the <b>Client Snapshot</b> section. EAs no longer see them. Their Dashboard now shows five tiles in one even row (Tasks Active, Meetings Today, Emails Pending, Gone quiet, Automations Running), then Today's EOD, the Priority Queue and Upcoming Meetings. Managers, admins and owners see the full Dashboard as before.</p>
+    </div>
+    <figure><img src="img/2026-10-08/ea-dashboard-after.png" alt="EA Dashboard with five tiles and no client sections" loading="lazy"><figcaption>An EA's Dashboard now. <i>Test account.</i></figcaption></figure>
+  </section>
+
+  <section class="panel" aria-labelledby="next-h">
+    <h2 id="next-h">What's next</h2>
+    <ol class="steps">
+      <li><span><b>Gmail for the client's EA</b>, once Google's security assessment (CASA) is arranged.</span></li>
+      <li><span><b>Finish Google verification:</b> the demo video and permission notes, which remove the "unverified app" warning and the 100-account limit.</span></li>
+      <li><span><b>Microsoft publisher verification</b> (free), so clients at larger companies can connect Outlook without asking their IT team first.</span></li>
+    </ol>
+  </section>
+
+  <section class="panel" aria-labelledby="log-h">
+    <h2 id="log-h">Change log</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Update</th><th>What went live</th></tr></thead>
+        <tbody>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/c94a5e4">c94a5e4</a></td><td>Clients &amp; Files hidden from EA accounts (sidebar, search, tour, client switcher)</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/66c26dd">66c26dd</a></td><td>EA Dashboard: Clients At Risk and Client Snapshot hidden</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>MadeEA Hub work report, 8 October 2026. Previous report: <a href="madeea-hub-report-2026-10-07.html">7 October 2026</a>.</footer>
+</div>
+</body>
+</html>
