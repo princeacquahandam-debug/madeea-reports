@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MadeEA Hub Work Report, 9 October</title>
+<meta name="description" content="Work report for the MadeEA Hub, 9 October 2026: a clearer menu with categories that open on hover.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Same look as the 30 September report, so the series reads as one. */
+  :root {
+    --bg: #f5f6f8; --surface: #ffffff; --ink: #151821; --muted: #5a6172; --line: #e0e3e9;
+    --accent: #d84e0f; --accent-soft: #fdeee6;
+    --live: #17804f; --live-soft: #e3f4ec;
+    --wait: #946200; --wait-soft: #fbf1d6;
+    --prog: #2557b8; --prog-soft: #e6eefc;
+    --shadow: 0 1px 2px rgba(21, 24, 33, 0.05), 0 8px 24px rgba(21, 24, 33, 0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+      --accent: #ff7036; --accent-soft: #3a2116;
+      --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+    --accent: #ff7036; --accent-soft: #3a2116;
+    --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+    --shadow: none;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, sans-serif; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 820px; margin: 0 auto; padding-inline: 20px; padding-block: 48px 72px; display: flex; flex-direction: column; gap: 40px; }
+  h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; }
+  p { margin: 0; }
+  a { color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: 0.86em; }
+
+  header { display: flex; flex-direction: column; gap: 14px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-size: clamp(30px, 5vw, 42px); font-weight: 800; letter-spacing: -0.02em; }
+  .lede { font-size: 18px; color: var(--muted); max-width: 62ch; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: var(--muted); }
+  .meta strong { color: var(--ink); font-weight: 600; }
+
+  .summary, .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+  .summary h2, .panel h2 { font-size: 20px; font-weight: 700; }
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .stat { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
+  .stat b { font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .stat span { font-size: 13px; color: var(--muted); }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 540px; }
+  th { text-align: left; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 0 12px 10px 0; border-bottom: 1px solid var(--line); }
+  td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td.num { font-variant-numeric: tabular-nums; color: var(--muted); width: 28px; }
+  td a { color: inherit; text-decoration: none; font-weight: 600; }
+  td a:hover { color: var(--accent); }
+
+  .pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+  .p-live { color: var(--live); background: var(--live-soft); }
+  .p-live::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 6px; vertical-align: 1px; }
+  .p-wait { color: var(--wait); background: var(--wait-soft); }
+  .p-prog { color: var(--prog); background: var(--prog-soft); }
+  .p-src { color: var(--muted); background: var(--bg); border: 1px solid var(--line); }
+
+  section.item { display: flex; flex-direction: column; gap: 16px; border-top: 1px solid var(--line); }
+  .item-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 24px; }
+  .item-head .num { font-size: 14px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .item h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; width: 100%; }
+  .item h3 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .block { display: flex; flex-direction: column; gap: 8px; }
+  .block p, .block li { max-width: 66ch; }
+  ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  li::marker { color: var(--accent); }
+
+  .notice { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; font-size: 15px; display: flex; flex-direction: column; gap: 4px; }
+
+  .compare { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  .compare > div { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: var(--surface); display: flex; flex-direction: column; gap: 10px; }
+  .compare h4 { margin: 0; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .compare .before h4 { color: var(--muted); }
+  .compare .after { border-color: var(--accent); }
+  .compare .after h4 { color: var(--accent); }
+  .compare ul { font-size: 15px; }
+  .compare .before li { color: var(--muted); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 13px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 4px 11px; }
+
+  .chat { display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
+  .bubble { padding: 10px 14px; border-radius: 14px; max-width: 520px; }
+  .bubble.you { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+  .bubble.her { align-self: flex-start; background: var(--surface); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+  .chat-label { font-size: 12px; color: var(--muted); }
+
+  .steps { counter-reset: s; list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; }
+  .steps li::before { content: counter(s); font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .steps li.done::before { content: "✓"; color: var(--live); }
+  td.hash { white-space: nowrap; }
+  td.hash a { font-weight: 500; color: var(--accent); }
+  footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 20px; }
+
+  /* Screenshots */
+  figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  figure img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: var(--shadow); }
+  figcaption { font-size: 14px; color: var(--muted); }
+  .shots { display: grid; gap: 16px; }
+  .shots.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 560px) {
+    .page { padding-block: 32px 56px; gap: 32px; }
+    .stats { grid-template-columns: 1fr; }
+    .compare { grid-template-columns: 1fr; }
+    .summary, .panel { padding: 18px; }
+    .shots.two { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <span class="eyebrow">MadeEA Hub · Work report</span>
+    <h1>A clearer menu, with categories that open on hover</h1>
+    <p class="lede">The sidebar is now grouped by what the person is doing, and on desktop each category opens its pages when you rest the mouse on it, as you asked. This applies to every Hub account (EA, manager, admin, owner) and to your clients' staff accounts. All of it is live at <a href="https://hub.madeeas.com">hub.madeeas.com</a>.</p>
+    <div class="meta">
+      <span>Work done <strong>9 October 2026</strong></span>
+      <span>Previous report <strong><a href="madeea-hub-report-2026-10-08.html">8 October</a></strong></span>
+      <span>Status <span class="pill p-live">Live</span></span>
+    </div>
+  </header>
+
+  <section class="summary" aria-labelledby="sum-h">
+    <h2 id="sum-h">At a glance</h2>
+    <div class="stats">
+      <div class="stat"><b>5</b><span>clear categories on an EA's menu, in place of one long "My Day" list</span></div>
+      <div class="stat"><b>Hover</b><span>to open a category, like a website menu; click and Esc work too</span></div>
+      <div class="stat"><b>2</b><span>kinds of account updated: the Hub, and your clients' staff</span></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>What was done</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td><a href="#item-1">The menu, grouped by what you're doing</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">2</td><td><a href="#item-2">Categories open on hover</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">3</td><td><a href="#item-3">The same for your clients' staff</a></td><td><span class="pill p-live">Live</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 1 -->
+  <section class="item" id="item-1" aria-labelledby="h-1">
+    <div class="item-head"><span class="num">1</span><span class="pill p-live">Live</span>
+      <h2 id="h-1">The menu, grouped by what you're doing</h2>
+    </div>
+    <div class="block">
+      <p>"My Day" held six different kinds of page: a summary, a calendar, an inbox, a task board, a clock and a report. The menu is now split by the question you have when you reach for it:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Category</th><th>Pages</th><th>For</th></tr></thead>
+          <tbody>
+            <tr><td><b>Today</b></td><td>Dashboard, Calendar</td><td>Where I stand, and what's booked</td></tr>
+            <tr><td><b>Work</b></td><td>Communication Center, Task Manager</td><td>The work itself</td></tr>
+            <tr><td><b>Time &amp; Reports</b></td><td>Time Tracker, EOD Reports</td><td>Clock in, then the report that closes the day</td></tr>
+            <tr><td><b>Clients &amp; Files</b></td><td>Client Vault, Password Manager, Notes &amp; Files</td><td>Managers, admins and owners only</td></tr>
+            <tr><td><b>Guides &amp; Training</b></td><td>SOP, Training Center</td><td>How we do things, and learning it</td></tr>
+            <tr><td><b>Settings</b></td><td>Integrations, plus Admin Panel for admins</td><td>Set up once</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Page names are unchanged, only their grouping. Pages that open as tabs stay with their parent page: Screenshots with Time Tracker, Routines with Task Manager, and Meeting Intelligence with Calendar. The first-login tour describes the new categories.</p>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="item" id="item-2" aria-labelledby="h-2">
+    <div class="item-head"><span class="num">2</span><span class="pill p-live">Live</span>
+      <h2 id="h-2">Categories open on hover</h2>
+    </div>
+    <div class="block">
+      <p>On desktop the sidebar shows the category titles, and <b>resting the mouse on one opens its pages</b> in a small menu beside it, like the website menu you shared.</p>
+      <ul>
+        <li><b>You always know where you are:</b> the category you're in is highlighted, with the page name under it, for example "Work · Task Manager".</li>
+        <li><b>Easy to use:</b> moving into the menu keeps it open, and brushing past another title on the way doesn't swap menus. Moving away closes it.</li>
+        <li><b>Not mouse-only:</b> clicking a title also opens it (for touch-screen laptops and keyboards), and Esc closes it.</li>
+        <li><b>Phones</b> have no hover, so the phone menu still lists every page and opens on tap.</li>
+      </ul>
+    </div>
+    <div class="shots two">
+      <figure><img src="img/2026-10-09/ea-before.png" alt="EA Dashboard with the old long My Day list in the sidebar" loading="lazy"><figcaption><b>Before:</b> one long "My Day" list.</figcaption></figure>
+      <figure><img src="img/2026-10-09/ea-hover.png" alt="EA Dashboard with category titles and the Work menu open beside the sidebar" loading="lazy"><figcaption><b>Now:</b> category titles. Hovering "Work" opens Communication Center and Task Manager. <i>Test account.</i></figcaption></figure>
+    </div>
+    <div class="notice">
+      <b>If someone still sees the old menu</b>
+      <span>Their browser tab was opened before the update. Pressing Ctrl+Shift+R, or closing and reopening the tab, loads the new version.</span>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="item" id="item-3" aria-labelledby="h-3">
+    <div class="item-head"><span class="num">3</span><span class="pill p-live">Live</span>
+      <h2 id="h-3">The same for your clients' staff</h2>
+    </div>
+    <div class="block">
+      <p>The client portal's staff accounts had one list under "Your work". They now have the same hover categories as the Hub:</p>
+      <div class="chips"><span class="chip"><b>Today</b>: My Work, Calendar</span><span class="chip"><b>Work</b>: Tasks, Daily report</span><span class="chip"><b>Notes &amp; messages</b>: Notes, Account owner</span></div>
+      <p>The client's own portal account keeps its full menu as before.</p>
+    </div>
+    <div class="shots two">
+      <figure><img src="img/2026-10-09/staff-before.png" alt="Staff account with one Your work list" loading="lazy"><figcaption><b>Before:</b> one "Your work" list.</figcaption></figure>
+      <figure><img src="img/2026-10-09/staff-hover.png" alt="Staff account with categories and the Work menu open" loading="lazy"><figcaption><b>Now:</b> Today, Work, Notes &amp; messages, opening on hover. <i>Test account.</i></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="next-h">
+    <h2 id="next-h">What's next</h2>
+    <ol class="steps">
+      <li><span><b>Gmail for the client's EA</b>, once Google's security assessment (CASA) is arranged.</span></li>
+      <li><span><b>Finish Google verification:</b> the demo video and permission notes, which remove the "unverified app" warning and the 100-account limit.</span></li>
+      <li><span><b>Microsoft publisher verification</b> (free), so clients at larger companies can connect Outlook without asking their IT team first.</span></li>
+    </ol>
+  </section>
+
+  <section class="panel" aria-labelledby="log-h">
+    <h2 id="log-h">Change log</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Update</th><th>What went live</th></tr></thead>
+        <tbody>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/9d99f33">9d99f33</a></td><td>Menu grouped by what you're doing</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/9d4ce92">9d4ce92</a></td><td>Categories open on hover (Hub)</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/01bd986">01bd986</a></td><td>Staff accounts: grouped menu with hover categories</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>MadeEA Hub work report, 9 October 2026. Previous report: <a href="madeea-hub-report-2026-10-08.html">8 October 2026</a>.</footer>
+</div>
+</body>
+</html>
