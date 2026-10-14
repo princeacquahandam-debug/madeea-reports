@@ -131,7 +131,7 @@
   <header>
     <span class="eyebrow">MadeEA Hub · Work report</span>
     <h1>AI actions on the page, and the changes from the 13 October call</h1>
-    <p class="lede">The first AI quick actions now sit on the pages themselves, on Tasks and in the Inbox, as Abder asked. The other changes agreed on the call are also done: channel logos in the Inbox, a visible Learn menu, a "Draft an email" quick note, and a cleaner layout without the footer. All of it is live at <a href="https://hub.madeeas.com">hub.madeeas.com</a>.</p>
+    <p class="lede">The first AI quick actions now sit on the pages themselves, on Tasks and in the Inbox, as Abder asked, and the three on Tasks are built to his answer spec. The other changes agreed on the call are also done: channel logos in the Inbox, a visible Learn menu, a "Draft an email" quick note, and a cleaner layout without the footer. All of it is live at <a href="https://hub.madeeas.com">hub.madeeas.com</a>.</p>
     <div class="meta">
       <span>Work done <strong>14 October 2026</strong></span>
       <span>Previous report <strong><a href="madeea-hub-report-2026-10-13.html">13 October</a></strong></span>
@@ -144,13 +144,14 @@
     <div class="stats">
       <div class="stat"><b>6</b><span>AI quick actions on the pages: three on Tasks, three in the Inbox</span></div>
       <div class="stat"><b>1 click</b><span>to an answer, in a pop-up over the page you're on</span></div>
-      <div class="stat"><b>Ready to test</b><span>for Abder, before the other pages get theirs</span></div>
+      <div class="stat"><b>0 AI cost</b><span>for Prioritize board and Find stuck tasks: worked out from the board itself</span></div>
     </div>
     <div class="table-wrap">
       <table>
         <thead><tr><th>#</th><th>What was done</th><th>Status</th></tr></thead>
         <tbody>
           <tr><td class="num">1</td><td><a href="#item-1">AI quick actions on Tasks and in the Inbox</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">1b</td><td><a href="#item-1b">Tasks actions built to Abder's answer spec</a></td><td><span class="pill p-live">Live</span></td></tr>
           <tr><td class="num">2</td><td><a href="#item-2">Questions asked in the Madeline chat stay in the chat</a></td><td><span class="pill p-live">Live</span></td></tr>
           <tr><td class="num">3</td><td><a href="#item-3">Inbox: a channel logo on every message</a></td><td><span class="pill p-live">Live</span></td></tr>
           <tr><td class="num">4</td><td><a href="#item-4">Learn, in plain sight</a></td><td><span class="pill p-live">Live</span></td></tr>
@@ -172,20 +173,49 @@
         <table>
           <thead><tr><th>Page</th><th>Actions</th><th>Where</th></tr></thead>
           <tbody>
-            <tr><td><b>Tasks</b></td><td>Prioritize my board · Break down a task · Find stuck tasks</td><td>Top right of the page</td></tr>
+            <tr><td><b>Tasks</b></td><td>Prioritize board · Break down a task · Find stuck tasks</td><td>Beside the title (see 1b)</td></tr>
             <tr><td><b>Inbox</b></td><td>Summarize unread · Draft replies · Find action items</td><td>Beside the title, as in Abder's mockup</td></tr>
           </tbody>
         </table>
       </div>
-      <p>"Break down a task" works on the most pressing task (overdue first, then the soonest due), and resting the mouse on it shows which one. Nothing is sent or saved without a click: drafts are there to review.</p>
+      <p>Nothing is sent or saved without a click: drafts are there to review, and changes wait for you to apply them.</p>
     </div>
     <div class="notice">
       <b>On the AI cost question from the call</b>
       <span>The buttons don't paste the whole board or inbox into the AI. Each one sends a short instruction, and Madeline then looks up only the tasks or messages it needs, a limited number at a time. That keeps each request small as an account grows. Abder can test this directly, and his definitions for each action will replace the current wording when they arrive.</span>
     </div>
     <div class="shots two">
-      <figure><img src="img/2026-10-14/tasks-ai.png" alt="Tasks page with the AI actions Prioritize my board, Break down a task and Find stuck tasks at the top right" loading="lazy"><figcaption><b>Tasks:</b> AI actions at the top right. <i>Test account.</i></figcaption></figure>
+      <figure><img src="img/2026-10-14/tasks-ai.png" alt="Tasks page with Prioritize board, Break down a task and Find stuck tasks beside the title" loading="lazy"><figcaption><b>Tasks:</b> AI actions beside the title. <i>Test data.</i></figcaption></figure>
       <figure><img src="img/2026-10-14/inbox-ai.png" alt="Inbox with Summarize unread, Draft replies and Find action items beside the title" loading="lazy"><figcaption><b>Inbox:</b> AI actions beside the title. <i>Test data.</i></figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 1b -->
+  <section class="item" id="item-1b" aria-labelledby="h-1b">
+    <div class="item-head"><span class="num">1b</span><span class="pill p-live">Live</span>
+      <h2 id="h-1b">Tasks actions built to Abder's answer spec</h2>
+    </div>
+    <div class="block">
+      <p>Abder's spec sets out exactly what each Tasks action reads, how it answers and what it does when there's nothing to report. All three now work that way. The answers are plain and factual, built only from the board, and nothing changes until you apply it.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Action</th><th>What it does now</th></tr></thead>
+          <tbody>
+            <tr><td><b>Prioritize board</b></td><td>A side panel slides in from the right and leaves the board visible. It shows how many tasks were reviewed, then one line such as "2 overdue, 1 blocked. Here's the order I'd work in, with 3 suggested changes." Below that, up to 10 tasks are ranked (overdue first, then due today, then blocked or waiting on approval), each with a one-fact reason. Up to 5 get one suggested change each, such as "Assign to …", "Due date Sep 23 → Oct 15" or "Priority Normal → High", ticked by default. <b>Apply N changes</b> saves only what is ticked, and an <b>Undo</b> stays on screen for 10 seconds. It never marks a task Done, deletes or renames one, only moves due dates forward for overdue tasks, and only assigns to the client's own EA.</td></tr>
+            <tr><td><b>Break down a task</b></td><td>Pick a card, then press the button. With no card picked it says "Pick a task first". It writes 3 to 7 short steps, each starting with a verb, in working order, with a time estimate where it can judge one. The steps appear on the card itself with <b>Keep all</b> / <b>Undo</b>. If the task is too vague, it asks one short question instead of guessing.</td></tr>
+            <tr><td><b>Find stuck tasks</b></td><td>A card above the board, with the stuck cards outlined on the board. Stuck means overdue, blocked, no update in 7+ days, or waiting for approval 3+ days. Each row shows the task, why it's stuck, the days stuck and one action: <b>Set new date</b>, <b>Nudge assignee</b> (a comment on the task) or <b>Open</b>. It shows 5 rows, then "Show N more". When all is well: "Nothing is stuck. Every open task moved in the last 7 days."</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="notice">
+      <b>Cost, the deciding factor from the call</b>
+      <span>The spec's ranking and "stuck" rules are exact, so Prioritize board and Find stuck tasks are worked out directly from the board. They give the same factual answer every time, they're instant, and they use no AI at all. Only Break down a task calls the AI, on the lower-cost model, and it sends just the one task.</span>
+    </div>
+    <figure><img src="img/2026-10-14/prioritize-panel.png" alt="Suggested priorities side panel with ranked tasks, change chips and Apply 3 changes" loading="lazy"><figcaption><b>Prioritize board:</b> the suggestions panel beside the board. <i>Test data.</i></figcaption></figure>
+    <div class="shots two">
+      <figure><img src="img/2026-10-14/stuck-tasks.png" alt="Stuck tasks card above the board with the stuck cards outlined" loading="lazy"><figcaption><b>Find stuck tasks:</b> the card, and the stuck cards outlined. <i>Test data.</i></figcaption></figure>
+      <figure><img src="img/2026-10-14/break-down.png" alt="Steps shown on a task card with Keep all and Undo" loading="lazy"><figcaption><b>Break down a task:</b> steps on the card, Keep all / Undo. <i>Example steps from a test run.</i></figcaption></figure>
     </div>
   </section>
 
@@ -253,7 +283,7 @@
   <section class="panel" aria-labelledby="next-h">
     <h2 id="next-h">What's next</h2>
     <ol class="steps">
-      <li><span><b>Abder tests the six AI actions</b> and sends his definitions; then the same buttons go on the Dashboard, Calendar, Time tracker and EOD reports.</span></li>
+      <li><span><b>Abder tests the Tasks actions against his spec</b>, and sends the specs for the Inbox and the other pages; then the same treatment goes to the Dashboard, Calendar, Time tracker and EOD reports.</span></li>
       <li><span><b>Internal team testing</b> from Monday, starting with a short walkthrough of how the Hub works.</span></li>
       <li><span><b>Screen and video recording for SOPs:</b> testing Loom's recording kit (free tier: 25 videos of up to 5 minutes) inside the Hub, with cost as the deciding factor.</span></li>
       <li><span><b>Google verification:</b> needs MadeEA's own domain, then the demo video and permission notes.</span></li>
@@ -268,6 +298,8 @@
         <tbody>
           <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/c6f3e45">c6f3e45</a></td><td>Changes from the 13 October call: Tasks AI actions, chat answers in the chat, Inbox logos, Learn, Draft an email, footer, layout, Stop sharing</td></tr>
           <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/af1522e">af1522e</a></td><td>Inbox AI actions beside the title</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/421fdfd">421fdfd</a></td><td>Tasks AI actions built to Abder's answer spec (side panel, stuck tasks, break down in place)</td></tr>
+          <tr><td class="hash mono">AI service</td><td>Updated for "Break down a task", deployed</td></tr>
         </tbody>
       </table>
     </div>
