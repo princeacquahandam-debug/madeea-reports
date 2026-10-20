@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MadeEA Hub Work Report, 20 October</title>
+<meta name="description" content="Work report for the MadeEA Hub, 20 October 2026: the 19 October team meeting action items — break deduction, email account switching, Loom in Learn, client time zones and a file-sharing permission check.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Same look as the 30 September report, so the series reads as one. */
+  :root {
+    --bg: #f5f6f8; --surface: #ffffff; --ink: #151821; --muted: #5a6172; --line: #e0e3e9;
+    --accent: #d84e0f; --accent-soft: #fdeee6;
+    --live: #17804f; --live-soft: #e3f4ec;
+    --wait: #946200; --wait-soft: #fbf1d6;
+    --prog: #2557b8; --prog-soft: #e6eefc;
+    --shadow: 0 1px 2px rgba(21, 24, 33, 0.05), 0 8px 24px rgba(21, 24, 33, 0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+      --accent: #ff7036; --accent-soft: #3a2116;
+      --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+    --accent: #ff7036; --accent-soft: #3a2116;
+    --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+    --shadow: none;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, sans-serif; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 820px; margin: 0 auto; padding-inline: 20px; padding-block: 48px 72px; display: flex; flex-direction: column; gap: 40px; }
+  h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; }
+  p { margin: 0; }
+  a { color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: 0.86em; }
+
+  header { display: flex; flex-direction: column; gap: 14px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-size: clamp(30px, 5vw, 42px); font-weight: 800; letter-spacing: -0.02em; }
+  .lede { font-size: 18px; color: var(--muted); max-width: 62ch; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: var(--muted); }
+  .meta strong { color: var(--ink); font-weight: 600; }
+
+  .summary, .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+  .summary h2, .panel h2 { font-size: 20px; font-weight: 700; }
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .stat { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
+  .stat b { font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .stat span { font-size: 13px; color: var(--muted); }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 540px; }
+  th { text-align: left; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 0 12px 10px 0; border-bottom: 1px solid var(--line); }
+  td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td.num { font-variant-numeric: tabular-nums; color: var(--muted); width: 28px; }
+  td a { color: inherit; text-decoration: none; font-weight: 600; }
+  td a:hover { color: var(--accent); }
+
+  .pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+  .p-live { color: var(--live); background: var(--live-soft); }
+  .p-live::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 6px; vertical-align: 1px; }
+  .p-wait { color: var(--wait); background: var(--wait-soft); }
+  .p-prog { color: var(--prog); background: var(--prog-soft); }
+  .p-src { color: var(--muted); background: var(--bg); border: 1px solid var(--line); }
+
+  section.item { display: flex; flex-direction: column; gap: 16px; border-top: 1px solid var(--line); }
+  .item-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 24px; }
+  .item-head .num { font-size: 14px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .item h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; width: 100%; }
+  .item h3 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .block { display: flex; flex-direction: column; gap: 8px; }
+  .block p, .block li { max-width: 66ch; }
+  ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  li::marker { color: var(--accent); }
+
+  .notice { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; font-size: 15px; display: flex; flex-direction: column; gap: 4px; }
+
+  .compare { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  .compare > div { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: var(--surface); display: flex; flex-direction: column; gap: 10px; }
+  .compare h4 { margin: 0; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .compare .before h4 { color: var(--muted); }
+  .compare .after { border-color: var(--accent); }
+  .compare .after h4 { color: var(--accent); }
+  .compare ul { font-size: 15px; }
+  .compare .before li { color: var(--muted); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 13px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 4px 11px; }
+
+  .chat { display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
+  .bubble { padding: 10px 14px; border-radius: 14px; max-width: 520px; }
+  .bubble.you { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+  .bubble.her { align-self: flex-start; background: var(--surface); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+  .chat-label { font-size: 12px; color: var(--muted); }
+
+  .steps { counter-reset: s; list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; }
+  .steps li::before { content: counter(s); font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .steps li.done::before { content: "✓"; color: var(--live); }
+  td.hash { white-space: nowrap; }
+  td.hash a { font-weight: 500; color: var(--accent); }
+  footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 20px; }
+
+  /* Screenshots */
+  figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  figure img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: var(--shadow); }
+  figcaption { font-size: 14px; color: var(--muted); }
+  .shots { display: grid; gap: 16px; }
+  .shots.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 560px) {
+    .page { padding-block: 32px 56px; gap: 32px; }
+    .stats { grid-template-columns: 1fr; }
+    .compare { grid-template-columns: 1fr; }
+    .summary, .panel { padding: 18px; }
+    .shots.two { grid-template-columns: 1fr; }
+  }
+</style>
+<body>
+<div class="page">
+
+  <header>
+    <span class="eyebrow">MadeEA Hub · Work report</span>
+    <h1>The team meeting's action items, built</h1>
+    <p class="lede">Everything from the 19 October team meeting under EOS Platform Development is done and live at <a href="https://hub.madeeas.com">hub.madeeas.com</a>: an automatic break on the time tracker, switching between email accounts, Loom training videos in Learn, client time zones, and a permission check before files are shared with the team. The test-account invites, the notes for FJ's demo video, and the website chatbot are covered below.</p>
+    <div class="meta">
+      <span>Work done <strong>20 October 2026</strong></span>
+      <span>Previous report <strong><a href="madeea-hub-report-2026-10-19.html">19 October</a></strong></span>
+      <span>Status <span class="pill p-live">Live</span></span>
+    </div>
+  </header>
+
+  <section class="summary" aria-labelledby="sum-h">
+    <h2 id="sum-h">At a glance</h2>
+    <div class="stats">
+      <div class="stat"><b>5 of 5</b><span>platform items from the meeting, live</span></div>
+      <div class="stat"><b>1 update</b><span>to the database (0089), run and confirmed</span></div>
+      <div class="stat"><b>25 checks</b><span>passed in testing before going live</span></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>What was done</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td><a href="#item-1">Time tracker: automatic break deduction</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">2</td><td><a href="#item-2">Inbox: switch between email accounts</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">3</td><td><a href="#item-3">Learn: Loom training videos and SOP walkthroughs</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">4</td><td><a href="#item-4">Client time zones</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">5</td><td><a href="#item-5">Permission check before sharing files with the team</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">6</td><td><a href="#item-6">Test accounts and notes for FJ</a></td><td><span class="pill p-prog">Ready to send</span></td></tr>
+          <tr><td class="num">7</td><td><a href="#item-7">Website chatbot (Voiceflow)</a></td><td><span class="pill p-wait">Needs the Voiceflow login</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 1 -->
+  <section class="item" id="item-1" aria-labelledby="h-1">
+    <div class="item-head"><span class="num">1</span><span class="pill p-live">Live</span>
+      <h2 id="h-1">Time tracker: automatic break deduction</h2>
+    </div>
+    <div class="block">
+      <p>The time tracker already had clock-in, clock-out and screenshots. The missing piece was deduction: an unpaid break taken off long days automatically, so nobody's hours include a lunch they didn't log.</p>
+      <ul>
+        <li><b>Set by an admin</b> on a new <b>Time tracking</b> card in the Admin panel: the daily hours, the length of the automatic break (off, 15, 30, 45 or 60 minutes), and the length of day it applies to (for example, longer than 6 hours).</li>
+        <li><b>Breaks taken with Pause count toward it.</b> Someone who already paused for 30 minutes isn't charged another 30.</li>
+        <li><b>The timesheet shows it plainly</b>: each day shows "−30 min break" beside its total, so the deduction is never hidden.</li>
+      </ul>
+    </div>
+    <figure><img src="img/2026-10-20/admin-time.png" alt="Admin panel Time tracking card with daily hours, automatic break and the length of day it applies to" loading="lazy"><figcaption><b>Admin panel:</b> the break rule, explained in one line under the settings. <i>Test account.</i></figcaption></figure>
+    <figure><img src="img/2026-10-20/time-break.png" alt="Timesheet showing a 7-hour day counted as 6:30 after a 30-minute break" loading="lazy"><figcaption><b>Timesheet:</b> a 7-hour day counts as 6:30 after the 30-minute break. <i>Test account.</i></figcaption></figure>
+    <div class="notice">
+      <b>Why a set break, not idle tracking</b>
+      <span>The Hub can only see activity inside its own tab, not in Gmail, Sheets or a client's tools. Taking time off for "idle" minutes would cut hours an EA really worked, so the deduction is a clear, fixed break rule instead.</span>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="item" id="item-2" aria-labelledby="h-2">
+    <div class="item-head"><span class="num">2</span><span class="pill p-live">Live</span>
+      <h2 id="h-2">Inbox: switch between email accounts</h2>
+    </div>
+    <div class="block">
+      <p>A new account switcher at the top of the Inbox, beside New message:</p>
+      <ul>
+        <li><b>All accounts</b>, or just your <b>Gmail</b> or <b>Outlook</b>, each shown by its address.</li>
+        <li><b>Client mailboxes</b> that clients have shared with their EA, in the same list.</li>
+        <li><b>Connect another account</b> at the bottom, which goes to the Integrations page.</li>
+      </ul>
+    </div>
+    <figure><img src="img/2026-10-20/accounts.png" alt="Inbox account switcher listing All accounts, Gmail, Outlook, a client mailbox and Connect another account" loading="lazy"><figcaption><b>Account switcher</b> in the Inbox. <i>Test account with sample addresses.</i></figcaption></figure>
+    <div class="notice">
+      <b>One limit to know</b>
+      <span>Each person can connect one Gmail and one Outlook account. Connecting two Gmail accounts to the same person would need a bigger change to how the Hub stores sign-ins, and can be added later if it's needed.</span>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="item" id="item-3" aria-labelledby="h-3">
+    <div class="item-head"><span class="num">3</span><span class="pill p-live">Live</span>
+      <h2 id="h-3">Learn: Loom training videos and SOP walkthroughs</h2>
+    </div>
+    <div class="block">
+      <ul>
+        <li><b>Training videos</b> at the top of the Training Center. Videos play right on the page, without leaving the Hub.</li>
+        <li><b>A video walkthrough on every SOP</b>, shown when the SOP is opened, so the checklist and the "how" sit together.</li>
+        <li><b>Managers and admins add them</b> by pasting a Loom link. Anything that isn't a Loom link is turned away. Once the Loom app ID is added (see What's next), they can also press <b>Record a Loom</b> and the video is added automatically.</li>
+        <li><b>Training videos</b> is also in the header's Learn menu.</li>
+        <li>The Hub's security settings were updated so Loom's player and recorder are allowed to load. Without this, Loom videos would have been blocked.</li>
+      </ul>
+    </div>
+    <div class="shots two">
+      <figure><img src="img/2026-10-20/training.png" alt="Training Center with a Training videos section and a Loom video" loading="lazy"><figcaption><b>Training Center:</b> training videos. <i>Test account; the player is blank because the test uses a made-up Loom link.</i></figcaption></figure>
+      <figure><img src="img/2026-10-20/sop.png" alt="An open SOP with a Video walkthrough section above its checklist" loading="lazy"><figcaption><b>SOP:</b> the video walkthrough above the checklist. <i>Test account.</i></figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="item" id="item-4" aria-labelledby="h-4">
+    <div class="item-head"><span class="num">4</span><span class="pill p-live">Live</span>
+      <h2 id="h-4">Client time zones</h2>
+    </div>
+    <div class="block">
+      <ul>
+        <li><b>A time zone field</b> when a client is added or edited in Client Vault, with a <b>Use mine</b> shortcut.</li>
+        <li><b>The client's local time</b> on their profile, for example "1:56 PM their time · Asia/Dubai (GMT+4)", so the EA knows at a glance whether it's a good moment to message them.</li>
+      </ul>
+    </div>
+    <figure><img src="img/2026-10-20/client-tz.png" alt="Client profile showing the client's local time and time zone under their name" loading="lazy"><figcaption><b>Client profile:</b> their local time under their name. <i>Test account.</i></figcaption></figure>
+  </section>
+
+  <!-- 5 -->
+  <section class="item" id="item-5" aria-labelledby="h-5">
+    <div class="item-head"><span class="num">5</span><span class="pill p-live">Live</span>
+      <h2 id="h-5">Permission check before sharing files with the team</h2>
+    </div>
+    <div class="block">
+      <p>Before a file goes on the team shelf, the Hub now asks first. It explains who will see it (everyone in the workspace, and Madeline, but not clients), and the person must tick that they have permission to share it and that it holds no passwords or personal information. They can also keep it on their personal shelf instead, or cancel.</p>
+    </div>
+    <figure><img src="img/2026-10-20/consent.png" alt="Share with your team dialog with a required permission checkbox and three choices" loading="lazy"><figcaption><b>Share with your team?</b> Share stays off until the permission box is ticked. <i>Test account.</i></figcaption></figure>
+  </section>
+
+  <!-- 6 -->
+  <section class="item" id="item-6" aria-labelledby="h-6">
+    <div class="item-head"><span class="num">6</span><span class="pill p-prog">Ready to send</span>
+      <h2 id="h-6">Test accounts and notes for FJ</h2>
+    </div>
+    <div class="block">
+      <ul>
+        <li><b>Test-account invites (due by 10:00 AM, 21 October):</b> created from the Admin panel's "Add a team member". The Hub doesn't email invites, so each person gets their address and starting password in a private message, and changes the password after signing in. Anyone who already has an account gets a new password instead of a second account.</li>
+        <li><b>Feature notes for FJ:</b> written and ready to send. They follow an EA's day in eight short sections (Home, Madeline, Inbox, Tasks, Routines, Time tracker, Learn, then the client portal), each with what to show and one line to say, plus what to keep off screen. About 3 to 4 minutes in total, recorded on a test account.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="item" id="item-7" aria-labelledby="h-7">
+    <div class="item-head"><span class="num">7</span><span class="pill p-wait">Needs the Voiceflow login</span>
+      <h2 id="h-7">Website chatbot (Voiceflow)</h2>
+    </div>
+    <div class="block">
+      <p>A check of the live madeeas.com site found that <b>the chatbot's code is no longer on the website at all</b>. The page and every script it loads were checked: the only outside widget left is the booking calendar. So renewing the Voiceflow plan won't bring the chat bubble back on its own. Two steps are needed:</p>
+    </div>
+    <ol class="steps">
+      <li><span><b>Renew the Voiceflow plan</b> on the account the chatbot was built in, then test the agent inside Voiceflow and publish it.</span></li>
+      <li><span><b>Add the chatbot's code back to the website</b>: copy Voiceflow's web chat installation code and place it on the site, then publish the site and test the chat in a private window.</span></li>
+    </ol>
+    <div class="notice">
+      <b>Needed from Prince</b>
+      <span>Which email the Voiceflow account is under, and who can update the website's code, or access to it so we can add the chatbot back and test it.</span>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="next-h">
+    <h2 id="next-h">What's next</h2>
+    <ol class="steps">
+      <li><span><b>Test accounts sent</b> before 10:00 AM on 21 October, and the notes sent to FJ with a test login.</span></li>
+      <li><span><b>Voiceflow:</b> the account email and website access, then the chatbot back on madeeas.com.</span></li>
+      <li><span><b>Loom app ID</b> added in Vercel, so "Record a Loom" works on the Integrations page, in the Training Center and on SOPs.</span></li>
+      <li><span><b>Set the break rule</b> in Admin panel → Time tracking. It's off until an admin picks a break length.</span></li>
+    </ol>
+  </section>
+
+  <section class="panel" aria-labelledby="log-h">
+    <h2 id="log-h">Change log</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Update</th><th>What went live</th></tr></thead>
+        <tbody>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/cf282cc">cf282cc</a></td><td>Break deduction, email account switcher, Loom in Learn, client time zones, file-sharing permission check, Loom allowed in the security settings</td></tr>
+          <tr><td class="hash mono">Database</td><td>Break settings, client time zones and training videos (update 0089), run and confirmed</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>MadeEA Hub work report, 20 October 2026. Previous report: <a href="madeea-hub-report-2026-10-19.html">19 October 2026</a>.</footer>
+</div>
+</body>
+</html>
