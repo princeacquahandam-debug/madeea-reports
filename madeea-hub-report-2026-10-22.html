@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MadeEA Hub Work Report, 22 October</title>
+<meta name="description" content="Work report for the MadeEA Hub, 22 October 2026: the AI Prioritize board, PostHog built to the tracking plan with consent and privacy, and the PostHog dashboards.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Same look as the 30 September report, so the series reads as one. */
+  :root {
+    --bg: #f5f6f8; --surface: #ffffff; --ink: #151821; --muted: #5a6172; --line: #e0e3e9;
+    --accent: #d84e0f; --accent-soft: #fdeee6;
+    --live: #17804f; --live-soft: #e3f4ec;
+    --wait: #946200; --wait-soft: #fbf1d6;
+    --prog: #2557b8; --prog-soft: #e6eefc;
+    --shadow: 0 1px 2px rgba(21, 24, 33, 0.05), 0 8px 24px rgba(21, 24, 33, 0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+      --accent: #ff7036; --accent-soft: #3a2116;
+      --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+    --accent: #ff7036; --accent-soft: #3a2116;
+    --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+    --shadow: none;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, sans-serif; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 820px; margin: 0 auto; padding-inline: 20px; padding-block: 48px 72px; display: flex; flex-direction: column; gap: 40px; }
+  h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; }
+  p { margin: 0; }
+  a { color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: 0.86em; }
+
+  header { display: flex; flex-direction: column; gap: 14px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-size: clamp(30px, 5vw, 42px); font-weight: 800; letter-spacing: -0.02em; }
+  .lede { font-size: 18px; color: var(--muted); max-width: 62ch; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: var(--muted); }
+  .meta strong { color: var(--ink); font-weight: 600; }
+
+  .summary, .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+  .summary h2, .panel h2 { font-size: 20px; font-weight: 700; }
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .stat { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
+  .stat b { font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .stat span { font-size: 13px; color: var(--muted); }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 540px; }
+  th { text-align: left; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 0 12px 10px 0; border-bottom: 1px solid var(--line); }
+  td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td.num { font-variant-numeric: tabular-nums; color: var(--muted); width: 28px; }
+  td a { color: inherit; text-decoration: none; font-weight: 600; }
+  td a:hover { color: var(--accent); }
+
+  .pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+  .p-live { color: var(--live); background: var(--live-soft); }
+  .p-live::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 6px; vertical-align: 1px; }
+  .p-wait { color: var(--wait); background: var(--wait-soft); }
+  .p-prog { color: var(--prog); background: var(--prog-soft); }
+  .p-src { color: var(--muted); background: var(--bg); border: 1px solid var(--line); }
+
+  section.item { display: flex; flex-direction: column; gap: 16px; border-top: 1px solid var(--line); }
+  .item-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 24px; }
+  .item-head .num { font-size: 14px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .item h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; width: 100%; }
+  .item h3 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .block { display: flex; flex-direction: column; gap: 8px; }
+  .block p, .block li { max-width: 66ch; }
+  ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  li::marker { color: var(--accent); }
+
+  .notice { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; font-size: 15px; display: flex; flex-direction: column; gap: 4px; }
+
+  .compare { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  .compare > div { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: var(--surface); display: flex; flex-direction: column; gap: 10px; }
+  .compare h4 { margin: 0; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .compare .before h4 { color: var(--muted); }
+  .compare .after { border-color: var(--accent); }
+  .compare .after h4 { color: var(--accent); }
+  .compare ul { font-size: 15px; }
+  .compare .before li { color: var(--muted); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 13px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 4px 11px; }
+
+  .chat { display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
+  .bubble { padding: 10px 14px; border-radius: 14px; max-width: 520px; }
+  .bubble.you { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+  .bubble.her { align-self: flex-start; background: var(--surface); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+  .chat-label { font-size: 12px; color: var(--muted); }
+
+  .steps { counter-reset: s; list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; }
+  .steps li::before { content: counter(s); font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .steps li.done::before { content: "✓"; color: var(--live); }
+  td.hash { white-space: nowrap; }
+  td.hash a { font-weight: 500; color: var(--accent); }
+  footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 20px; }
+
+  /* Screenshots */
+  figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  figure img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: var(--shadow); }
+  figcaption { font-size: 14px; color: var(--muted); }
+  .shots { display: grid; gap: 16px; }
+  .shots.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 560px) {
+    .page { padding-block: 32px 56px; gap: 32px; }
+    .stats { grid-template-columns: 1fr; }
+    .compare { grid-template-columns: 1fr; }
+    .summary, .panel { padding: 18px; }
+    .shots.two { grid-template-columns: 1fr; }
+  }
+</style>
+<body>
+<div class="page">
+
+  <header>
+    <span class="eyebrow">MadeEA Hub · Work report</span>
+    <h1>An AI that reads the whole board, and PostHog to the plan</h1>
+    <p class="lede">The actions from the 21 October call with Abder are done. "Prioritize board" now has the AI read every task and decide today's order. PostHog is live across the Hub, its database and its AI, built to the PostHog tracking plan, and recording real use since this afternoon. The dashboards are being set up in PostHog and will be finished tomorrow.</p>
+    <div class="meta">
+      <span>Work done <strong>21–22 October 2026</strong></span>
+      <span>Previous report <strong><a href="madeea-hub-report-2026-10-21.html">21 October</a></strong></span>
+      <span>Status <span class="pill p-live">Live</span></span>
+    </div>
+  </header>
+
+  <section class="summary" aria-labelledby="sum-h">
+    <h2 id="sum-h">At a glance</h2>
+    <div class="stats">
+      <div class="stat"><b>3 of 3</b><span>sources sending to PostHog: the Hub, its database and its AI</span></div>
+      <div class="stat"><b>40+</b><span>named events from the tracking plan's catalog</span></div>
+      <div class="stat"><b>0</b><span>names, emails, task titles or messages sent to PostHog</span></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>What was done</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td><a href="#item-1">Prioritize board: the AI reads every task</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">2</td><td><a href="#item-2">PostHog, built to the tracking plan</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">3</td><td><a href="#item-3">Privacy and consent</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">4</td><td><a href="#item-4">PostHog dashboards and alerts</a></td><td><span class="pill p-prog">In progress</span></td></tr>
+          <tr><td class="num">5</td><td><a href="#item-5">For Abder: recommendations tracker and briefing</a></td><td><span class="pill p-live">Prepared</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 1 -->
+  <section class="item" id="item-1" aria-labelledby="h-1">
+    <div class="item-head"><span class="num">1</span><span class="pill p-live">Live</span>
+      <h2 id="h-1">Prioritize board: the AI reads every task</h2>
+    </div>
+    <div class="block">
+      <p>On the call, Abder said the old "Prioritize board" only showed what anyone can see by eye. It now sends every open task, in every column, to the AI with its facts: the stage, how long since it was last updated, due date, blocker, approval and checklist. The AI decides today's order and gives a reason for each. It catches what Abder asked for:</p>
+      <ul>
+        <li><b>Forgotten work:</b> "In Review for 31 days with no update. Chase the sign-off today."</li>
+        <li><b>Blocked tasks, and what's blocking them:</b> "Blocked on passport details. Ask the client for them."</li>
+        <li><b>Overdue and due-today work,</b> with priority taken into account.</li>
+      </ul>
+      <p>Its answers are checked before they're shown: only real tasks, at most 5 suggested changes, due dates only in the future, and it can never mark a task done. Nothing changes until "Apply", with Undo for 10 seconds. If the AI can't be reached, the board's own order is shown and says so. Abder confirmed "Break down a task" and "Find stuck tasks" were already right, so they are unchanged.</p>
+    </div>
+    <figure><img src="img/2026-10-22/prioritize.png" alt="Suggested priorities panel listing forgotten and blocked tasks first, each with a reason and a suggested change" loading="lazy"><figcaption><b>Suggested priorities:</b> the forgotten review and the month-old task first, each with a reason. <i>Test account with sample tasks.</i></figcaption></figure>
+  </section>
+
+  <!-- 2 -->
+  <section class="item" id="item-2" aria-labelledby="h-2">
+    <div class="item-head"><span class="num">2</span><span class="pill p-live">Live</span>
+      <h2 id="h-2">PostHog, built to the tracking plan</h2>
+    </div>
+    <div class="block">
+      <p>PostHog is set up as the PostHog tracking plan (October 2026) describes, so it can answer the plan's five questions: are EAs using the app every day, do they keep the daily routine, which features are used, is the AI worth its cost, and did the redesign help. Events come from three places, and all three were checked arriving in PostHog today:</p>
+      <ul>
+        <li><b>The Hub (browser):</b> pages opened and the plan's named actions, such as a task filter used, an AI action clicked, shown, applied or dismissed, Madeline opened, an EOD started, and a timesheet period changed. Every event carries the person's role, workspace, current client, app version and theme, so any chart can be split by them.</li>
+        <li><b>The database:</b> the events that measure the business are sent by the database itself, so they can't be lost or faked: a task created or moved, clock in, pause and clock out, an EOD report submitted, a message sent, and an account connected.</li>
+        <li><b>The AI:</b> every call to the AI is logged with its model, tokens, cost and speed, never the question or the answer. Questions stopped for being off-topic are counted too.</li>
+      </ul>
+      <p>Hosting is PostHog's EU cloud (Frankfurt). Events go through the Hub's own web address, so ad blockers don't drop them. Session recordings are on for 20% of sessions longer than 5 seconds.</p>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="item" id="item-3" aria-labelledby="h-3">
+    <div class="item-head"><span class="num">3</span><span class="pill p-live">Live</span>
+      <h2 id="h-3">Privacy and consent</h2>
+    </div>
+    <div class="block">
+      <p>The plan says "we track what people do, never what they read or write." So:</p>
+      <ul>
+        <li><b>Asked first:</b> nothing is recorded until each person agrees. Their choice is saved on their account, so it follows them to any computer, and it can be changed any time in Settings.</li>
+        <li><b>No content:</b> no names, emails, task titles, notes or messages in any event. People are identified by an internal ID only, and that is cleared when they sign out.</li>
+        <li><b>Recordings show no text:</b> all text on screen and everything typed is hidden. The Inbox is never recorded, and the Password Manager, Client Vault, Screenshots and Uploads pages are left out entirely. Client accounts send page and button events only, never a recording.</li>
+        <li><b>Privacy policy:</b> the Hub's privacy page has a new "Usage analytics" section that explains all of this.</li>
+      </ul>
+    </div>
+    <div class="shots two">
+      <figure><img src="img/2026-10-22/consent.png" alt="Help us improve the Hub prompt asking permission before recording usage" loading="lazy"><figcaption><b>Asked once,</b> before anything is recorded. <i>Test account.</i></figcaption></figure>
+      <figure><img src="img/2026-10-22/setting.png" alt="Usage analytics card in Settings with a Share my usage switch" loading="lazy"><figcaption><b>Settings:</b> the same choice, changeable any time. <i>Test account.</i></figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="item" id="item-4" aria-labelledby="h-4">
+    <div class="item-head"><span class="num">4</span><span class="pill p-prog">In progress</span>
+      <h2 id="h-4">PostHog dashboards and alerts</h2>
+    </div>
+    <div class="block">
+      <p>The plan's five dashboards are created in PostHog and being filled chart by chart:</p>
+      <ul>
+        <li><b>Adoption:</b> done. Daily and weekly active users by role, and the plan's north star: EAs who submit an EOD report on at least 4 of 5 working days.</li>
+        <li><b>Daily routine:</b> the routine funnel (open the Hub, clock in, finish a task, file the EOD) and the EOD submission rate are in. One more chart to go.</li>
+        <li><b>Feature usage, AI and Redesign impact:</b> to be filled tomorrow, along with the three alerts: the EOD rate falling below 60%, an AI cost spike, and AI errors over 2% in an hour.</li>
+      </ul>
+    </div>
+    <div class="notice">
+      <b>Expect thin numbers this week</b>
+      <span>Tracking started this afternoon, and only for people who clicked Allow. The charts fill in as the team uses the Hub.</span>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="item" id="item-5" aria-labelledby="h-5">
+    <div class="item-head"><span class="num">5</span><span class="pill p-live">Prepared</span>
+      <h2 id="h-5">For Abder: recommendations tracker and briefing</h2>
+    </div>
+    <div class="block">
+      <ul>
+        <li><b>A tracker of Abder's recommendations</b> (as agreed on the call): all 21, from the 13 October call to today, each with its status and where to test it.</li>
+        <li><b>A briefing</b> on what he asked to see:
+          <ul>
+            <li><b>The delegation coach:</b> it is already in the client portal under Delegate, and handing a plan over creates a task on the EA's board. The briefing includes its flow and prompts.</li>
+            <li><b>The Academy:</b> what exists today and what he will design.</li>
+            <li><b>The team's testing feedback.</b></li>
+          </ul></li>
+      </ul>
+    </div>
+    <div class="notice">
+      <b>The delegation coach needs its automation subscription renewed</b>
+      <span>The coach runs through MadeEA's own automation service, whose plan has lapsed. Until it is renewed, the coach can't answer.</span>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="next-h">
+    <h2 id="next-h">What's next</h2>
+    <ol class="steps">
+      <li><span><b>Finish the PostHog dashboards</b> (Daily routine, Feature usage, AI, Redesign impact) and set the three alerts.</span></li>
+      <li><span><b>Renew the automation subscription</b> so the delegation coach works again.</span></li>
+      <li><span><b>Abder tests</b> the AI Prioritize board, and sends the other pages' AI action definitions.</span></li>
+      <li><span><b>Academy:</b> Abder designs the continuous-training views once HR sends the outline.</span></li>
+    </ol>
+  </section>
+
+  <section class="panel" aria-labelledby="log-h">
+    <h2 id="log-h">Change log</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Update</th><th>What went live</th></tr></thead>
+        <tbody>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/7f4dd95">7f4dd95</a></td><td>AI Prioritize board, and PostHog installed</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/1ecd0b5">1ecd0b5</a></td><td>PostHog built to the tracking plan: EU, named events, privacy, consent</td></tr>
+          <tr><td class="hash mono">Database</td><td>Business events sent by the database (update 0093), run and switched on</td></tr>
+          <tr><td class="hash mono">AI</td><td>Five AI functions redeployed: the AI Prioritize board, and AI cost logging</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>MadeEA Hub work report, 22 October 2026. Previous report: <a href="madeea-hub-report-2026-10-21.html">21 October 2026</a>.</footer>
+</div>
+</body>
+</html>
