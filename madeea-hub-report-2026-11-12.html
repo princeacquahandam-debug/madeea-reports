@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MadeEA Hub Work Report, 12 November</title>
+<meta name="description" content="Work report for the MadeEA Hub, 12 November 2026: the Delegation Coach rebuilt for the founder after the 11 November call, with the organisation, a daily keep-or-delegate sort and one-click hand-over.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Same look as the 30 September report, so the series reads as one. */
+  :root {
+    --bg: #f5f6f8; --surface: #ffffff; --ink: #151821; --muted: #5a6172; --line: #e0e3e9;
+    --accent: #d84e0f; --accent-soft: #fdeee6;
+    --live: #17804f; --live-soft: #e3f4ec;
+    --wait: #946200; --wait-soft: #fbf1d6;
+    --prog: #2557b8; --prog-soft: #e6eefc;
+    --shadow: 0 1px 2px rgba(21, 24, 33, 0.05), 0 8px 24px rgba(21, 24, 33, 0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+      --accent: #ff7036; --accent-soft: #3a2116;
+      --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+    --accent: #ff7036; --accent-soft: #3a2116;
+    --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+    --shadow: none;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, sans-serif; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 820px; margin: 0 auto; padding-inline: 20px; padding-block: 48px 72px; display: flex; flex-direction: column; gap: 40px; }
+  h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; }
+  p { margin: 0; }
+  a { color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: 0.86em; }
+
+  header { display: flex; flex-direction: column; gap: 14px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-size: clamp(30px, 5vw, 42px); font-weight: 800; letter-spacing: -0.02em; }
+  .lede { font-size: 18px; color: var(--muted); max-width: 62ch; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: var(--muted); }
+  .meta strong { color: var(--ink); font-weight: 600; }
+
+  .summary, .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+  .summary h2, .panel h2 { font-size: 20px; font-weight: 700; }
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .stat { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
+  .stat b { font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .stat span { font-size: 13px; color: var(--muted); }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 540px; }
+  th { text-align: left; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 0 12px 10px 0; border-bottom: 1px solid var(--line); }
+  td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td.num { font-variant-numeric: tabular-nums; color: var(--muted); width: 28px; }
+  td a { color: inherit; text-decoration: none; font-weight: 600; }
+  td a:hover { color: var(--accent); }
+
+  .pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+  .p-live { color: var(--live); background: var(--live-soft); }
+  .p-live::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 6px; vertical-align: 1px; }
+  .p-wait { color: var(--wait); background: var(--wait-soft); }
+  .p-prog { color: var(--prog); background: var(--prog-soft); }
+  .p-src { color: var(--muted); background: var(--bg); border: 1px solid var(--line); }
+
+  section.item { display: flex; flex-direction: column; gap: 16px; border-top: 1px solid var(--line); }
+  .item-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 24px; }
+  .item-head .num { font-size: 14px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .item h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; width: 100%; }
+  .item h3 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .block { display: flex; flex-direction: column; gap: 8px; }
+  .block p, .block li { max-width: 66ch; }
+  ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  li::marker { color: var(--accent); }
+
+  .notice { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; font-size: 15px; display: flex; flex-direction: column; gap: 4px; }
+
+  .compare { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  .compare > div { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: var(--surface); display: flex; flex-direction: column; gap: 10px; }
+  .compare h4 { margin: 0; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .compare .before h4 { color: var(--muted); }
+  .compare .after { border-color: var(--accent); }
+  .compare .after h4 { color: var(--accent); }
+  .compare ul { font-size: 15px; }
+  .compare .before li { color: var(--muted); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 13px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 4px 11px; }
+
+  .chat { display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
+  .bubble { padding: 10px 14px; border-radius: 14px; max-width: 520px; }
+  .bubble.you { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+  .bubble.her { align-self: flex-start; background: var(--surface); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+  .chat-label { font-size: 12px; color: var(--muted); }
+
+  .steps { counter-reset: s; list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; }
+  .steps li::before { content: counter(s); font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .steps li.done::before { content: "✓"; color: var(--live); }
+  td.hash { white-space: nowrap; }
+  td.hash a { font-weight: 500; color: var(--accent); }
+  footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 20px; }
+
+  /* Screenshots */
+  figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  figure img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: var(--shadow); }
+  figcaption { font-size: 14px; color: var(--muted); }
+  .shots { display: grid; gap: 16px; }
+  .shots.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 560px) {
+    .page { padding-block: 32px 56px; gap: 32px; }
+    .stats { grid-template-columns: 1fr; }
+    .compare { grid-template-columns: 1fr; }
+    .summary, .panel { padding: 18px; }
+    .shots.two { grid-template-columns: 1fr; }
+  }
+  .muted { color: var(--muted); font-size: 13px; font-weight: 400; }
+</style>
+<body>
+<div class="page">
+
+  <header>
+    <span class="eyebrow">MadeEA Hub · Work report</span>
+    <h1>The Delegation Coach, rebuilt for the founder</h1>
+    <p class="lede">Everything agreed on the 11 November call about the Delegation Coach is now live in the client portal and tested. The founder keeps the few things only they should do. Everything else is sorted to the EA or to the right person in their organisation, and handed over in one click.</p>
+    <div class="meta">
+      <span>Work done <strong>12 November 2026</strong></span>
+      <span>From the call on <strong>11 November</strong></span>
+      <span>Previous report <strong><a href="madeea-hub-report-2026-11-10.html">10 November</a></strong></span>
+      <span>Status <span class="pill p-live">Live</span></span>
+    </div>
+  </header>
+
+  <section class="summary" aria-labelledby="sum-h">
+    <h2 id="sum-h">At a glance</h2>
+    <div class="stats">
+      <div class="stat"><b>5</b><span>changes from the call, live in the client portal</span></div>
+      <div class="stat"><b>6</b><span>live checks passed, signed in as a client</span></div>
+      <div class="stat"><b>2</b><span>issues found in testing and fixed the same day</span></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>What was done</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td><a href="#item-1">The founder's organisation comes first</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">2</td><td><a href="#item-2">Keep or delegate, sorted every day</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">3</td><td><a href="#item-3">What the EA can take until a role exists</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">4</td><td><a href="#item-4">Handed over in one click, to the right person</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">5</td><td><a href="#item-5">Client AI working again</a></td><td><span class="pill p-live">Fixed</span></td></tr>
+          <tr><td class="num">6</td><td><a href="#item-6">Tested live</a></td><td><span class="pill p-live">Passed</span></td></tr>
+          <tr><td class="num">7</td><td><a href="#item-7">Waiting on decisions</a></td><td><span class="pill p-wait">Waiting</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="item" id="item-1" aria-labelledby="h-1">
+    <div class="item-head"><span class="num">1</span><span class="pill p-live">Live</span>
+      <h2 id="h-1">The founder's organisation comes first</h2>
+    </div>
+    <div class="block">
+      <p>Abder's tree: the founder at the top, then the EA and everyone who reports directly to the founder. As Rowena asked, the client fills it in before using the coach.</p>
+      <ul>
+        <li>The first time a client opens <b>Delegate</b>, it asks "Before you start: who reports to you?"</li>
+        <li>For each person: name, title, area (finance, product, commercial and so on), what they handle, and their MadeEA login if they have one.</li>
+        <li>It shows as a tree: the founder, then the EA, then their direct reports. It can be edited at any time, or skipped for now.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="item" id="item-2" aria-labelledby="h-2">
+    <div class="item-head"><span class="num">2</span><span class="pill p-live">Live</span>
+      <h2 id="h-2">Keep or delegate, sorted every day</h2>
+    </div>
+    <div class="block">
+      <p>Prince's point: a founder should focus on a few things every day, and everything else should go to the right person. The coach now works from what the platform already knows, as Abder described.</p>
+      <ul>
+        <li>The founder names up to 4 focus areas and keeps a list of what is on their desk.</li>
+        <li>It adds the founder's meetings for the next 7 days from their connected calendar.</li>
+        <li>Once a day, when the founder opens Delegate, Madeline sorts every item into <b>keep</b>, <b>the EA</b>, <b>a named person</b> in the organisation, or <b>a role nobody covers yet</b>, each with a one-line reason.</li>
+        <li>Follow-ups, emails, scheduling and chasing go to the EA. Work for a department goes to the person who covers it.</li>
+        <li>Meetings that name the founder, and one-to-ones, stay with the founder. Trainings and events are never sent to someone else.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="item" id="item-3" aria-labelledby="h-3">
+    <div class="item-head"><span class="num">3</span><span class="pill p-live">Live</span>
+      <h2 id="h-3">What the EA can take until a role exists</h2>
+    </div>
+    <div class="block">
+      <p>Rowena's point: when a task belongs to a department the business doesn't have yet, finance for example, the coach doesn't stop at "hire someone". It shows "Until then, [EA] can: …". That is the part the EA can take now, such as gathering documents, chasing or keeping a tracker. That part can be handed to the EA in one click. Where it fits, it also suggests the role the business may need.</p>
+    </div>
+  </section>
+
+  <section class="item" id="item-4" aria-labelledby="h-4">
+    <div class="item-head"><span class="num">4</span><span class="pill p-live">Live</span>
+      <h2 id="h-4">Handed over in one click, to the right person</h2>
+    </div>
+    <div class="block">
+      <ul>
+        <li><b>One click:</b> "Hand to [name]" puts the item on that person's task board, with the coach's reason in the notes. The item then shows "Handed to [name]" and comes off the founder's desk list.</li>
+        <li><b>Not only the EA:</b> work can go to anyone in the organisation who has a MadeEA login.</li>
+        <li><b>People not on MadeEA:</b> "Plan it first" builds a full delegation plan with a handoff message the founder copies and sends. The plan is kept as handed over.</li>
+        <li><b>Full plans still work</b> for any item: outcome, context, how much freedom, success criteria, risks and the handoff message.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="item" id="item-5" aria-labelledby="h-5">
+    <div class="item-head"><span class="num">5</span><span class="pill p-live">Fixed</span>
+      <h2 id="h-5">Client AI working again</h2>
+    </div>
+    <div class="block">
+      <p>While building this, we found that the AI cost limits added on 7 November also blocked client accounts. From 7 to 12 November, a client using Madeline in the client portal was told they had reached today's AI limit. That is fixed. Clients now have the same daily allowance as the team: 150 AI requests or $0.50 a day per person.</p>
+    </div>
+  </section>
+
+  <section class="item" id="item-6" aria-labelledby="h-6">
+    <div class="item-head"><span class="num">6</span><span class="pill p-live">Passed</span>
+      <h2 id="h-6">Tested live</h2>
+    </div>
+    <div class="steps-wrap block">
+      <ol class="steps">
+        <li class="done"><span>Signed in as a client: "Before you start: who reports to you?" appeared, and the organisation saved.</span></li>
+        <li class="done"><span>The sort ran by itself: 8 items, including 4 calendar meetings, routed to the EA, the Head of Product and the Sales Director.</span></li>
+        <li class="done"><span>Fixed after the first test: two meetings that named the founder had gone to the Head of Product. They now stay with the founder.</span></li>
+        <li class="done"><span>Fixed after the second test: the count line now always matches the list ("Keep 2 of 8; 5 to the EA, 1 to the Head of Product").</span></li>
+        <li class="done"><span>One-click hand-over: "chasing suppliers" landed on the EA's board as a task, and the item showed "Handed to". The test task was then deleted.</span></li>
+        <li class="done"><span>Already in place, as Rowena asked: the Hub shows which EAs have finished MadeEA Ready, and warns when one who hasn't is assigned to a client.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="item" id="item-7" aria-labelledby="h-7">
+    <div class="item-head"><span class="num">7</span><span class="pill p-wait">Waiting</span>
+      <h2 id="h-7">Waiting on decisions</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Item</th><th>Waiting on</th></tr></thead>
+        <tbody>
+          <tr><td><b>The Academy</b>, as Abder showed it: a separate platform on its own address with single sign-on from the Hub. Admin: course builder, AI course creation, learning paths, audiences, reports and reviews. Learners: focused lessons, flashcards, quizzes, certificates, plus images and videos in lessons.</td><td>Abder's task breakdown, or a go-ahead to start now</td></tr>
+          <tr><td><b>Abder's review of the Delegation Coach</b>, then v2 and later versions from real clients' feedback</td><td>Abder</td></tr>
+          <tr><td><b>A light Delegation Coach as a lead magnet</b>: it points out the founder's delegation problems and invites them to use the full coach as a member</td><td>After Abder's review (Bryan)</td></tr>
+          <tr><td><b>Open questions</b>: keep suggesting new roles? Match work to the EA's skills? Also read the inbox and run in the background?</td><td>Abder, in the coach's product brief</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="log-h">
+    <h2 id="log-h">Change log</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Update</th><th>What went live</th></tr></thead>
+        <tbody>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/534b37e">534b37e</a></td><td>The count line is worked out by the app, not the AI</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/f180d68">f180d68</a></td><td>Meetings that name the founder stay with the founder</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/1c1d001">1c1d001</a></td><td>Organisation, what the EA can take, the daily sort and the one-click hand-over</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/5dfb549">5dfb549</a></td><td>Keep or delegate sort, plans to any team member, client AI limit fixed</td></tr>
+          <tr><td class="hash mono">Database</td><td>Organisation, focus and desk, one-click hand-over, client AI limit</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>MadeEA Hub work report, 12 November 2026. Previous report: <a href="madeea-hub-report-2026-11-10.html">10 November 2026</a>.</footer>
+</div>
+</body>
+</html>
