@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MadeEA Hub Work Report, 13 November</title>
+<meta name="description" content="Work report for the MadeEA Hub, 13 November 2026: the old Hub address fixed, the Google app checked in production, the security assessment priced, and Delegation Coach emails moved to coach.madeea.io.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Same look as the 30 September report, so the series reads as one. */
+  :root {
+    --bg: #f5f6f8; --surface: #ffffff; --ink: #151821; --muted: #5a6172; --line: #e0e3e9;
+    --accent: #d84e0f; --accent-soft: #fdeee6;
+    --live: #17804f; --live-soft: #e3f4ec;
+    --wait: #946200; --wait-soft: #fbf1d6;
+    --prog: #2557b8; --prog-soft: #e6eefc;
+    --shadow: 0 1px 2px rgba(21, 24, 33, 0.05), 0 8px 24px rgba(21, 24, 33, 0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+      --accent: #ff7036; --accent-soft: #3a2116;
+      --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+    --accent: #ff7036; --accent-soft: #3a2116;
+    --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+    --shadow: none;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, sans-serif; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 820px; margin: 0 auto; padding-inline: 20px; padding-block: 48px 72px; display: flex; flex-direction: column; gap: 40px; }
+  h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; }
+  p { margin: 0; }
+  a { color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: 0.86em; }
+
+  header { display: flex; flex-direction: column; gap: 14px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-size: clamp(30px, 5vw, 42px); font-weight: 800; letter-spacing: -0.02em; }
+  .lede { font-size: 18px; color: var(--muted); max-width: 62ch; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: var(--muted); }
+  .meta strong { color: var(--ink); font-weight: 600; }
+
+  .summary, .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+  .summary h2, .panel h2 { font-size: 20px; font-weight: 700; }
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .stat { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
+  .stat b { font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .stat span { font-size: 13px; color: var(--muted); }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 540px; }
+  th { text-align: left; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 0 12px 10px 0; border-bottom: 1px solid var(--line); }
+  td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td.num { font-variant-numeric: tabular-nums; color: var(--muted); width: 28px; }
+  td a { color: inherit; text-decoration: none; font-weight: 600; }
+  td a:hover { color: var(--accent); }
+
+  .pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+  .p-live { color: var(--live); background: var(--live-soft); }
+  .p-live::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 6px; vertical-align: 1px; }
+  .p-wait { color: var(--wait); background: var(--wait-soft); }
+  .p-prog { color: var(--prog); background: var(--prog-soft); }
+  .p-src { color: var(--muted); background: var(--bg); border: 1px solid var(--line); }
+
+  section.item { display: flex; flex-direction: column; gap: 16px; border-top: 1px solid var(--line); }
+  .item-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 24px; }
+  .item-head .num { font-size: 14px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .item h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; width: 100%; }
+  .item h3 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .block { display: flex; flex-direction: column; gap: 8px; }
+  .block p, .block li { max-width: 66ch; }
+  ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  li::marker { color: var(--accent); }
+
+  .notice { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; font-size: 15px; display: flex; flex-direction: column; gap: 4px; }
+
+  .compare { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  .compare > div { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: var(--surface); display: flex; flex-direction: column; gap: 10px; }
+  .compare h4 { margin: 0; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .compare .before h4 { color: var(--muted); }
+  .compare .after { border-color: var(--accent); }
+  .compare .after h4 { color: var(--accent); }
+  .compare ul { font-size: 15px; }
+  .compare .before li { color: var(--muted); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 13px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 4px 11px; }
+
+  .chat { display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
+  .bubble { padding: 10px 14px; border-radius: 14px; max-width: 520px; }
+  .bubble.you { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+  .bubble.her { align-self: flex-start; background: var(--surface); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+  .chat-label { font-size: 12px; color: var(--muted); }
+
+  .steps { counter-reset: s; list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; }
+  .steps li::before { content: counter(s); font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .steps li.done::before { content: "✓"; color: var(--live); }
+  td.hash { white-space: nowrap; }
+  td.hash a { font-weight: 500; color: var(--accent); }
+  footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 20px; }
+
+  /* Screenshots */
+  figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  figure img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: var(--shadow); }
+  figcaption { font-size: 14px; color: var(--muted); }
+  .shots { display: grid; gap: 16px; }
+  .shots.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 560px) {
+    .page { padding-block: 32px 56px; gap: 32px; }
+    .stats { grid-template-columns: 1fr; }
+    .compare { grid-template-columns: 1fr; }
+    .summary, .panel { padding: 18px; }
+    .shots.two { grid-template-columns: 1fr; }
+  }
+  .muted { color: var(--muted); font-size: 13px; font-weight: 400; }
+</style>
+<body>
+<div class="page">
+
+  <header>
+    <span class="eyebrow">MadeEA Hub · Work report</span>
+    <h1>Loose ends after the move to hub.madeea.io</h1>
+    <p class="lede">The day after the Hub moved to hub.madeea.io. The old address works again and forwards to the new one, the Google app is confirmed open to the team, the security assessment Google will ask for is priced, and the Delegation Coach now sends its emails from its own madeea.io address.</p>
+    <div class="meta">
+      <span>Work done <strong>13 November 2026</strong></span>
+      <span>Previous report <strong><a href="madeea-hub-report-2026-11-12.html">12 November</a></strong></span>
+      <span>Status <span class="pill p-prog">One step waiting</span></span>
+    </div>
+  </header>
+
+  <section class="summary" aria-labelledby="sum-h">
+    <h2 id="sum-h">At a glance</h2>
+    <div class="stats">
+      <div class="stat"><b>1</b><span>broken address fixed: hub.madeeas.com forwards to hub.madeea.io</span></div>
+      <div class="stat"><b>$675</b><span>recommended price for the security assessment, bought only once Google asks</span></div>
+      <div class="stat"><b>3</b><span>email records added for coach.madeea.io, all confirmed</span></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>What was done</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td><a href="#item-1">The old Hub address works again</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">2</td><td><a href="#item-2">Google app checked</a></td><td><span class="pill p-live">Done</span></td></tr>
+          <tr><td class="num">3</td><td><a href="#item-3">Message to the team about the new address</a></td><td><span class="pill p-live">Ready to send</span></td></tr>
+          <tr><td class="num">4</td><td><a href="#item-4">Google's security assessment, priced</a></td><td><span class="pill p-wait">When Google asks</span></td></tr>
+          <tr><td class="num">5</td><td><a href="#item-5">Delegation Coach emails from coach.madeea.io</a></td><td><span class="pill p-prog">Final check</span></td></tr>
+          <tr><td class="num">6</td><td><a href="#item-6">What comes next</a></td><td><span class="pill p-wait">Next</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="item" id="item-1" aria-labelledby="h-1">
+    <div class="item-head"><span class="num">1</span><span class="pill p-live">Live</span>
+      <h2 id="h-1">The old Hub address works again</h2>
+    </div>
+    <div class="block">
+      <p>hub.madeeas.com, the address the team used before, was showing a "not found" page. It now forwards to hub.madeea.io, keeping the page someone asked for.</p>
+      <ul>
+        <li>Old bookmarks and links in past emails still work. For example, hub.madeeas.com/inbox opens hub.madeea.io/inbox.</li>
+        <li>Checked live: the Inbox, the Privacy Policy and the Terms all open on the new address.</li>
+        <li>The spare madeea.io entry in Vercel was checked: it had already been removed, so nothing was left to clean up.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="item" id="item-2" aria-labelledby="h-2">
+    <div class="item-head"><span class="num">2</span><span class="pill p-live">Done</span>
+      <h2 id="h-2">Google app checked</h2>
+    </div>
+    <div class="block">
+      <p>The Google app is <b>in production</b> and open to any Google account, not only listed testers. 6 accounts are connected, out of the 100 Google allows before its Gmail review is finished. Nothing needed changing.</p>
+    </div>
+  </section>
+
+  <section class="item" id="item-3" aria-labelledby="h-3">
+    <div class="item-head"><span class="num">3</span><span class="pill p-live">Ready to send</span>
+      <h2 id="h-3">Message to the team about the new address</h2>
+    </div>
+    <div class="block">
+      <p>A short message is drafted for the team: the Hub is now at hub.madeea.io, old links still work, sign-in is the same, and Google now shows "MadeEA Hub" when connecting Gmail or Calendar.</p>
+    </div>
+  </section>
+
+  <section class="item" id="item-4" aria-labelledby="h-4">
+    <div class="item-head"><span class="num">4</span><span class="pill p-wait">When Google asks</span>
+      <h2 id="h-4">Google's security assessment, priced</h2>
+    </div>
+    <div class="block">
+      <p>Because the Hub reads Gmail, Google requires a yearly security assessment (CASA) by one of its approved labs once the Gmail review starts. Google tells us when it is needed. We looked at all 10 approved labs.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Option (TAC Security)</th><th>Price</th><th>What it includes</th></tr></thead>
+          <tbody>
+            <tr><td><b>Basic</b> (recommended)</td><td>$675</td><td>The assessment Google asks for, 2 rechecks after fixes, help fixing issues, the letter Google needs, 2–3 weeks</td></tr>
+            <tr><td>Premium</td><td>$855</td><td>The same with unlimited rechecks</td></tr>
+            <tr><td>Enterprise</td><td>$4,500 and up</td><td>Higher levels Google does not ask for here</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul>
+        <li><b>Plan:</b> scan the Hub ourselves and fix what turns up first, so Basic's 2 rechecks are enough. Buy only once Google asks for it.</li>
+        <li>A quote request is drafted, asking TAC about the renewal price and whether we can start early.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="item" id="item-5" aria-labelledby="h-5">
+    <div class="item-head"><span class="num">5</span><span class="pill p-prog">Final check</span>
+      <h2 id="h-5">Delegation Coach emails from coach.madeea.io</h2>
+    </div>
+    <div class="block">
+      <p>The Delegation Coach's sign-in emails, such as password resets, now go out from <b>no-reply@coach.madeea.io</b> through Resend, a sending service, instead of the basic built-in sender, which only allows a few emails an hour.</p>
+      <ul>
+        <li><b>Why coach.madeea.io:</b> madeea.io itself is already claimed in Resend by another account. Using its own sub-address also leaves the company mailboxes and the hello.madeea.io marketing emails untouched.</li>
+        <li><b>Done:</b> 3 records added to madeea.io's settings at Hostinger, all confirmed by Resend. The coach's sign-in emails are set to send through Resend.</li>
+        <li><b>Waiting:</b> Resend's final approval of the address. A password reset tried before that failed, as expected. Once Resend shows "Verified", one more reset test confirms it.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="item" id="item-6" aria-labelledby="h-6">
+    <div class="item-head"><span class="num">6</span><span class="pill p-wait">Next</span>
+      <h2 id="h-6">What comes next</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Item</th><th>When</th></tr></thead>
+        <tbody>
+          <tr><td><b>Coach password reset test</b> once Resend shows "Verified"</td><td>As soon as Resend approves</td></tr>
+          <tr><td><b>A test account for Google's reviewers</b>: a new Gmail, invited to the Hub as an EA, with a few ordinary emails in it</td><td>Before the video</td></tr>
+          <tr><td><b>The demo video</b> of the Hub using Gmail and Calendar, then submit the Gmail review to Google</td><td>Next week</td></tr>
+          <tr><td><b>Security assessment</b>: our own scan and fixes, then TAC Basic</td><td>When Google asks</td></tr>
+          <tr><td><b>The Academy</b>: start now, or wait for Abder's task breakdown</td><td>Decision needed</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="log-h">
+    <h2 id="log-h">Change log</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Where</th><th>What changed</th></tr></thead>
+        <tbody>
+          <tr><td>Vercel</td><td>hub.madeeas.com added to the Hub, forwarding to hub.madeea.io</td></tr>
+          <tr><td>Hostinger</td><td>3 email records for coach.madeea.io. The website, n8n, company email and hello.madeea.io records were not touched</td></tr>
+          <tr><td>Resend</td><td>coach.madeea.io added as the coach's sending address</td></tr>
+          <tr><td>Supabase</td><td>Delegation Coach sign-in emails set to send through Resend</td></tr>
+          <tr><td>Code</td><td>No code changes today</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>MadeEA Hub work report, 13 November 2026. Previous report: <a href="madeea-hub-report-2026-11-12.html">12 November 2026</a>.</footer>
+</div>
+</body>
+</html>
