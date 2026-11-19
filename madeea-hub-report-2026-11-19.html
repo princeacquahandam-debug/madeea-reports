@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MadeEA Hub Work Report, 19 November</title>
+<meta name="description" content="Work report for the MadeEA Hub, 19 November 2026: the account for Google&#39;s reviewers, three fixes, the Hub sending its own emails, and a security pre-check ahead of Google&#39;s assessment.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Same look as the 30 September report, so the series reads as one. */
+  :root {
+    --bg: #f5f6f8; --surface: #ffffff; --ink: #151821; --muted: #5a6172; --line: #e0e3e9;
+    --accent: #d84e0f; --accent-soft: #fdeee6;
+    --live: #17804f; --live-soft: #e3f4ec;
+    --wait: #946200; --wait-soft: #fbf1d6;
+    --prog: #2557b8; --prog-soft: #e6eefc;
+    --shadow: 0 1px 2px rgba(21, 24, 33, 0.05), 0 8px 24px rgba(21, 24, 33, 0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+      --accent: #ff7036; --accent-soft: #3a2116;
+      --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+    --accent: #ff7036; --accent-soft: #3a2116;
+    --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+    --shadow: none;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, sans-serif; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 820px; margin: 0 auto; padding-inline: 20px; padding-block: 48px 72px; display: flex; flex-direction: column; gap: 40px; }
+  h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; }
+  p { margin: 0; }
+  a { color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: 0.86em; }
+
+  header { display: flex; flex-direction: column; gap: 14px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-size: clamp(30px, 5vw, 42px); font-weight: 800; letter-spacing: -0.02em; }
+  .lede { font-size: 18px; color: var(--muted); max-width: 62ch; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: var(--muted); }
+  .meta strong { color: var(--ink); font-weight: 600; }
+
+  .summary, .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+  .summary h2, .panel h2 { font-size: 20px; font-weight: 700; }
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .stat { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
+  .stat b { font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .stat span { font-size: 13px; color: var(--muted); }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 540px; }
+  th { text-align: left; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 0 12px 10px 0; border-bottom: 1px solid var(--line); }
+  td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td.num { font-variant-numeric: tabular-nums; color: var(--muted); width: 28px; }
+  td a { color: inherit; text-decoration: none; font-weight: 600; }
+  td a:hover { color: var(--accent); }
+
+  .pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+  .p-live { color: var(--live); background: var(--live-soft); }
+  .p-live::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 6px; vertical-align: 1px; }
+  .p-wait { color: var(--wait); background: var(--wait-soft); }
+  .p-prog { color: var(--prog); background: var(--prog-soft); }
+  .p-src { color: var(--muted); background: var(--bg); border: 1px solid var(--line); }
+
+  section.item { display: flex; flex-direction: column; gap: 16px; border-top: 1px solid var(--line); }
+  .item-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 24px; }
+  .item-head .num { font-size: 14px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .item h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; width: 100%; }
+  .item h3 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .block { display: flex; flex-direction: column; gap: 8px; }
+  .block p, .block li { max-width: 66ch; }
+  ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  li::marker { color: var(--accent); }
+
+  .notice { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; font-size: 15px; display: flex; flex-direction: column; gap: 4px; }
+
+  .compare { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  .compare > div { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: var(--surface); display: flex; flex-direction: column; gap: 10px; }
+  .compare h4 { margin: 0; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .compare .before h4 { color: var(--muted); }
+  .compare .after { border-color: var(--accent); }
+  .compare .after h4 { color: var(--accent); }
+  .compare ul { font-size: 15px; }
+  .compare .before li { color: var(--muted); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 13px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 4px 11px; }
+
+  .chat { display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
+  .bubble { padding: 10px 14px; border-radius: 14px; max-width: 520px; }
+  .bubble.you { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+  .bubble.her { align-self: flex-start; background: var(--surface); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+  .chat-label { font-size: 12px; color: var(--muted); }
+
+  .steps { counter-reset: s; list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; }
+  .steps li::before { content: counter(s); font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .steps li.done::before { content: "✓"; color: var(--live); }
+  td.hash { white-space: nowrap; }
+  td.hash a { font-weight: 500; color: var(--accent); }
+  footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 20px; }
+
+  /* Screenshots */
+  figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  figure img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: var(--shadow); }
+  figcaption { font-size: 14px; color: var(--muted); }
+  .shots { display: grid; gap: 16px; }
+  .shots.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 560px) {
+    .page { padding-block: 32px 56px; gap: 32px; }
+    .stats { grid-template-columns: 1fr; }
+    .compare { grid-template-columns: 1fr; }
+    .summary, .panel { padding: 18px; }
+    .shots.two { grid-template-columns: 1fr; }
+  }
+  .muted { color: var(--muted); font-size: 13px; font-weight: 400; }
+</style>
+<body>
+<div class="page">
+
+  <header>
+    <span class="eyebrow">MadeEA Hub · Work report</span>
+    <h1>Ready for Google's review, and a security pre-check of the Hub</h1>
+    <p class="lede">The account Google's reviewers will use is set up and working, the Hub now sends its own emails from a MadeEA address, and a security pre-check ahead of Google's assessment found and closed two real issues and seven outdated libraries. Everything below is live and was tested on hub.madeea.io.</p>
+    <div class="meta">
+      <span>Work done <strong>19 November 2026</strong></span>
+      <span>Previous report <strong><a href="madeea-hub-report-2026-11-18.html">18 November</a></strong></span>
+      <span>Status <span class="pill p-live">Live</span></span>
+    </div>
+  </header>
+
+  <section class="summary" aria-labelledby="sum-h">
+    <h2 id="sum-h">At a glance</h2>
+    <div class="stats">
+      <div class="stat"><b>6</b><span>updates live in the Hub, each tested on the live site</span></div>
+      <div class="stat"><b>0</b><span>tokens for Gmail, Calendar or Outlook stored unencrypted, down from 6</span></div>
+      <div class="stat"><b>7 → 0</b><span>known issues in the Hub's libraries, 3 of them high risk</span></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>What was done</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td><a href="#item-1">An account for Google's reviewers</a></td><td><span class="pill p-live">Ready</span></td></tr>
+          <tr><td class="num">2</td><td><a href="#item-2">Three fixes found while setting it up</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">3</td><td><a href="#item-3">The Hub sends its own emails</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">4</td><td><a href="#item-4">Security pre-check for Google's assessment</a></td><td><span class="pill p-live">Fixed</span></td></tr>
+          <tr><td class="num">5</td><td><a href="#item-5">What comes next</a></td><td><span class="pill p-wait">Next</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="item" id="item-1" aria-labelledby="h-1">
+    <div class="item-head"><span class="num">1</span><span class="pill p-live">Ready</span>
+      <h2 id="h-1">An account for Google's reviewers</h2>
+    </div>
+    <div class="block">
+      <p>Google's Gmail review needs a demo video and an account its reviewers can sign in with. That account now exists and works end to end.</p>
+      <ul>
+        <li>A new Gmail account, added to the Hub as an executive assistant named "MadeEA Review".</li>
+        <li>Five ordinary work emails sent to it: a meeting move, a report request, an invoice, a scheduling question and a lunch invitation.</li>
+        <li>Gmail and Google Calendar connected through the Hub's sign-in, showing the "MadeEA Hub" name Google approved on 12 November.</li>
+        <li>Checked live: the emails appear in the Hub's Inbox, a reply sent from the Hub arrived threaded in the sender's Gmail, and an event added in the Hub appeared in Google Calendar.</li>
+      </ul>
+      <p>What's left before submitting to Google is recording the demo video with this account.</p>
+    </div>
+  </section>
+
+  <section class="item" id="item-2" aria-labelledby="h-2">
+    <div class="item-head"><span class="num">2</span><span class="pill p-live">Live</span>
+      <h2 id="h-2">Three fixes found while setting it up</h2>
+    </div>
+    <div class="block">
+      <ul>
+        <li><b>Follow-ups show only your own work.</b> A brand-new assistant with no tasks was shown five of other people's tasks under "Needs follow-up". Assistants now see follow-ups for their own tasks only; managers and admins still see the whole team's.</li>
+        <li><b>No false warning after connecting Google.</b> Connecting Gmail or Calendar worked, but the Hub then said "The login window was closed before it finished". Google's sign-in pages cut the link back to the Hub's window, so the result now reaches the Hub another way, and the sign-in window closes by itself. This affected everyone who connected Google.</li>
+        <li><b>Change your own name.</b> Settings → Account now has <b>Edit name</b>. Until now a name came from the email address and could only be fixed by hand in the database. It updates the greeting, initials, the team list and tasks assigned to you.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="item" id="item-3" aria-labelledby="h-3">
+    <div class="item-head"><span class="num">3</span><span class="pill p-live">Live</span>
+      <h2 id="h-3">The Hub sends its own emails</h2>
+    </div>
+    <div class="block">
+      <p>Password resets and sign-in emails from the Hub now come from <b>MadeEA Hub &lt;no-reply@mail.madeea.io&gt;</b>, through the same sending service as the Delegation Coach, instead of a shared built-in sender that allows only a few emails an hour.</p>
+      <ul>
+        <li>A new sending address, mail.madeea.io, verified within 10 minutes. The website, company email, n8n and marketing email settings were not touched.</li>
+        <li>The Hub's limit raised to 100 emails an hour.</li>
+        <li>Tested: a password reset arrived in 1 second and passed all three email authentication checks (SPF, DKIM and DMARC).</li>
+        <li>Abder's Academy can send its invitations and password resets from the same address.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="item" id="item-4" aria-labelledby="h-4">
+    <div class="item-head"><span class="num">4</span><span class="pill p-live">Fixed</span>
+      <h2 id="h-4">Security pre-check for Google's assessment</h2>
+    </div>
+    <div class="block">
+      <p>Once the Gmail review starts, Google requires a paid security assessment (CASA). The Hub was checked against it first, so it can pass on the first attempt instead of paying for extra rounds.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>What was checked</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td><b>Who can read the team's name lists</b></td><td>Two small lists of team names, with some email addresses, could be read from outside the Hub without signing in. <b>Closed</b>, and checked from outside: access is now refused.</td></tr>
+          <tr><td><b>How Gmail, Calendar and Outlook tokens are stored</b></td><td>Tokens were encrypted, but an older second copy of 6 Google tokens was kept unencrypted. Eleven server functions were moved to the encrypted copy, the unencrypted ones were deleted, and a database rule now refuses any new one. <b>0 left</b>, and nobody had to reconnect. Mail sync, sending and calendar events were retested live.</td></tr>
+          <tr><td><b>Libraries the Hub is built on</b></td><td>7 known issues, 3 high risk, in the Loom recorder's components and the page-routing library. Both updated. <b>0 left</b>; every page checked after the update.</td></tr>
+          <tr><td><b>Web security settings</b></td><td>Secure connection forced, protection against framing and content sniffing, strict content rules. <b>Already in place.</b></td></tr>
+          <tr><td><b>Secrets in the Hub's code</b></td><td>None found in what the browser downloads. <b>Already fine.</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="item" id="item-5" aria-labelledby="h-5">
+    <div class="item-head"><span class="num">5</span><span class="pill p-wait">Next</span>
+      <h2 id="h-5">What comes next</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Item</th><th>When</th></tr></thead>
+        <tbody>
+          <tr><td><b>Finish the security pre-check:</b> limit the server functions to the Hub's own addresses, and remove old sign-in functions that are no longer used</td><td>Next session</td></tr>
+          <tr><td><b>Record the demo video</b> with the reviewer account, then submit the Gmail review to Google</td><td>This week</td></tr>
+          <tr><td><b>Deploy Abder's Academy</b></td><td>When his code arrives</td></tr>
+          <tr><td><b>madeea.io on the madeeas.com approved senders list</b>, so team emails from the Hub and the coach don't land in spam</td><td>madeeas.com Google admin</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="log-h">
+    <h2 id="log-h">Change log</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Update</th><th>What went live</th></tr></thead>
+        <tbody>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/9b3d612">9b3d612</a></td><td>Library security updates (Loom recorder, page routing)</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/da0e444">da0e444</a></td><td>Tokens read only from encrypted storage; 11 server functions updated</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/c6cd3fe">c6cd3fe</a></td><td>Team name lists closed to outside access</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/72454de">72454de</a></td><td>Edit your own name in Settings</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/4480289">4480289</a></td><td>No false warning after connecting Google</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/ab92173">ab92173</a></td><td>Follow-ups show only your own tasks for assistants</td></tr>
+          <tr><td class="hash mono">Database</td><td>Name lists locked; unencrypted token copies deleted, with a rule refusing new ones</td></tr>
+          <tr><td class="hash mono">Email</td><td>mail.madeea.io verified; Hub emails sent through it, limit 100 an hour</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>MadeEA Hub work report, 19 November 2026. Previous report: <a href="madeea-hub-report-2026-11-18.html">18 November 2026</a>.</footer>
+</div>
+</body>
+</html>
