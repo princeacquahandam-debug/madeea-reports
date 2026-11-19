@@ -210,7 +210,7 @@
       <h2 id="h-4">Security pre-check for Google's assessment</h2>
     </div>
     <div class="block">
-      <p>Once the Gmail review starts, Google requires a paid security assessment (CASA). The Hub was checked against it first, so it can pass on the first attempt instead of paying for extra rounds.</p>
+      <p>Once the Gmail review starts, Google requires a paid security assessment (CASA). The Hub was checked against it first, so it can pass on the first attempt instead of paying for extra rounds. Every finding below is closed and live.</p>
     </div>
     <div class="table-wrap">
       <table>
@@ -219,6 +219,8 @@
           <tr><td><b>Who can read the team's name lists</b></td><td>Two small lists of team names, with some email addresses, could be read from outside the Hub without signing in. <b>Closed</b>, and checked from outside: access is now refused.</td></tr>
           <tr><td><b>How Gmail, Calendar and Outlook tokens are stored</b></td><td>Tokens were encrypted, but an older second copy of 6 Google tokens was kept unencrypted. Eleven server functions were moved to the encrypted copy, the unencrypted ones were deleted, and a database rule now refuses any new one. <b>0 left</b>, and nobody had to reconnect. Mail sync, sending and calendar events were retested live.</td></tr>
           <tr><td><b>Libraries the Hub is built on</b></td><td>7 known issues, 3 high risk, in the Loom recorder's components and the page-routing library. Both updated. <b>0 left</b>; every page checked after the update.</td></tr>
+          <tr><td><b>Which websites can call the Hub's server functions</b></td><td>31 server functions answered requests from any website (the person's sign-in was still checked). Now only MadeEA's own sites: hub.madeea.io, the old hub.madeeas.com, and academy.madeea.io. <b>Fixed</b>, and checked from outside: other websites are refused.</td></tr>
+          <tr><td><b>Old sign-in functions</b></td><td>5 retired Google and Microsoft sign-in functions were still online, unused. <b>Deleted</b>, and checked from outside: they no longer exist. Sign-in runs through the current one, retested live.</td></tr>
           <tr><td><b>Web security settings</b></td><td>Secure connection forced, protection against framing and content sniffing, strict content rules. <b>Already in place.</b></td></tr>
           <tr><td><b>Secrets in the Hub's code</b></td><td>None found in what the browser downloads. <b>Already fine.</b></td></tr>
         </tbody>
@@ -234,7 +236,6 @@
       <table>
         <thead><tr><th>Item</th><th>When</th></tr></thead>
         <tbody>
-          <tr><td><b>Finish the security pre-check:</b> limit the server functions to the Hub's own addresses, and remove old sign-in functions that are no longer used</td><td>Next session</td></tr>
           <tr><td><b>Record the demo video</b> with the reviewer account, then submit the Gmail review to Google</td><td>This week</td></tr>
           <tr><td><b>Deploy Abder's Academy</b></td><td>When his code arrives</td></tr>
           <tr><td><b>madeea.io on the madeeas.com approved senders list</b>, so team emails from the Hub and the coach don't land in spam</td><td>madeeas.com Google admin</td></tr>
@@ -249,6 +250,7 @@
       <table>
         <thead><tr><th>Update</th><th>What went live</th></tr></thead>
         <tbody>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/fdba802">fdba802</a></td><td>Server functions answer only MadeEA's own sites; old sign-in functions removed (31 functions redeployed, 5 deleted)</td></tr>
           <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/9b3d612">9b3d612</a></td><td>Library security updates (Loom recorder, page routing)</td></tr>
           <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/da0e444">da0e444</a></td><td>Tokens read only from encrypted storage; 11 server functions updated</td></tr>
           <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/c6cd3fe">c6cd3fe</a></td><td>Team name lists closed to outside access</td></tr>
