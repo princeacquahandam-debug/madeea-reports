@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MadeEA Work Update, 9–19 Nov</title>
+<meta name="description" content="A presentation of everything built and fixed for MadeEA from 9 to 19 November 2026: what each piece does and how to use it step by step.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f6f7; --surface: #ffffff; --surface-2: #f1f1f3; --text: #1c1c1e; --muted: #5f5f66; --faint: #74747a;
+    --line: #e5e5e9; --accent: #d2562b; --accent-ink: #b8471f; --accent-soft: #fbece5; --good: #16804b; --good-soft: #e6f4ec;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 30px rgba(0,0,0,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #111113; --surface: #1c1c1f; --surface-2: #27272b; --text: #ededef; --muted: #a8a8b0; --faint: #8b8b93;
+      --line: #2e2e33; --accent: #e8693c; --accent-ink: #f08a62; --accent-soft: #3a2219; --good: #4cc98d; --good-soft: #143024;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #111113; --surface: #1c1c1f; --surface-2: #27272b; --text: #ededef; --muted: #a8a8b0; --faint: #8b8b93;
+    --line: #2e2e33; --accent: #e8693c; --accent-ink: #f08a62; --accent-soft: #3a2219; --good: #4cc98d; --good-soft: #143024;
+    --shadow: none;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--text); font: 16px/1.55 "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent-ink); }
+
+  /* ── deck chrome ── */
+  .bar { position: fixed; inset: 0 0 auto 0; height: 56px; display: flex; align-items: center; gap: 12px; padding: 0 20px;
+    background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); z-index: 10; }
+  .brand { font-weight: 800; letter-spacing: .02em; }
+  .brand b { color: var(--accent); }
+  .bar .spacer { flex: 1; }
+  .bar .count { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 14px; }
+  .btn { appearance: none; border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 8px;
+    height: 34px; padding: 0 12px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .btn:hover { border-color: var(--accent); }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .progress { position: fixed; top: 56px; left: 0; height: 3px; background: var(--accent); width: 0; transition: width .25s; z-index: 10; }
+
+  .deck { padding: 80px 20px 40px; }
+  .slide { max-width: 1080px; margin: 0 auto; background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+    box-shadow: var(--shadow); padding: 44px 52px; min-height: calc(100vh - 140px); display: flex; flex-direction: column; }
+  .js .slide { display: none; }
+  .js .slide.on { display: flex; animation: in .25s ease; }
+  @keyframes in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink); margin: 0 0 10px; }
+  h1 { font-size: clamp(32px, 4.4vw, 52px); line-height: 1.08; margin: 0 0 14px; letter-spacing: -.02em; }
+  h2 { font-size: clamp(26px, 3.2vw, 36px); line-height: 1.15; margin: 0 0 8px; letter-spacing: -.01em; }
+  .lede { font-size: 19px; color: var(--muted); margin: 0 0 26px; max-width: 64ch; }
+  h2 + .cols, h2 + table, h2 + .grid { margin-top: 18px; }
+  .where { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; color: var(--muted); background: var(--surface-2);
+    border-radius: 999px; padding: 4px 12px; margin: 0 0 22px; width: fit-content; }
+  .where b { color: var(--text); font-weight: 600; }
+
+  .cols { display: grid; grid-template-columns: 1.15fr .85fr; gap: 28px; align-items: start; }
+  .panel { background: var(--surface-2); border-radius: 14px; padding: 20px 22px; }
+  .panel h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .1em; color: var(--faint); margin: 0 0 12px; }
+  ol.steps { list-style: none; counter-reset: s; margin: 0; padding: 0; }
+  ol.steps li { counter-increment: s; position: relative; padding: 0 0 12px 40px; }
+  ol.steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; display: grid; place-items: center; }
+  ol.steps li:last-child { padding-bottom: 0; }
+  ul.dots { margin: 0; padding: 0 0 0 18px; }
+  ul.dots li { margin-bottom: 8px; }
+  ul.dots li::marker { color: var(--accent); }
+  .tip { margin-top: 18px; background: var(--accent-soft); border-radius: 12px; padding: 14px 16px; font-size: 15px; }
+  .tip b { color: var(--accent-ink); }
+  .ok { background: var(--good-soft); color: var(--good); border-radius: 999px; padding: 2px 10px; font-size: 12px; font-weight: 700; }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .tile { background: var(--surface-2); border-radius: 14px; padding: 18px; }
+  .tile b { display: block; margin-bottom: 4px; }
+  .tile span { color: var(--muted); font-size: 14px; }
+  .tile .n { color: var(--accent-ink); font-weight: 800; font-size: 13px; letter-spacing: .08em; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--faint); padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td:first-child { font-weight: 600; white-space: nowrap; }
+  .foot { margin-top: auto; padding-top: 22px; color: var(--faint); font-size: 13px; display: flex; justify-content: space-between; gap: 12px; }
+  .section { justify-content: center; }
+  .section .big { font-size: 15px; font-weight: 800; color: var(--accent-ink); letter-spacing: .14em; }
+  .kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px; padding: 0 6px; font-size: 13px; background: var(--surface); }
+
+  /* ── overview ── */
+  .overview { position: fixed; inset: 56px 0 0 0; background: var(--bg); overflow: auto; padding: 24px 20px; display: none; z-index: 9; }
+  .overview.open { display: block; }
+  .overview .list { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+  .overview button { text-align: left; border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 10px; padding: 12px 14px; font: inherit; font-size: 14px; cursor: pointer; }
+  .overview button:hover { border-color: var(--accent); }
+  .overview button small { display: block; color: var(--faint); font-size: 12px; }
+
+  /* ── phone: no deck, one long page ── */
+  @media (max-width: 860px) {
+    .js .slide { display: flex; animation: none; }
+    .slide { padding: 26px 18px; min-height: 0; margin-bottom: 14px; border-radius: 14px; }
+    .cols, .grid { grid-template-columns: 1fr; }
+    .bar .nav, .bar .count, .progress { display: none; }
+    .lede { font-size: 17px; }
+    td:first-child { white-space: normal; }
+  }
+  @media print {
+    .bar, .progress, .overview { display: none !important; }
+    .deck { padding: 0; }
+    .js .slide, .slide { display: flex !important; break-after: page; min-height: 0; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="bar">
+  <span class="brand">MADE<b>/</b>EA · Work update, 9–19 Nov</span>
+  <span class="spacer"></span>
+  <span class="count" id="count" aria-live="polite"></span>
+  <button class="btn nav" id="prev" aria-label="Previous slide">‹ Back</button>
+  <button class="btn nav" id="next" aria-label="Next slide">Next ›</button>
+  <button class="btn" id="all">All slides</button>
+  <button class="btn" id="theme" aria-label="Switch light or dark">◐</button>
+</div>
+<div class="progress" id="progress"></div>
+<div class="overview" id="overview" role="dialog" aria-label="All slides"><div class="list" id="list"></div></div>
+
+<main class="deck" id="deck">
+
+<section class="slide" data-title="Title">
+  <p class="eyebrow">Work update · 9 to 19 November 2026</p>
+  <h1>What we built and fixed, in the last two weeks</h1>
+  <p class="lede">Every change from 9 to 19 November: what it is, what it does for MadeEA, and how to use it step by step. Everything here is live and was tested on the live sites.</p>
+  <div class="grid">
+    <div class="tile"><span class="n">DELEGATION COACH</span><b>Fixed, rebuilt, protected</b><span>The standalone app repaired, and the coach in the client portal rebuilt around the founder.</span></div>
+    <div class="tile"><span class="n">HUB + GOOGLE</span><b>hub.madeea.io</b><span>A new address, Google's sign-in approved as "MadeEA Hub", and ready for Google's Gmail review.</span></div>
+    <div class="tile"><span class="n">ACADEMY + SECURITY</span><b>New Academy, safer Hub</b><span>The Academy on academy.madeea.io, MadeEA's own email sending, and a security pre-check.</span></div>
+  </div>
+  <div class="foot"><span>Use <span class="kbd">←</span> <span class="kbd">→</span> or the buttons to move. "All slides" jumps anywhere.</span><span></span></div>
+</section>
+
+<section class="slide" data-title="The two weeks at a glance">
+  <p class="eyebrow">At a glance</p>
+  <h2>Day by day</h2>
+  <table>
+    <thead><tr><th>Date</th><th>What shipped</th></tr></thead>
+    <tbody>
+      <tr><td>9 Nov</td><td>Delegation Coach app fixed (27 problems) and live on its own address; the shared AI webhook locked with a secret key.</td></tr>
+      <tr><td>10 Nov</td><td>Delegation Coach security updates: library issues 15 → 6.</td></tr>
+      <tr><td>12 Nov</td><td>Coach in the client portal rebuilt from the 11 Nov call; client AI working again; the Hub moved to hub.madeea.io; Google approved "MadeEA Hub".</td></tr>
+      <tr><td>13 Nov</td><td>Old Hub address forwards; Google app checked; security assessment priced; coach emails set up on coach.madeea.io.</td></tr>
+      <tr><td>16 Nov</td><td>MadeEA Academy built and live on academy.madeea.io, one sign-in from the Hub.</td></tr>
+      <tr><td>18 Nov</td><td>Abder's Academy documents reviewed; decision to deploy his code; coach emails verified.</td></tr>
+      <tr><td>19 Nov</td><td>Google reviewer account ready; three Hub fixes; Hub email from mail.madeea.io; security pre-check closed.</td></tr>
+    </tbody>
+  </table>
+  <div class="foot"><span>At a glance</span><span></span></div>
+</section>
+
+<!-- ───── Delegation Coach app ───── -->
+<section class="slide section" data-title="Section: Delegation Coach app">
+  <p class="big">01 · THE DELEGATION COACH APP</p>
+  <h1>Fixed, live and protected</h1>
+  <p class="lede">The standalone coach at madeea-delegation-coach.vercel.app. 9, 10, 13 and 18 November.</p>
+</section>
+
+<section class="slide" data-title="Delegation Coach: what was fixed">
+  <p class="eyebrow">Delegation Coach app · 9 Nov</p>
+  <h2>What was wrong, and what it does now</h2>
+  <table>
+    <thead><tr><th>Before</th><th>Now</th></tr></thead>
+    <tbody>
+      <tr><td>The AI pointed at an n8n address that no longer existed: nobody could finish an assessment or a plan.</td><td>Uses MadeEA's live n8n. If the AI is ever down, "Continue without AI" and "Build plan anyway" keep people moving.</td></tr>
+      <tr><td>Plans failed to save without a deadline; Edit made a copy; people's own criteria were overwritten.</td><td>Saves every time, edits the same plan, keeps the person's own answers first.</td></tr>
+      <tr><td>Check-ins were saved but never shown.</td><td>A check-in series per plan, upcoming ones on the dashboard, <b>Mark done</b> with notes.</td></tr>
+      <tr><td>Made-up dashboard progress; "Forgot password" went nowhere; unreadable colours on phones.</td><td>Real counts only, a working password reset, readable on desktop and phone.</td></tr>
+    </tbody>
+  </table>
+  <div class="tip"><b>27 problems fixed</b>, 82 automated checks passed, plus a full live run-through. Live at <b>madeea-delegation-coach.vercel.app</b>.</div>
+  <div class="foot"><span>Delegation Coach app</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Delegation Coach: how to use it">
+  <p class="eyebrow">Delegation Coach app</p>
+  <h2>How to use the Delegation Coach</h2>
+  <p class="where">madeea-delegation-coach.vercel.app</p>
+  <div class="cols">
+    <div class="panel"><h3>Step by step</h3>
+      <ol class="steps">
+        <li><b>Sign up</b> or <b>Sign in</b>. Forgot the password? <b>Forgot password?</b> sends a reset link from no-reply@coach.madeea.io.</li>
+        <li>Take the <b>delegation assessment</b> (it can be retaken any time).</li>
+        <li>Start a plan: describe the task, then <b>Get AI Clarification</b> for a sharper outcome, context, success criteria and questions.</li>
+        <li><b>Build the plan</b>: success criteria, risks, a check-in schedule, coaching tips and a ready-to-send handoff message.</li>
+        <li>Follow up from the <b>dashboard</b>: upcoming check-ins, <b>Mark done</b> with notes, and <b>My Plans</b> with a status for each.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Also</h3>
+        <ul class="dots">
+          <li>Export a plan as a <b>PDF</b> or add check-ins to your <b>calendar</b>.</li>
+          <li>Drafts show <b>Finish setup</b> until they're complete.</li>
+        </ul>
+      </div>
+      <div class="tip"><b>Use only this link.</b> The original Lovable version is still the old, broken one.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Delegation Coach app</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Delegation Coach: protected">
+  <p class="eyebrow">Delegation Coach app · 9, 10, 13, 18 Nov</p>
+  <h2>Protected, updated, and its own email</h2>
+  <div class="grid">
+    <div class="tile"><span class="n">9 NOV</span><b>AI behind a secret key</b><span>The AI webhook shared by the coach and the client portal was open to anyone with the address. n8n now refuses any request without the secret key, so nobody else can spend MadeEA's AI credits.</span></div>
+    <div class="tile"><span class="n">10 NOV</span><b>Security updates</b><span>Known issues in the app's libraries cut from 15 (13 high) to 6 (1 high, low risk), with no change to how the app works.</span></div>
+    <div class="tile"><span class="n">13–18 NOV</span><b>Its own email address</b><span>Sign-in and reset emails now come from <b>no-reply@coach.madeea.io</b>, verified, and pass all three email checks (SPF, DKIM, DMARC).</span></div>
+  </div>
+  <div class="tip"><b>One thing for the team:</b> in madeeas.com inboxes these emails can land in spam (Gmail flags madeea.io as close to madeeas.com). The madeeas.com Google admin can add madeea.io to the approved senders.</div>
+  <div class="foot"><span>Delegation Coach app</span><span></span></div>
+</section>
+
+<!-- ───── Coach in the portal ───── -->
+<section class="slide section" data-title="Section: Coach in the client portal">
+  <p class="big">02 · THE COACH FOR FOUNDERS</p>
+  <h1>Rebuilt from the 11 November call</h1>
+  <p class="lede">In the client portal's Delegate tab: the founder keeps what only they should do, and everything else goes to the right person in one click. Live 12 November.</p>
+</section>
+
+<section class="slide" data-title="Coach: the organisation first">
+  <p class="eyebrow">Client portal → Delegate · 12 Nov</p>
+  <h2>Step 1: the founder's organisation</h2>
+  <div class="cols">
+    <div class="panel"><h3>How the founder sets it up</h3>
+      <ol class="steps">
+        <li>Sign in to the client portal on hub.madeea.io and open <b>Delegate</b>.</li>
+        <li>The first time, it asks <b>"Before you start: who reports to you?"</b></li>
+        <li>For each person: name, title, area (finance, product, commercial…), what they handle, and their MadeEA login if they have one.</li>
+        <li>It shows as a tree: the founder, then the EA, then the direct reports. Edit it any time, or skip for now.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Why first</h3><p style="margin:0">As Rowena asked: the coach can only route work to the right person once it knows who the people are. This is Abder's tree from the call.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Coach for founders</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Coach: keep or delegate">
+  <p class="eyebrow">Client portal → Delegate · 12 Nov</p>
+  <h2>Step 2: keep or delegate, sorted every day</h2>
+  <div class="cols">
+    <div class="panel"><h3>How it works</h3>
+      <ol class="steps">
+        <li>Name up to <b>4 focus areas</b>, and keep a list of what's on your desk.</li>
+        <li>The next 7 days of meetings are added from your connected calendar.</li>
+        <li>Once a day, when you open Delegate, Madeline sorts every item into <b>keep</b>, <b>the EA</b>, <b>a named person</b>, or <b>a role nobody covers yet</b>, with a one-line reason.</li>
+        <li>Read the count line, e.g. "Keep 2 of 8; 5 to the EA, 1 to the Head of Product".</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>The rules it follows</h3>
+        <ul class="dots">
+          <li>Follow-ups, emails, scheduling and chasing go to the EA.</li>
+          <li>Department work goes to whoever covers it.</li>
+          <li>Meetings that name the founder, and one-to-ones, stay with the founder. Trainings are never handed on.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Coach for founders</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Coach: hand over in one click">
+  <p class="eyebrow">Client portal → Delegate · 12 Nov</p>
+  <h2>Step 3: hand it over, to the right person</h2>
+  <div class="cols">
+    <div class="panel"><h3>Step by step</h3>
+      <ol class="steps">
+        <li>On any item going to someone else, click <b>Hand to [name]</b>. It lands on that person's task board, with the coach's reason in the notes.</li>
+        <li>The item then shows <b>Handed to [name]</b> and leaves the founder's desk list.</li>
+        <li>For someone without a MadeEA login, click <b>Plan it first</b>: a full delegation plan with a handoff message to copy and send.</li>
+        <li>For a role the business doesn't have yet, read <b>"Until then, [EA] can: …"</b> and hand that part to the EA in one click.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Choose how much freedom</h3>
+        <ul class="dots">
+          <li><b>Check with me first</b>: they propose, you approve.</li>
+          <li><b>Act, then tell me</b>: they decide and keep you posted.</li>
+          <li><b>Own it outright</b>: they handle it; you see the outcome.</li>
+        </ul>
+      </div>
+      <div class="tip"><b>Also fixed (12 Nov):</b> clients' AI had been blocked since 7 Nov by the new cost limits. Clients now get the same daily allowance as the team.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Coach for founders</span><span></span></div>
+</section>
+
+<!-- ───── Hub + Google ───── -->
+<section class="slide section" data-title="Section: Hub and Google">
+  <p class="big">03 · THE HUB AND GOOGLE</p>
+  <h1>hub.madeea.io, approved by Google</h1>
+  <p class="lede">A new address, Google's sign-in approved under the MadeEA Hub name, and everything ready for Google's Gmail review. 12, 13 and 19 November.</p>
+</section>
+
+<section class="slide" data-title="The new address">
+  <p class="eyebrow">Hub · 12–13 Nov</p>
+  <h2>The Hub now lives on hub.madeea.io</h2>
+  <div class="cols">
+    <div class="panel"><h3>For the team</h3>
+      <ol class="steps">
+        <li>Go to <b>hub.madeea.io</b> and bookmark it.</li>
+        <li>Sign in exactly as before: same email, same password.</li>
+        <li>Old links still work: <b>hub.madeeas.com/anything</b> forwards to the same page on hub.madeea.io.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>What changed behind it</h3>
+        <ul class="dots">
+          <li>Privacy policy and terms published at hub.madeea.io/privacy and /terms, readable by Google's checks.</li>
+          <li>The company website, email and n8n on madeea.io were not touched.</li>
+        </ul>
+      </div>
+      <div class="tip"><b>The team message</b> about the new address is drafted and ready to send.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Hub and Google</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Google sign-in approved">
+  <p class="eyebrow">Hub · 12 Nov</p>
+  <h2>Google sign-in approved as "MadeEA Hub"</h2>
+  <div class="cols">
+    <div class="panel"><h3>Connecting Gmail and Calendar</h3>
+      <ol class="steps">
+        <li>In the Hub: <b>Settings → Integrations</b>, then <b>Gmail → Connect → Sign in</b>.</li>
+        <li>Google's own window opens and names the app <b>MadeEA Hub</b>. Choose your account.</li>
+        <li>Tick all the permissions and click <b>Continue</b>. The window closes by itself, and the card shows <b>Connected</b>.</li>
+        <li>Click <b>Sync now</b> on the Google Calendar card to pull mail and events straight away.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Where Google stands</h3>
+        <ul class="dots">
+          <li>Branding verified and published. The app is in production, open to any Google account.</li>
+          <li>Until Google finishes its Gmail review, people see "Google hasn't verified this app": click <b>Advanced → Go to MadeEA Hub</b>.</li>
+          <li>Up to 100 people can connect before the review; 6 have.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Hub and Google</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Ready for Google's review">
+  <p class="eyebrow">Hub · 13–19 Nov</p>
+  <h2>Ready for Google's Gmail review</h2>
+  <div class="cols">
+    <div class="panel"><h3>What's done</h3>
+      <ol class="steps">
+        <li>Permissions requested and justified: read and send Gmail, and Calendar events.</li>
+        <li>A <b>reviewer account</b> (19 Nov): a new Gmail, set up in the Hub as an EA named "MadeEA Review", with five ordinary work emails.</li>
+        <li>Tested end to end with it: the emails show in the Hub's Inbox, a reply sent from the Hub arrived threaded, and an event added in the Hub appeared in Google Calendar.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>What's left</h3>
+        <ul class="dots">
+          <li><b>Record the demo video</b> with the reviewer account, upload it unlisted, and submit.</li>
+          <li>Then Google asks for its <b>security assessment</b> (CASA). Recommended: TAC Security Basic, <b>$675</b>, bought only when Google asks.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Hub and Google</span><span></span></div>
+</section>
+
+<!-- ───── Academy ───── -->
+<section class="slide section" data-title="Section: MadeEA Academy">
+  <p class="big">04 · MADEEA ACADEMY</p>
+  <h1>academy.madeea.io</h1>
+  <p class="lede">Built from Abder's roadmap on the 16 November call and live the same day, with one sign-in from the Hub. Abder's own build will replace it.</p>
+</section>
+
+<section class="slide" data-title="Academy: getting in">
+  <p class="eyebrow">Academy · 16 Nov</p>
+  <h2>Opening the Academy</h2>
+  <div class="cols">
+    <div class="panel"><h3>Step by step</h3>
+      <ol class="steps">
+        <li>In the Hub, click <b>Learn → MadeEA Academy</b>. A new tab opens, <b>already signed in</b>.</li>
+        <li>Or go to academy.madeea.io and click <b>Continue with MadeEA Hub</b>, or use your Hub email and password.</li>
+        <li>The Hub's Training page shows a summary: paths assigned, lessons done, certificates.</li>
+        <li>Admins and trainers switch between <b>Learn</b> and <b>Studio</b> at the top.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Who can get in</h3><p style="margin:0">The MadeEA team only. Client portal accounts are refused.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Academy</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Academy: building a course">
+  <p class="eyebrow">Academy → Studio · 16 Nov</p>
+  <h2>Building a course</h2>
+  <div class="cols">
+    <div class="panel"><h3>Step by step</h3>
+      <ol class="steps">
+        <li><b>Studio → Courses → New course</b>. It starts with Module 1 and Lesson 1 ready.</li>
+        <li>Set the title, description, level, icon and cover image.</li>
+        <li>Write each lesson: add <b>Text</b>, <b>Image</b>, <b>Video</b> (upload or a YouTube, Vimeo or Loom link) and <b>Table</b> blocks in any order.</li>
+        <li>Add <b>flashcards</b> and a <b>quiz</b> (multiple choice or free text) to each module, with a pass mark.</li>
+        <li><b>Preview</b> it as a learner sees it, then <b>Save and publish</b>.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Already in it</h3><p style="margin:0">The Made Ready course was copied across as a draft: 10 modules, 47 lessons, 64 questions, ready to review and publish.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Academy</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Academy: learning paths">
+  <p class="eyebrow">Academy → Studio · 16 Nov</p>
+  <h2>Learning paths and the final assessment</h2>
+  <div class="cols">
+    <div class="panel"><h3>Step by step</h3>
+      <ol class="steps">
+        <li><b>Studio → Learning paths → New learning path</b>: title, type, optional due date.</li>
+        <li><b>+ Add a course…</b> and put the courses in order.</li>
+        <li>Tick <b>Final assessment</b>: pass mark, questions per attempt, time limit, attempts allowed.</li>
+        <li>Fill the <b>question bank</b>, each question tagged easy, medium or hard. Every attempt draws a random set across the three.</li>
+        <li><b>Who it's for</b>: everyone, or chosen people, regions or teams. Then <b>Save and publish</b>.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Fair by design</h3><p style="margin:0">Answers never reach the learner's browser; the assessment returns only the score, so the bank can't be collected one attempt at a time.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Academy</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Academy: the learner">
+  <p class="eyebrow">Academy → Learn · 16 Nov</p>
+  <h2>Taking a path, to the certificate</h2>
+  <div class="cols">
+    <div class="panel"><h3>Step by step</h3>
+      <ol class="steps">
+        <li>On <b>Overview</b>, open your learning path and click <b>Start</b>.</li>
+        <li>The player shows only the lesson. Click <b>Next</b> through lessons, flip the <b>flashcards</b>, take the <b>quiz</b> (right answers explained, retry any time).</li>
+        <li>At the end, rate the course and leave a comment.</li>
+        <li>When every lesson is done, <b>Start the final assessment</b>, answer, <b>Submit</b>.</li>
+        <li>Pass, and click <b>View your certificate</b>: name, path, score, date, number and signature, to print or save as PDF.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>For admins</h3>
+        <ul class="dots">
+          <li><b>Learners</b>: roles, progress, email reminders, invites.</li>
+          <li><b>Reports</b> and <b>Reviews</b>: who finished, scores, ratings.</li>
+          <li><b>Settings</b>: who signs the certificate, with an uploaded or drawn signature.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Academy</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Abder's Academy">
+  <p class="eyebrow">Academy · 18 Nov</p>
+  <h2>Abder's Academy documents, and the decision</h2>
+  <div class="cols">
+    <div class="panel"><h3>What the documents describe</h3>
+      <ul class="dots">
+        <li><b>Sign-in PRD:</b> sign in, forgot password, accept invitation, and a public certificate check.</li>
+        <li><b>Roadmap:</b> go-live and a pilot of 10–15 people, then one sign-in with the Hub (Dec–Jan), training inside the Hub (to Feb), automatic enrollment (to Mar), then Arabic, phones and client academies (to Apr).</li>
+        <li><b>Screens:</b> the new look in light and dark, on desktop and phone.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="panel"><h3>Decision and next step</h3><p style="margin:0">They describe Abder's own, already-built Academy. <b>His code will be deployed</b> on academy.madeea.io; ours stays live until then, so there's no gap.</p></div>
+      <div class="tip"><b>Waiting on Abder:</b> access to the code, an Anthropic key for "Create with AI", the pilot group, and PRDs 2 and 3.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Academy</span><span></span></div>
+</section>
+
+<!-- ───── 19 Nov ───── -->
+<section class="slide section" data-title="Section: Hub fixes and security">
+  <p class="big">05 · HUB FIXES, EMAIL AND SECURITY</p>
+  <h1>Safer and tidier, 19 November</h1>
+  <p class="lede">Three fixes found while setting up the reviewer account, MadeEA's own email sending, and a security pre-check ahead of Google's assessment.</p>
+</section>
+
+<section class="slide" data-title="Three Hub fixes">
+  <p class="eyebrow">Hub · 19 Nov</p>
+  <h2>Three fixes</h2>
+  <div class="cols">
+    <div class="panel"><h3>Change your own name</h3>
+      <ol class="steps">
+        <li>Click your name, bottom left, or open <b>Settings</b>.</li>
+        <li>In <b>Account</b>, click <b>Edit name</b>.</li>
+        <li>Type it and click <b>Save</b>. The greeting, initials, team list and your tasks update.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Also fixed</h3>
+        <ul class="dots">
+          <li><b>Follow-ups show your own work.</b> A new assistant was shown other people's stale tasks; now assistants see their own, managers the team's.</li>
+          <li><b>No false warning after connecting Google.</b> "The login window was closed before it finished" appeared even when connecting worked. Now the window closes cleanly.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Hub fixes</span><span></span></div>
+</section>
+
+<section class="slide" data-title="The Hub's own email">
+  <p class="eyebrow">Hub · 19 Nov</p>
+  <h2>The Hub sends its own emails</h2>
+  <div class="cols">
+    <div class="panel"><h3>Resetting a Hub password</h3>
+      <ol class="steps">
+        <li>On hub.madeea.io, click <b>Forgot password</b> and enter your email.</li>
+        <li>An email arrives within seconds from <b>MadeEA Hub &lt;no-reply@mail.madeea.io&gt;</b>.</li>
+        <li>Click the link and choose a new password.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>What changed</h3>
+        <ul class="dots">
+          <li>A verified MadeEA sending address instead of a shared sender limited to a few emails an hour; now up to 100 an hour.</li>
+          <li>Passes SPF, DKIM and DMARC.</li>
+          <li>Abder's Academy can send its invitations from it too.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Hub email</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Security pre-check">
+  <p class="eyebrow">Hub · 19 Nov</p>
+  <h2>Security pre-check, ahead of Google's assessment</h2>
+  <table>
+    <thead><tr><th>Checked</th><th>Found</th><th>Now</th></tr></thead>
+    <tbody>
+      <tr><td>Team name lists</td><td>Two small lists with some email addresses could be read without signing in.</td><td><span class="ok">CLOSED</span> verified from outside</td></tr>
+      <tr><td>Gmail, Calendar, Outlook access</td><td>An older, unencrypted second copy of 6 Google tokens.</td><td><span class="ok">0 LEFT</span> encrypted only; nobody had to reconnect</td></tr>
+      <tr><td>Libraries</td><td>7 known issues, 3 high, in the Loom recorder and page routing.</td><td><span class="ok">0 LEFT</span> every page rechecked</td></tr>
+      <tr><td>Server functions</td><td>31 answered requests from any website (login still checked).</td><td><span class="ok">FIXED</span> MadeEA's own sites only</td></tr>
+      <tr><td>Old sign-in functions</td><td>5 retired functions still online.</td><td>Removed from the code; deleting from the server</td></tr>
+      <tr><td>Headers, HTTPS, secrets</td><td>Nothing found.</td><td><span class="ok">FINE</span></td></tr>
+    </tbody>
+  </table>
+  <div class="foot"><span>Security</span><span></span></div>
+</section>
+
+<section class="slide" data-title="What's next">
+  <p class="eyebrow">Next</p>
+  <h2>What's next</h2>
+  <table>
+    <thead><tr><th>Item</th><th>Who / when</th></tr></thead>
+    <tbody>
+      <tr><td>Record Google's demo video with the reviewer account, then submit the Gmail review</td><td>This week</td></tr>
+      <tr><td>Deploy Abder's Academy: review the code, database, email and AI, then the pilot</td><td>When Abder sends the code</td></tr>
+      <tr><td>Google's security assessment (TAC Basic, $675)</td><td>When Google asks</td></tr>
+      <tr><td>madeea.io on the madeeas.com approved senders list</td><td>madeeas.com Google admin</td></tr>
+      <tr><td>Abder's review of the Delegation Coach; a lighter coach as a lead magnet</td><td>Abder, then Bryan</td></tr>
+    </tbody>
+  </table>
+  <div class="tip"><b>Every change in detail:</b> the daily work reports at madeea-reports-65dq.vercel.app.</div>
+  <div class="foot"><span>Next</span><span></span></div>
+</section>
+
+<section class="slide section" data-title="Thank you">
+  <p class="big">THANK YOU</p>
+  <h1>Questions?</h1>
+  <p class="lede">Hub: <a href="https://hub.madeea.io">hub.madeea.io</a> · Academy: <a href="https://academy.madeea.io">academy.madeea.io</a> · Delegation Coach: <a href="https://madeea-delegation-coach.vercel.app">madeea-delegation-coach.vercel.app</a> · Reports: <a href="https://madeea-reports-65dq.vercel.app">madeea-reports-65dq.vercel.app</a></p>
+</section>
+
+</main>
+
+<script>
+(function () {
+  document.documentElement.classList.add("js");
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var n = slides.length, i = 0;
+  var count = document.getElementById("count"), bar = document.getElementById("progress");
+  var ov = document.getElementById("overview"), list = document.getElementById("list");
+
+  slides.forEach(function (s, k) {
+    var f = s.querySelector(".foot span:last-child");
+    if (f) f.textContent = (k + 1) + " / " + n;
+    var b = document.createElement("button");
+    b.innerHTML = "<small>" + (k + 1) + "</small>" + (s.getAttribute("data-title") || "Slide");
+    b.addEventListener("click", function () { show(k); ov.classList.remove("open"); });
+    list.appendChild(b);
+  });
+
+  function show(k) {
+    i = Math.max(0, Math.min(n - 1, k));
+    slides.forEach(function (s, j) { s.classList.toggle("on", j === i); });
+    count.textContent = (i + 1) + " / " + n;
+    bar.style.width = ((i + 1) / n * 100) + "%";
+    if (history.replaceState) history.replaceState(null, "", "#" + (i + 1));
+    window.scrollTo(0, 0);
+  }
+  document.getElementById("prev").addEventListener("click", function () { show(i - 1); });
+  document.getElementById("next").addEventListener("click", function () { show(i + 1); });
+  document.getElementById("all").addEventListener("click", function () { ov.classList.toggle("open"); });
+  document.getElementById("theme").addEventListener("click", function () {
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark" ||
+      (!root.getAttribute("data-theme") && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.target && /input|textarea|select/i.test(e.target.tagName)) return;
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); show(i + 1); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); show(i - 1); }
+    else if (e.key === "Home") show(0);
+    else if (e.key === "End") show(n - 1);
+    else if (e.key === "Escape") ov.classList.remove("open");
+    else if (e.key === "g" || e.key === "G") ov.classList.toggle("open");
+  });
+  var start = parseInt((location.hash || "").slice(1), 10);
+  show(isNaN(start) ? 0 : start - 1);
+})();
+</script>
+</body>
+</html>
