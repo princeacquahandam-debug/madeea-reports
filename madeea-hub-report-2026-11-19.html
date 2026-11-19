@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>MadeEA Hub Work Report, 19 November</title>
-<meta name="description" content="Work report for the MadeEA Hub, 19 November 2026: the account for Google&#39;s reviewers, three fixes, the Hub sending its own emails, and a security pre-check ahead of Google&#39;s assessment.">
+<meta name="description" content="Work report for the MadeEA Hub, 19 November 2026: the account for Google&#39;s reviewers, five fixes, the Hub sending its own emails, and a security pre-check ahead of Google&#39;s assessment.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
@@ -143,7 +143,7 @@
   <section class="summary" aria-labelledby="sum-h">
     <h2 id="sum-h">At a glance</h2>
     <div class="stats">
-      <div class="stat"><b>6</b><span>updates live in the Hub, each tested on the live site</span></div>
+      <div class="stat"><b>8</b><span>updates live in the Hub, each tested on the live site</span></div>
       <div class="stat"><b>0</b><span>tokens for Gmail, Calendar or Outlook stored unencrypted, down from 6</span></div>
       <div class="stat"><b>7 → 0</b><span>known issues in the Hub's libraries, 3 of them high risk</span></div>
     </div>
@@ -152,7 +152,7 @@
         <thead><tr><th>#</th><th>What was done</th><th>Status</th></tr></thead>
         <tbody>
           <tr><td class="num">1</td><td><a href="#item-1">An account for Google's reviewers</a></td><td><span class="pill p-live">Ready</span></td></tr>
-          <tr><td class="num">2</td><td><a href="#item-2">Three fixes found while setting it up</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">2</td><td><a href="#item-2">Five Hub fixes</a></td><td><span class="pill p-live">Live</span></td></tr>
           <tr><td class="num">3</td><td><a href="#item-3">The Hub sends its own emails</a></td><td><span class="pill p-live">Live</span></td></tr>
           <tr><td class="num">4</td><td><a href="#item-4">Security pre-check for Google's assessment</a></td><td><span class="pill p-live">Fixed</span></td></tr>
           <tr><td class="num">5</td><td><a href="#item-5">What comes next</a></td><td><span class="pill p-wait">Next</span></td></tr>
@@ -179,13 +179,15 @@
 
   <section class="item" id="item-2" aria-labelledby="h-2">
     <div class="item-head"><span class="num">2</span><span class="pill p-live">Live</span>
-      <h2 id="h-2">Three fixes found while setting it up</h2>
+      <h2 id="h-2">Five Hub fixes</h2>
     </div>
     <div class="block">
       <ul>
         <li><b>Follow-ups show only your own work.</b> A brand-new assistant with no tasks was shown five of other people's tasks under "Needs follow-up". Assistants now see follow-ups for their own tasks only; managers and admins still see the whole team's.</li>
         <li><b>No false warning after connecting Google.</b> Connecting Gmail or Calendar worked, but the Hub then said "The login window was closed before it finished". Google's sign-in pages cut the link back to the Hub's window, so the result now reaches the Hub another way, and the sign-in window closes by itself. This affected everyone who connected Google.</li>
         <li><b>Change your own name.</b> Settings → Account now has <b>Edit name</b>. Until now a name came from the email address and could only be fixed by hand in the database. It updates the greeting, initials, the team list and tasks assigned to you.</li>
+        <li><b>Priorities show your own work.</b> On the Dashboard, a new assistant's <b>Priorities</b> panel listed the whole team's open tasks. Assistants now see their own tasks plus unassigned tasks for clients they lead; managers and admins still see the whole team's. Checked live with the reviewer account: the panel is empty, as it should be.</li>
+        <li><b>Madeline no longer says the calendar isn't connected.</b> Asked about meetings with nothing booked, Madeline answered that Google Calendar wasn't connected. She now checks whether it is connected and says the calendar is simply empty when it is. Retested live.</li>
       </ul>
     </div>
   </section>
@@ -237,8 +239,8 @@
         <thead><tr><th>Item</th><th>When</th></tr></thead>
         <tbody>
           <tr><td><b>Record the demo video</b> with the reviewer account, then submit the Gmail review to Google</td><td>This week</td></tr>
-          <tr><td><b>Deploy Abder's Academy</b></td><td>When his code arrives</td></tr>
-          <tr><td><b>madeea.io on the madeeas.com approved senders list</b>, so team emails from the Hub and the coach don't land in spam</td><td>madeeas.com Google admin</td></tr>
+          <tr><td><b>Deploy Abder's Academy</b>: Abder has been asked for the code, an AI key and the pilot date</td><td>When his code arrives</td></tr>
+          <tr><td><b>madeea.io on the madeeas.com approved senders list</b>, so team emails from the Hub and the coach don't land in spam; the request has been sent</td><td>madeeas.com Google admin</td></tr>
         </tbody>
       </table>
     </div>
@@ -250,6 +252,8 @@
       <table>
         <thead><tr><th>Update</th><th>What went live</th></tr></thead>
         <tbody>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/ad94778">ad94778</a></td><td>Dashboard Priorities show your own tasks for assistants</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/2e1d814">2e1d814</a></td><td>Madeline checks the calendar connection before saying it isn't connected (assistant redeployed)</td></tr>
           <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/fdba802">fdba802</a></td><td>Server functions answer only MadeEA's own sites; old sign-in functions removed (31 functions redeployed, 5 deleted)</td></tr>
           <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/9b3d612">9b3d612</a></td><td>Library security updates (Loom recorder, page routing)</td></tr>
           <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/da0e444">da0e444</a></td><td>Tokens read only from encrypted storage; 11 server functions updated</td></tr>
