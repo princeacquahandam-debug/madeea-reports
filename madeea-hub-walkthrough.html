@@ -1,0 +1,841 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MadeEA Hub Walkthrough</title>
+<meta name="description" content="A guided walkthrough of MadeEA Hub: every area, what it does, and how to use it step by step, plus the client portal, the Delegation Coach, the Academy and the security behind it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f6f7; --surface: #ffffff; --surface-2: #f1f1f3; --text: #1c1c1e; --muted: #5f5f66; --faint: #74747a;
+    --line: #e5e5e9; --accent: #d2562b; --accent-ink: #b8471f; --accent-soft: #fbece5; --good: #16804b; --good-soft: #e6f4ec;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 30px rgba(0,0,0,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #111113; --surface: #1c1c1f; --surface-2: #27272b; --text: #ededef; --muted: #a8a8b0; --faint: #8b8b93;
+      --line: #2e2e33; --accent: #e8693c; --accent-ink: #f08a62; --accent-soft: #3a2219; --good: #4cc98d; --good-soft: #143024;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #111113; --surface: #1c1c1f; --surface-2: #27272b; --text: #ededef; --muted: #a8a8b0; --faint: #8b8b93;
+    --line: #2e2e33; --accent: #e8693c; --accent-ink: #f08a62; --accent-soft: #3a2219; --good: #4cc98d; --good-soft: #143024;
+    --shadow: none;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--text); font: 16px/1.55 "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent-ink); }
+
+  /* ── deck chrome ── */
+  .bar { position: fixed; inset: 0 0 auto 0; height: 56px; display: flex; align-items: center; gap: 12px; padding: 0 20px;
+    background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); z-index: 10; }
+  .brand { font-weight: 800; letter-spacing: .02em; }
+  .brand b { color: var(--accent); }
+  .bar .spacer { flex: 1; }
+  .bar .count { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 14px; }
+  .btn { appearance: none; border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 8px;
+    height: 34px; padding: 0 12px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .btn:hover { border-color: var(--accent); }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .progress { position: fixed; top: 56px; left: 0; height: 3px; background: var(--accent); width: 0; transition: width .25s; z-index: 10; }
+
+  .deck { padding: 80px 20px 40px; }
+  .slide { max-width: 1080px; margin: 0 auto; background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+    box-shadow: var(--shadow); padding: 44px 52px; min-height: calc(100vh - 140px); display: flex; flex-direction: column; }
+  .js .slide { display: none; }
+  .js .slide.on { display: flex; animation: in .25s ease; }
+  @keyframes in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink); margin: 0 0 10px; }
+  h1 { font-size: clamp(32px, 4.4vw, 52px); line-height: 1.08; margin: 0 0 14px; letter-spacing: -.02em; }
+  h2 { font-size: clamp(26px, 3.2vw, 36px); line-height: 1.15; margin: 0 0 8px; letter-spacing: -.01em; }
+  .lede { font-size: 19px; color: var(--muted); margin: 0 0 26px; max-width: 64ch; }
+  .where { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; color: var(--muted); background: var(--surface-2);
+    border-radius: 999px; padding: 4px 12px; margin: 0 0 22px; width: fit-content; }
+  .where b { color: var(--text); font-weight: 600; }
+
+  .cols { display: grid; grid-template-columns: 1.15fr .85fr; gap: 28px; align-items: start; }
+  .panel { background: var(--surface-2); border-radius: 14px; padding: 20px 22px; }
+  .panel h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .1em; color: var(--faint); margin: 0 0 12px; }
+  ol.steps { list-style: none; counter-reset: s; margin: 0; padding: 0; }
+  ol.steps li { counter-increment: s; position: relative; padding: 0 0 12px 40px; }
+  ol.steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; display: grid; place-items: center; }
+  ol.steps li:last-child { padding-bottom: 0; }
+  ul.dots { margin: 0; padding: 0 0 0 18px; }
+  ul.dots li { margin-bottom: 8px; }
+  ul.dots li::marker { color: var(--accent); }
+  .tip { margin-top: 18px; background: var(--accent-soft); border-radius: 12px; padding: 14px 16px; font-size: 15px; }
+  .tip b { color: var(--accent-ink); }
+  .ok { background: var(--good-soft); color: var(--good); border-radius: 999px; padding: 2px 10px; font-size: 12px; font-weight: 700; }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .tile { background: var(--surface-2); border-radius: 14px; padding: 18px; }
+  .tile b { display: block; margin-bottom: 4px; }
+  .tile span { color: var(--muted); font-size: 14px; }
+  .tile .n { color: var(--accent-ink); font-weight: 800; font-size: 13px; letter-spacing: .08em; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--faint); padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td:first-child { font-weight: 600; white-space: nowrap; }
+  .foot { margin-top: auto; padding-top: 22px; color: var(--faint); font-size: 13px; display: flex; justify-content: space-between; gap: 12px; }
+  .section { justify-content: center; }
+  .section .big { font-size: 15px; font-weight: 800; color: var(--accent-ink); letter-spacing: .14em; }
+  .kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px; padding: 0 6px; font-size: 13px; background: var(--surface); }
+
+  /* ── overview ── */
+  .overview { position: fixed; inset: 56px 0 0 0; background: var(--bg); overflow: auto; padding: 24px 20px; display: none; z-index: 9; }
+  .overview.open { display: block; }
+  .overview .list { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+  .overview button { text-align: left; border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 10px; padding: 12px 14px; font: inherit; font-size: 14px; cursor: pointer; }
+  .overview button:hover { border-color: var(--accent); }
+  .overview button small { display: block; color: var(--faint); font-size: 12px; }
+
+  /* ── phone: no deck, one long page ── */
+  @media (max-width: 860px) {
+    .js .slide { display: flex; animation: none; }
+    .slide { padding: 26px 18px; min-height: 0; margin-bottom: 14px; border-radius: 14px; }
+    .cols, .grid { grid-template-columns: 1fr; }
+    .bar .nav, .bar .count, .progress { display: none; }
+    .lede { font-size: 17px; }
+    td:first-child { white-space: normal; }
+  }
+  @media print {
+    .bar, .progress, .overview { display: none !important; }
+    .deck { padding: 0; }
+    .js .slide, .slide { display: flex !important; break-after: page; min-height: 0; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="bar">
+  <span class="brand">MADE<b>/</b>EA · Hub walkthrough</span>
+  <span class="spacer"></span>
+  <span class="count" id="count" aria-live="polite"></span>
+  <button class="btn nav" id="prev" aria-label="Previous slide">‹ Back</button>
+  <button class="btn nav" id="next" aria-label="Next slide">Next ›</button>
+  <button class="btn" id="all">All slides</button>
+  <button class="btn" id="theme" aria-label="Switch light or dark">◐</button>
+</div>
+<div class="progress" id="progress"></div>
+<div class="overview" id="overview" role="dialog" aria-label="All slides"><div class="list" id="list"></div></div>
+
+<main class="deck" id="deck">
+
+<!-- 1 -->
+<section class="slide" data-title="MadeEA Hub walkthrough">
+  <p class="eyebrow">Client walkthrough · November 2026</p>
+  <h1>MadeEA Hub, area by area</h1>
+  <p class="lede">The workspace MadeEA's executive assistants run their day from, the portal clients see, the Delegation Coach, the Academy, and the security behind all of it. Each slide covers one part: what it is for and how to use it, step by step.</p>
+  <div class="grid">
+    <div class="tile"><span class="n">THE HUB</span><b>hub.madeea.io</b><span>Inbox, calendar, tasks, time, reports, clients, training, settings, and Madeline, the AI assistant.</span></div>
+    <div class="tile"><span class="n">FOR CLIENTS</span><b>Client portal</b><span>Same address, a client sign-in. What was done, what's booked, the Delegation Coach, and a line to their EA.</span></div>
+    <div class="tile"><span class="n">TRAINING</span><b>academy.madeea.io</b><span>Courses, learning paths and certificates, opened from the Hub without signing in again.</span></div>
+  </div>
+  <div class="foot"><span>Use <span class="kbd">←</span> <span class="kbd">→</span> or the buttons to move. “All slides” jumps anywhere.</span><span>MadeEA</span></div>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-title="Getting around">
+  <p class="eyebrow">Start here</p>
+  <h2>Signing in and getting around</h2>
+  <p class="lede">One sign-in for the Hub and the Academy. Everything is on the left; the things you reach for all day are along the top.</p>
+  <div class="cols">
+    <div class="panel"><h3>Step by step</h3>
+      <ol class="steps">
+        <li>Go to <b>hub.madeea.io</b> and sign in with the email and password your admin set. Forgot it? Use <b>Forgot password</b>; the reset email comes from MadeEA Hub.</li>
+        <li>The <b>left menu</b> is grouped: Today, Work, Time &amp; Reports, Clients &amp; Files, Learn, Settings. Click a group to open it.</li>
+        <li>Along the top: <b>search</b> (<span class="kbd">Ctrl</span> <span class="kbd">K</span>) for tasks, clients and messages, <b>Clock in</b>, <b>Quick note</b>, <b>Learn</b> and the <b>bell</b> for alerts.</li>
+        <li>The orange <b>✨ button</b>, bottom right, opens Madeline, the AI assistant, on any page.</li>
+        <li>Your name, bottom left, opens your settings. The <b>«</b> next to the logo collapses the menu.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Who sees what</h3>
+        <ul class="dots">
+          <li><b>Executive assistants</b> see their own work: tasks, time, reports.</li>
+          <li><b>Managers and admins</b> also see the team's, and the Admin Panel.</li>
+          <li><b>Clients</b> get their own portal, never the agency screens.</li>
+        </ul>
+      </div>
+      <div class="tip"><b>Lost on a page?</b> Learn → “How this page works” explains the page you're on in three or four points.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Getting around</span><span>2</span></div>
+</section>
+
+<!-- section: Today -->
+<section class="slide section" data-title="Section: Today">
+  <p class="big">01 · TODAY</p>
+  <h1>Your day at a glance</h1>
+  <p class="lede">Dashboard, My workspace, Calendar and Meeting Intelligence: what needs doing, who you're meeting, and what came out of those meetings.</p>
+</section>
+
+<section class="slide" data-title="Dashboard">
+  <p class="eyebrow">Today</p>
+  <h2>Dashboard</h2>
+  <p class="where">Left menu → <b>Today → Dashboard</b></p>
+  <div class="cols">
+    <div class="panel"><h3>How to use it</h3>
+      <ol class="steps">
+        <li>Read the <b>greeting line</b>: how many active tasks you have and how many need a follow-up.</li>
+        <li>Check the <b>counters</b>: your active tasks, meetings today, emails to answer, follow-ups, automations running. Click any one to open that list.</li>
+        <li>Work through <b>Needs follow-up</b>: anything with no update in 5+ days. Click <b>Follow up</b> to act, or <b>Snooze</b> it.</li>
+        <li>Use the AI buttons at the top: <b>Plan my day</b>, <b>Catch me up</b>, <b>Draft follow-ups</b>.</li>
+        <li>At the end of the day, the <b>End-of-day report</b> card shows what's filled in. Click <b>Submit report</b>.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>What it's for</h3><p style="margin:0">The first page of the day. Every number is live: it changes as your tasks, calendar and inbox change, so there's nothing to refresh.</p></div>
+      <div class="tip"><b>Good to know:</b> assistants see follow-ups for their own tasks only; managers see the whole team's.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Today</span><span></span></div>
+</section>
+
+<section class="slide" data-title="My workspace">
+  <p class="eyebrow">Today</p>
+  <h2>My workspace</h2>
+  <p class="where">Left menu → <b>Today → My workspace</b></p>
+  <div class="cols">
+    <div class="panel"><h3>How to use it</h3>
+      <ol class="steps">
+        <li>Open it to see <b>your</b> open tasks and your EOD reports in one place.</li>
+        <li>Add things you want Madeline to keep in mind, then click <b>Remember</b>. Your memory and personal notes are private to you.</li>
+        <li>Managers can open <b>any member's workspace</b> to see their work and reports.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>What it's for</h3><p style="margin:0">A home for each person. Work output is visible to managers; personal memory and notes to Madeline stay private, even from managers.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Today</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Calendar">
+  <p class="eyebrow">Today</p>
+  <h2>Calendar</h2>
+  <p class="where">Left menu → <b>Today → Calendar</b> · needs Google connected (Settings → Integrations)</p>
+  <div class="cols">
+    <div class="panel"><h3>How to add an event</h3>
+      <ol class="steps">
+        <li>Open Calendar. Your Google Calendar shows next to the work it creates.</li>
+        <li>Click <b>New event</b>.</li>
+        <li>Fill in the title, date, start and end. The time zone is yours by default; guests, location and a description are optional.</li>
+        <li>Click <b>Add to Google Calendar</b>. It appears in Google Calendar straight away, and Google emails any guests.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>What it's for</h3><p style="margin:0">Your diary and your work in one place. Click a task's due date anywhere in the Hub and the calendar opens on that day.</p></div>
+      <div class="tip"><b>Times:</b> shown in your own time zone, set in Settings. A client's local time is shown where it matters.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Today</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Meeting Intelligence">
+  <p class="eyebrow">Today</p>
+  <h2>Meeting Intelligence</h2>
+  <p class="where">Left menu → <b>Today → Meeting Intelligence</b></p>
+  <div class="cols">
+    <div class="panel"><h3>How to use it</h3>
+      <ol class="steps">
+        <li>Open it after a recorded call. It reads the Fathom transcripts.</li>
+        <li>Review what it found: <b>tasks, decisions and things to remember</b>.</li>
+        <li>Tasks it finds are already on the task board. Open them there; this page is the record of where they came from.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>What it's for</h3><p style="margin:0">Nothing agreed on a call gets lost. Action items become tasks without anyone retyping them.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Today</span><span></span></div>
+</section>
+
+<!-- section: Work -->
+<section class="slide section" data-title="Section: Work">
+  <p class="big">02 · WORK</p>
+  <h1>Inbox, tasks and routines</h1>
+  <p class="lede">Where the day's work actually happens: answering mail, moving tasks, and the jobs that repeat.</p>
+</section>
+
+<section class="slide" data-title="Inbox">
+  <p class="eyebrow">Work</p>
+  <h2>Inbox</h2>
+  <p class="where">Left menu → <b>Work → Inbox</b> · needs Gmail or Outlook connected</p>
+  <div class="cols">
+    <div class="panel"><h3>How to answer an email</h3>
+      <ol class="steps">
+        <li>Pick a tab: <b>All</b>, <b>Needs reply</b>, <b>Waiting on others</b> or <b>Done</b>. Search and filters are on the right.</li>
+        <li>Click an email. It opens on the right with the full message.</li>
+        <li>Type in <b>Reply to…</b>, or click <b>AI draft</b> to have one written in the client's tone, then edit it.</li>
+        <li>Click <b>Send</b>. It goes from your own Gmail or Outlook, in the same thread, and shows <b>Sent</b>.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>AI shortcuts at the top</h3>
+        <ul class="dots">
+          <li><b>Summarize unread</b>: the gist of everything new.</li>
+          <li><b>Draft replies</b>: first drafts for what needs an answer.</li>
+          <li><b>Find action items</b>: the asks hidden in your mail.</li>
+        </ul>
+      </div>
+      <div class="tip"><b>Private by design:</b> your mailbox is readable only by you. Not even an admin can open it.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Work</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Tasks">
+  <p class="eyebrow">Work</p>
+  <h2>Tasks</h2>
+  <p class="where">Left menu → <b>Work → Tasks</b></p>
+  <div class="cols">
+    <div class="panel"><h3>How to use the board</h3>
+      <ol class="steps">
+        <li>Click <b>New task</b> (or start from <b>Templates</b>). Set who it's for, the client, the due date and the priority.</li>
+        <li><b>Drag</b> a card between columns: To Do, In Progress, Waiting, Review, Done. It saves instantly.</li>
+        <li>Click a card for its notes, checklist, files and progress. Click its due date to open that day in the calendar.</li>
+        <li>Hover a card for the edit and delete controls.</li>
+        <li>Tasks you move to <b>Done</b> are added to today's EOD report automatically.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>AI on the board</h3>
+        <ul class="dots">
+          <li><b>Prioritize</b>: ranks your open tasks and marks where to start.</li>
+          <li><b>Find stuck tasks</b>: the next action for each one that stalled.</li>
+          <li><b>Break down</b>: writes the steps for a big task.</li>
+        </ul>
+      </div>
+      <div class="tip"><b>Tip:</b> click anywhere outside an AI result to close it.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Work</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Routines">
+  <p class="eyebrow">Work</p>
+  <h2>Routines (repetitive tasks)</h2>
+  <p class="where">Left menu → <b>Work → Routines</b></p>
+  <div class="cols">
+    <div class="panel"><h3>How to set one up</h3>
+      <ol class="steps">
+        <li>Click <b>New repetitive task</b>.</li>
+        <li>Give it a title, the client, who it's for, and how often it repeats.</li>
+        <li>Save. From then on the task appears on the board by itself, every time it's due.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>What it's for</h3><p style="margin:0">The weekly report, the Monday inbox clean-up, the monthly invoice run: set once, never forgotten.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Work</span><span></span></div>
+</section>
+
+<!-- section: Time & Reports -->
+<section class="slide section" data-title="Section: Time & Reports">
+  <p class="big">03 · TIME &amp; REPORTS</p>
+  <h1>Time, screenshots and end-of-day reports</h1>
+  <p class="lede">How hours are tracked for attendance and payroll, how work is evidenced, and how each day is reported.</p>
+</section>
+
+<section class="slide" data-title="Time tracker">
+  <p class="eyebrow">Time &amp; Reports</p>
+  <h2>Time tracker</h2>
+  <p class="where"><b>Clock in</b> at the top of every page · Left menu → <b>Time &amp; Reports → Time tracker</b></p>
+  <div class="cols">
+    <div class="panel"><h3>A working day</h3>
+      <ol class="steps">
+        <li>Click <b>Clock in</b> at the top when you start.</li>
+        <li>Allow the browser's <b>screen-share</b> prompt. Screenshots and activity are only recorded while you're clocked in.</li>
+        <li>Taking a break? Click <b>Pause</b>, then <b>Resume</b>. Paused time doesn't count.</li>
+        <li>Click <b>Clock out</b> at the end of the day. The Time tracker page shows your hours as a timesheet.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>What it's for</h3><p style="margin:0">Clock-ins are used for attendance and payroll. Long days can have an automatic unpaid break deducted, set by an admin.</p></div>
+      <div class="tip"><b>Nothing outside a shift</b> is recorded. Typing is counted, never captured.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Time &amp; Reports</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Screenshots">
+  <p class="eyebrow">Time &amp; Reports</p>
+  <h2>Screenshots</h2>
+  <p class="where">Left menu → <b>Time &amp; Reports → Screenshots</b></p>
+  <div class="cols">
+    <div class="panel"><h3>How to review</h3>
+      <ol class="steps">
+        <li>Pick the person and the day.</li>
+        <li>Each screenshot (about one every ten minutes) is shown <b>with the activity for that period</b>: keyboard and mouse counts and idle time.</li>
+        <li>Judge each one on the question that matters: does what was happening match what was claimed?</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Who can see them</h3><p style="margin:0">The assistant sees their own; managers and admins see the team's. Kept for 90 days by default.</p></div>
+      <div class="tip"><b>Read the scope note:</b> activity counts cover the browser tab, so writing in another app shows as low activity.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Time &amp; Reports</span><span></span></div>
+</section>
+
+<section class="slide" data-title="EOD reports">
+  <p class="eyebrow">Time &amp; Reports</p>
+  <h2>End-of-day (EOD) reports</h2>
+  <p class="where">Left menu → <b>Time &amp; Reports → EOD reports</b>, or the card on the Dashboard</p>
+  <div class="cols">
+    <div class="panel"><h3>Submitting yours</h3>
+      <ol class="steps">
+        <li>Open <b>My report</b>. <b>Completed today</b> is already filled from the tasks you moved to Done.</li>
+        <li>Add <b>Blockers</b> and your <b>Plan for tomorrow</b>.</li>
+        <li>Click <b>Submit report</b>. Your managers are alerted.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>For managers: the Team tab</h3>
+        <ul class="dots">
+          <li>Everyone's reports, blockers and plans in one place.</li>
+          <li>Completion: how many days each person submitted this month.</li>
+          <li>Filter by person, date, or “With blockers”, and open any report as submitted.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Time &amp; Reports</span><span></span></div>
+</section>
+
+<!-- section: Clients & Files -->
+<section class="slide section" data-title="Section: Clients & Files">
+  <p class="big">04 · CLIENTS &amp; FILES</p>
+  <h1>Everything about each client, kept safe</h1>
+  <p class="lede">Client profiles, their logins, notes and files, and how the desk is performing for them.</p>
+</section>
+
+<section class="slide" data-title="Client Vault">
+  <p class="eyebrow">Clients &amp; Files</p>
+  <h2>Client Vault</h2>
+  <p class="where">Left menu → <b>Clients &amp; Files → Client Vault</b></p>
+  <div class="cols">
+    <div class="panel"><h3>Adding a client</h3>
+      <ol class="steps">
+        <li>Click <b>New Client</b>.</li>
+        <li>Fill in their preferred channel, tone, tags and notes. Add a photo by uploading or pasting an image link.</li>
+        <li>Choose their <b>Lead EA</b>. The Hub warns if that assistant hasn't finished their Made Ready training.</li>
+        <li>To give the client their own portal login, open their profile and use <b>Give access</b>.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>What it's for</h3><p style="margin:0">One profile per client. Madeline uses each client's tone and preferences whenever she drafts for them.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Clients &amp; Files</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Password Manager">
+  <p class="eyebrow">Clients &amp; Files</p>
+  <h2>Password Manager</h2>
+  <p class="where">Left menu → <b>Clients &amp; Files → Password Manager</b></p>
+  <div class="cols">
+    <div class="panel"><h3>How to use it</h3>
+      <ol class="steps">
+        <li>Click <b>Add login</b>, then pick the client and enter the site, username and password.</li>
+        <li>Admins decide which assistant can see which login.</li>
+        <li>To use one, open it and copy the password. Nothing is shown to people it wasn't shared with.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>What it's for</h3><p style="margin:0">Client logins kept in one place instead of chats and spreadsheets. They're encrypted in the browser before they're stored.</p></div>
+      <div class="tip"><b>Better still:</b> ask the client for delegated access instead of a password where the service allows it.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Clients &amp; Files</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Notes, Uploads, Saved">
+  <p class="eyebrow">Clients &amp; Files</p>
+  <h2>Notes, Uploads and Saved</h2>
+  <p class="where">Left menu → <b>Clients &amp; Files</b></p>
+  <table>
+    <thead><tr><th>Page</th><th>What it's for</th><th>How to use it</th></tr></thead>
+    <tbody>
+      <tr><td>Notes &amp; Files</td><td>A shared scratchpad for anything that isn't a task, client or event yet.</td><td>New note → optional title → link it to a client if it belongs to one. <b>Pin</b> the ones you return to; search matches title and body.</td></tr>
+      <tr><td>Uploads</td><td>Client documents the workspace owns, so a link can't die when someone tidies their Drive.</td><td>Upload a file and link it to the client it belongs to; find it here later.</td></tr>
+      <tr><td>Saved</td><td>AI results you bookmarked, kept live rather than copied.</td><td>Click the bookmark on an AI result you want to keep; open Saved to get back to it.</td></tr>
+    </tbody>
+  </table>
+  <div class="tip"><b>Quick note</b> at the top of every page drops a note into Notes without leaving what you're doing.</div>
+  <div class="foot"><span>Clients &amp; Files</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Client Scoreboard">
+  <p class="eyebrow">Clients &amp; Files</p>
+  <h2>Client Scoreboard</h2>
+  <p class="where">Left menu → <b>Clients &amp; Files → Client Scoreboard</b></p>
+  <div class="cols">
+    <div class="panel"><h3>How to read it</h3>
+      <ol class="steps">
+        <li>Pick a client and a period. The numbers compare with the period before.</li>
+        <li>Read the <b>amber note</b> first: it says what the numbers can't see.</li>
+        <li>A dash means no data, not zero.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>What it's for</h3><p style="margin:0">How the desk actually performed for a client: measured, not estimated. Useful before a client review.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Clients &amp; Files</span><span></span></div>
+</section>
+
+<!-- section: Learn -->
+<section class="slide section" data-title="Section: Learn">
+  <p class="big">05 · LEARN</p>
+  <h1>How the work is done, written down once</h1>
+  <p class="lede">SOPs, training videos and the MadeEA Academy.</p>
+</section>
+
+<section class="slide" data-title="SOPs">
+  <p class="eyebrow">Learn</p>
+  <h2>SOPs (standard operating procedures)</h2>
+  <p class="where">Left menu → <b>Learn → SOP</b>, or the <b>Learn</b> menu at the top</p>
+  <div class="cols">
+    <div class="panel"><h3>Running a procedure</h3>
+      <ol class="steps">
+        <li>Open a procedure, then pick the client and the task it's for.</li>
+        <li>Tick each step as you go. Steps marked ✨ run the matching AI action and tick themselves.</li>
+        <li><b>Pin to screen</b> keeps the checklist floating while you work anywhere in the Hub.</li>
+        <li>Finishing marks the task done, so it lands in today's EOD without retyping.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>What it's for</h3><p style="margin:0">Checklists for the work that repeats. The same procedure can run for several clients at once, each with its own progress.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Learn</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Training videos">
+  <p class="eyebrow">Learn</p>
+  <h2>Training videos</h2>
+  <p class="where"><b>Learn</b> menu → <b>Training videos</b> (the Training page)</p>
+  <div class="cols">
+    <div class="panel"><h3>How to add one</h3>
+      <ol class="steps">
+        <li>Record the walkthrough in Loom as usual.</li>
+        <li>On the Training page, click <b>Add a Loom link</b> and paste it.</li>
+        <li>It plays right in the Hub. Write it up as an SOP so the steps outlast the video.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>What it's for</h3><p style="margin:0">Record how a job is done once, so the next person watches it instead of asking.</p></div>
+      <div class="tip"><b>Recording inside the Hub</b> switches on once a Loom developer app ID is added.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Learn</span><span></span></div>
+</section>
+
+<section class="slide" data-title="MadeEA Academy">
+  <p class="eyebrow">Learn</p>
+  <h2>MadeEA Academy</h2>
+  <p class="where"><b>Learn</b> menu → <b>MadeEA Academy</b> · academy.madeea.io</p>
+  <div class="cols">
+    <div class="panel"><h3>For a learner</h3>
+      <ol class="steps">
+        <li>Click <b>Learn → MadeEA Academy</b>. A new tab opens, already signed in.</li>
+        <li>Open a <b>learning path</b> and press <b>Start</b>. The player shows only the lesson.</li>
+        <li>Work through the lessons, flip the flashcards and take each module's quiz.</li>
+        <li>When every lesson is done, take the <b>final assessment</b> and download your certificate.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>For admins (Studio)</h3>
+        <ul class="dots">
+          <li>Build courses: lessons with text, images, video and tables, flashcards, quizzes.</li>
+          <li>Group them into learning paths, with a final assessment and who it's for.</li>
+          <li>Learners, reports, reviews and the certificate signature.</li>
+        </ul>
+      </div>
+      <div class="tip"><b>Coming next:</b> Abder's own Academy build will replace this one, keeping the one-click sign-in from the Hub.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Learn</span><span></span></div>
+</section>
+
+<!-- section: Settings -->
+<section class="slide section" data-title="Section: Settings">
+  <p class="big">06 · SETTINGS &amp; ADMIN</p>
+  <h1>Connections, automations and the team</h1>
+  <p class="lede">Connecting mail and calendars, automations, managing accounts, and your own preferences.</p>
+</section>
+
+<section class="slide" data-title="Integrations">
+  <p class="eyebrow">Settings</p>
+  <h2>Integrations</h2>
+  <p class="where">Left menu → <b>Settings → Integrations</b></p>
+  <div class="cols">
+    <div class="panel"><h3>Connecting Gmail and Google Calendar</h3>
+      <ol class="steps">
+        <li>On the <b>Gmail</b> card, click <b>Connect</b>, then <b>Sign in</b>.</li>
+        <li>Google's own window opens. Choose your account; Google shows the app as <b>MadeEA Hub</b>.</li>
+        <li>Tick all the permissions and click <b>Continue</b>. The window closes by itself and the card shows <b>Connected</b>.</li>
+        <li>Click <b>Sync now</b> on the Google Calendar card to pull mail and events straight away.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Also available</h3>
+        <ul class="dots">
+          <li><b>Outlook</b> and <b>Teams</b> with a Microsoft sign-in.</li>
+          <li><b>Slack</b>, <b>Discord</b>, <b>WhatsApp</b> and <b>Instagram</b> for shared team channels.</li>
+          <li><b>Disconnect</b> any of them at any time from the same card.</li>
+        </ul>
+      </div>
+      <div class="tip"><b>Your password never reaches MadeEA:</b> you sign in on Google's or Microsoft's own page.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Settings</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Automation">
+  <p class="eyebrow">Settings</p>
+  <h2>Automation</h2>
+  <p class="where">Left menu → <b>Settings → Automation</b></p>
+  <div class="cols">
+    <div class="panel"><h3>How to use it</h3>
+      <ol class="steps">
+        <li>Each automation can be set <b>Active</b> or <b>Paused</b>.</li>
+        <li><b>Run now</b> runs it on live data and saves the result.</li>
+        <li>Open <b>View last result</b> to read what it produced, or build your own below.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>What it's for</h3><p style="margin:0">Recurring jobs that run for the whole workspace, so nobody has to remember them.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Settings</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Admin Panel">
+  <p class="eyebrow">Settings · admins</p>
+  <h2>Admin Panel</h2>
+  <p class="where">Left menu → <b>Settings → Admin Panel</b> (admins and owners only)</p>
+  <div class="cols">
+    <div class="panel"><h3>Adding a team member</h3>
+      <ol class="steps">
+        <li>Under <b>Add a team member</b>, type their email.</li>
+        <li>Choose the role: <b>Team member</b> for an assistant, or Manager / Admin.</li>
+        <li>Copy the <b>starting password</b> shown, and send them the address and password yourself.</li>
+        <li>Click <b>Create account</b>. They sign in and can change the password in Settings.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Also here</h3>
+        <ul class="dots">
+          <li>Every account, its role and activity.</li>
+          <li>Promote, demote or remove access.</li>
+          <li>Time-tracking rules: daily hours and the automatic unpaid break.</li>
+          <li>Reset a password for someone who can't sign in.</li>
+        </ul>
+      </div>
+      <div class="tip"><b>Locked down:</b> only admins can make changes, checked on the server, and workspaces never see each other.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Settings</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Your settings">
+  <p class="eyebrow">Settings</p>
+  <h2>Your own settings</h2>
+  <p class="where">Click <b>your name</b>, bottom left, or <b>Settings</b></p>
+  <table>
+    <thead><tr><th>Setting</th><th>How to change it</th></tr></thead>
+    <tbody>
+      <tr><td>Your name <span class="ok">NEW</span></td><td>Account → <b>Edit name</b> → type it → <b>Save</b>. It updates your greeting, initials, the team list and tasks assigned to you.</td></tr>
+      <tr><td>Time zone</td><td>Pick it under Time zone, or leave it on your computer's. The calendar and new events use it.</td></tr>
+      <tr><td>Password</td><td>Enter your current password, then the new one twice.</td></tr>
+      <tr><td>Usage analytics</td><td>Tick or untick <b>Share my usage</b>. Names, emails and messages are never recorded.</td></tr>
+      <tr><td>Alerts (admins)</td><td>Choose where late replies, clock-ins and EOD submissions are sent. Each alert stays off until an admin sets it.</td></tr>
+      <tr><td>Guided tour</td><td><b>Learn → Replay the guided tour</b>: a two-minute walk through the Hub.</td></tr>
+    </tbody>
+  </table>
+  <div class="foot"><span>Settings</span><span></span></div>
+</section>
+
+<!-- Madeline -->
+<section class="slide" data-title="Madeline, the AI assistant">
+  <p class="eyebrow">Everywhere</p>
+  <h2>Madeline, the AI assistant</h2>
+  <p class="where">The orange <b>✨ button</b>, bottom right of every page</p>
+  <div class="cols">
+    <div class="panel"><h3>How to use her</h3>
+      <ol class="steps">
+        <li>Click <b>✨</b>. Madeline opens on the side of whatever page you're on.</li>
+        <li>Ask in plain words: “What's in my inbox?”, “Plan my day”, “Draft a reply declining Thursday”.</li>
+        <li>With an email or task open, she works on that one, and offers buttons such as <b>Summarize thread</b>, <b>Draft reply</b> and <b>Turn into task</b>.</li>
+        <li>Use the clock icon to reopen past chats. Rate an answer with 👍 / 👎.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>What she knows</h3>
+        <ul class="dots">
+          <li>Your tasks, inbox, calendar and clients, and how the Hub works.</li>
+          <li>What you told her to remember in My workspace.</li>
+          <li>Each client's tone, when drafting for them.</li>
+        </ul>
+      </div>
+      <div class="tip"><b>Costs are capped:</b> each person has a daily AI allowance, so usage can't run away.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Madeline</span><span></span></div>
+</section>
+
+<!-- section: Clients -->
+<section class="slide section" data-title="Section: For clients">
+  <p class="big">07 · FOR CLIENTS</p>
+  <h1>The client portal and the Delegation Coach</h1>
+  <p class="lede">What a client sees when they sign in, and the coach that helps founders hand work over.</p>
+</section>
+
+<section class="slide" data-title="Client portal">
+  <p class="eyebrow">For clients</p>
+  <h2>The client portal</h2>
+  <p class="where">hub.madeea.io, with the client's own login (given from Client Vault → <b>Give access</b>)</p>
+  <div class="cols">
+    <div class="panel"><h3>A client's tour</h3>
+      <ol class="steps">
+        <li><b>Overview</b>: where things stand today.</li>
+        <li><b>Tasks</b>, <b>Daily reports</b> and <b>Activity</b>: what was done, and when.</li>
+        <li><b>Calendar</b> and <b>Notes</b>: what's booked and what to know.</li>
+        <li><b>Delegate</b>: the Delegation Coach (next slide).</li>
+        <li><b>Your staff</b>: message their EA directly; there's also a line to the agency's leads.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>What it's for</h3><p style="margin:0">Clients see their own work, never the agency's screens. Every other client, the staff list and internal notes stay invisible to them.</p></div>
+      <div class="tip"><b>Connected accounts:</b> a client can share their Outlook or Google calendar with their EA from the portal.</div>
+    </div>
+  </div>
+  <div class="foot"><span>For clients</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Delegation Coach">
+  <p class="eyebrow">For clients</p>
+  <h2>The Delegation Coach</h2>
+  <p class="where">Client portal → <b>Delegate</b> · also on its own at madeea-delegation-coach.vercel.app</p>
+  <div class="cols">
+    <div class="panel"><h3>How a founder uses it</h3>
+      <ol class="steps">
+        <li>The first time, answer <b>“Who reports to you?”</b>: name, title, area and MadeEA login for each person. It shows as a tree.</li>
+        <li>Name up to <b>4 focus areas</b> and list what's on your desk. Next week's meetings are added from your calendar.</li>
+        <li>Each day the coach sorts everything into <b>keep</b>, <b>your EA</b>, <b>a named person</b>, or <b>a role nobody covers yet</b>, with a reason for each.</li>
+        <li>Click <b>Hand to [name]</b> to put it on that person's task board in one click, or <b>Plan it first</b> for a full handoff message.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Choosing how much freedom</h3>
+        <ul class="dots">
+          <li><b>Check with me first</b>: they propose, you approve.</li>
+          <li><b>Act, then tell me</b>: they decide and keep you posted.</li>
+          <li><b>Own it outright</b>: they handle it; you see the outcome.</li>
+        </ul>
+      </div>
+      <div class="tip"><b>Until a role exists,</b> the coach shows the part the EA can take now, such as gathering documents or chasing.</div>
+    </div>
+  </div>
+  <div class="foot"><span>For clients</span><span></span></div>
+</section>
+
+<!-- Security -->
+<section class="slide" data-title="Behind the scenes: security">
+  <p class="eyebrow">Behind the scenes</p>
+  <h2>Security and trust</h2>
+  <p class="lede">What protects client data, checked ahead of Google's security assessment.</p>
+  <div class="grid">
+    <div class="tile"><b>Google-approved sign-in</b><span>Google shows “MadeEA Hub” on its consent screen, with privacy and terms pages that meet its checks.</span></div>
+    <div class="tile"><b>Encrypted connections</b><span>Gmail, Calendar and Outlook access is stored encrypted only. No unencrypted copies remain.</span></div>
+    <div class="tile"><b>Private mailboxes</b><span>Each person's mail is readable by them alone. No administrator override.</span></div>
+    <div class="tile"><b>Locked-down data</b><span>Every table checks who's asking. Clients and other workspaces see nothing that isn't theirs.</span></div>
+    <div class="tile"><b>Only MadeEA's sites</b><span>The Hub's servers answer requests from MadeEA's own sites only, not other websites.</span></div>
+    <div class="tile"><b>Verified email</b><span>Hub and coach emails come from mail.madeea.io and coach.madeea.io and pass SPF, DKIM and DMARC.</span></div>
+  </div>
+  <div class="foot"><span>Behind the scenes</span><span></span></div>
+</section>
+
+<section class="slide" data-title="What's next">
+  <p class="eyebrow">Next steps</p>
+  <h2>What's next</h2>
+  <table>
+    <thead><tr><th>Item</th><th>What happens</th></tr></thead>
+    <tbody>
+      <tr><td>Google's Gmail review</td><td>Record the demo video with the reviewer account (ready), then submit. Google then asks for its security assessment, which the pre-check has prepared for.</td></tr>
+      <tr><td>Abder's Academy</td><td>Deploy his build on academy.madeea.io, connect email and AI, then the pilot group.</td></tr>
+      <tr><td>Team email</td><td>Add madeea.io to madeeas.com's approved senders, so Hub and coach emails don't land in spam.</td></tr>
+      <tr><td>Loom recording</td><td>Add a Loom developer app ID to switch on recording inside the Hub.</td></tr>
+    </tbody>
+  </table>
+  <div class="tip"><b>Every change is written up</b> in the work reports: madeea-reports-65dq.vercel.app</div>
+  <div class="foot"><span>Next steps</span><span></span></div>
+</section>
+
+<section class="slide section" data-title="Thank you">
+  <p class="big">THANK YOU</p>
+  <h1>Questions?</h1>
+  <p class="lede">The Hub: <a href="https://hub.madeea.io">hub.madeea.io</a> · The Academy: <a href="https://academy.madeea.io">academy.madeea.io</a> · Work reports: <a href="https://madeea-reports-65dq.vercel.app">madeea-reports-65dq.vercel.app</a></p>
+</section>
+
+</main>
+
+<script>
+(function () {
+  document.documentElement.classList.add("js");
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var n = slides.length, i = 0;
+  var count = document.getElementById("count"), bar = document.getElementById("progress");
+  var ov = document.getElementById("overview"), list = document.getElementById("list");
+
+  slides.forEach(function (s, k) {
+    var f = s.querySelector(".foot span:last-child");
+    if (f) f.textContent = (k + 1) + " / " + n;
+    var b = document.createElement("button");
+    b.innerHTML = "<small>" + (k + 1) + "</small>" + (s.getAttribute("data-title") || "Slide");
+    b.addEventListener("click", function () { show(k); ov.classList.remove("open"); });
+    list.appendChild(b);
+  });
+
+  function show(k) {
+    i = Math.max(0, Math.min(n - 1, k));
+    slides.forEach(function (s, j) { s.classList.toggle("on", j === i); });
+    count.textContent = (i + 1) + " / " + n;
+    bar.style.width = ((i + 1) / n * 100) + "%";
+    if (history.replaceState) history.replaceState(null, "", "#" + (i + 1));
+    window.scrollTo(0, 0);
+  }
+  document.getElementById("prev").addEventListener("click", function () { show(i - 1); });
+  document.getElementById("next").addEventListener("click", function () { show(i + 1); });
+  document.getElementById("all").addEventListener("click", function () { ov.classList.toggle("open"); });
+  document.getElementById("theme").addEventListener("click", function () {
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark" ||
+      (!root.getAttribute("data-theme") && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.target && /input|textarea|select/i.test(e.target.tagName)) return;
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); show(i + 1); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); show(i - 1); }
+    else if (e.key === "Home") show(0);
+    else if (e.key === "End") show(n - 1);
+    else if (e.key === "Escape") ov.classList.remove("open");
+    else if (e.key === "g" || e.key === "G") ov.classList.toggle("open");
+  });
+  var start = parseInt((location.hash || "").slice(1), 10);
+  show(isNaN(start) ? 0 : start - 1);
+})();
+</script>
+</body>
+</html>
