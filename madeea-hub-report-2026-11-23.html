@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>MadeEA Hub Work Report, 23 November</title>
-<meta name="description" content="Work report for the MadeEA Hub, 23 November 2026: a separate test team, the first test of saving and sending, two rounds of fixes to the clock, client messages, alerts and routines, and a final verdict of Ready.">
+<meta name="description" content="Work report for the MadeEA Hub, 23 November 2026: a separate test team, the first test of saving and sending, two rounds of fixes to the clock, client messages, alerts and routines, a final verdict of Ready, and a new Approvals page.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
@@ -157,7 +157,7 @@
           <tr><td class="num">4</td><td><a href="#item-4">Round 1: the clock, client messages, alerts and routines</a></td><td><span class="pill p-live">Live</span></td></tr>
           <tr><td class="num">5</td><td><a href="#item-5">Round 2: editing, task comments for clients, and names</a></td><td><span class="pill p-live">Live</span></td></tr>
           <tr><td class="num">6</td><td><a href="#item-6">Two re-tests, and the last fixes</a></td><td><span class="pill p-live">Ready</span></td></tr>
-          <tr><td class="num">7</td><td><a href="#item-7">Also done today</a></td><td><span class="pill p-live">Done</span></td></tr>
+          <tr><td class="num">7</td><td><a href="#item-7">A new Approvals page, and the rest of today</a></td><td><span class="pill p-live">Live</span></td></tr>
           <tr><td class="num">8</td><td><a href="#item-8">What comes next</a></td><td><span class="pill p-wait">Next</span></td></tr>
         </tbody>
       </table>
@@ -266,12 +266,22 @@
   </section>
 
   <section class="item" id="item-7" aria-labelledby="h-7">
-    <div class="item-head"><span class="num">7</span><span class="pill p-live">Done</span>
-      <h2 id="h-7">Also done today</h2>
+    <div class="item-head"><span class="num">7</span><span class="pill p-live">Live</span>
+      <h2 id="h-7">A new Approvals page, and the rest of today</h2>
     </div>
     <div class="block">
+      <p><b>Approvals.</b> Tasks could already be marked "Needs approval", which stops them being completed until an owner or admin approves them. But approving lived inside each task, nobody could see what was waiting, and the only answer was yes. Now:</p>
+      <ul>
+        <li><b>Work → Approvals</b> (owners and admins) lists what is <b>waiting</b> (work submitted for review first), what was <b>sent back</b>, and what was <b>approved</b> in the last 30 days, with who approved it and when.</li>
+        <li><b>Send back with a reason.</b> The task returns to In progress, and the reason shows on the task and in its comments. The client never sees it. When the work is submitted for review again, it goes back to Waiting.</li>
+        <li><b>The bell</b> tells approvers "Waiting for approval", and tells the person who did the work "Sent back", with the reason.</li>
+        <li><b>The database now checks who approves.</b> Until today only the button was hidden; the database itself would have accepted an approval from anyone, including the person who did the work. Who approved is also now always recorded, which it wasn't when approving from inside a task.</li>
+      </ul>
+      <p>Tested in the test team. The database refused an assistant approving their own work, and refused marking it Done before approval. Send back, the bell, resubmitting and approving all worked.</p>
+      <p><b>Also today:</b></p>
       <ul>
         <li><b>The reports page is tidied.</b> The walkthrough guide and the 9–19 November update are pinned at the top, and older presentations are in an Archive section. Every old link still works.</li>
+        <li><b>Loading speed checked.</b> The tester saw about 20 seconds to sign in. Measured directly, the sign-in page appears in about 2 seconds and the Dashboard about 2 seconds after signing in, and under 4 seconds on a slow connection. The delay was the tester's own network, so nothing needed changing.</li>
         <li><b>The client portal's corner</b> shows the person's name, not their email address.</li>
         <li><b>The duplicate team entries</b> stay. Both accounts are needed, so the item is closed.</li>
         <li><b>Clean-up:</b> leftover test logins were deleted, and the access token used for today's deployments was deleted afterwards.</li>
@@ -287,8 +297,6 @@
       <table>
         <thead><tr><th>Item</th><th>Who / when</th></tr></thead>
         <tbody>
-          <tr><td><b>An approvals page</b>, with a record of who approved each task. Tasks already have a "Needs approval" option.</td><td>Owner's decision</td></tr>
-          <tr><td><b>Faster first load and sign-in</b> (about 20 seconds in the tester's browser)</td><td>Later</td></tr>
           <tr><td><b>Record Google's demo video</b> with the reviewer account, then submit the Gmail review</td><td>This week</td></tr>
           <tr><td><b>Deploy Abder's Academy</b></td><td>When his code arrives</td></tr>
           <tr><td><b>madeea.io on the approved senders list</b></td><td>madeeas.com Google admin</td></tr>
@@ -303,6 +311,7 @@
       <table>
         <thead><tr><th>Update</th><th>What went live</th></tr></thead>
         <tbody>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/1c09a43">1c09a43</a></td><td>The Approvals page: waiting, sent back and approved; send back with a reason; only owners and admins can approve (database 0110)</td></tr>
           <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/3a9ddb2">3a9ddb2</a></td><td>Clock actions give up after 15 seconds and say so</td></tr>
           <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/be18ef4">be18ef4</a></td><td>"Client request" alert, Team today status, no double sends, staff names (database 0109)</td></tr>
           <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/15ad231">15ad231</a></td><td>Your own day total; "Whose timesheet" picker</td></tr>
