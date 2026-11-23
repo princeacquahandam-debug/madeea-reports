@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MadeEA Hub Work Report, 23 November</title>
+<meta name="description" content="Work report for the MadeEA Hub, 23 November 2026: a separate test team, the first test of saving and sending, two rounds of fixes to the clock, client messages, alerts and routines, and a final verdict of Ready.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Same look as the 30 September report, so the series reads as one. */
+  :root {
+    --bg: #f5f6f8; --surface: #ffffff; --ink: #151821; --muted: #5a6172; --line: #e0e3e9;
+    --accent: #d84e0f; --accent-soft: #fdeee6;
+    --live: #17804f; --live-soft: #e3f4ec;
+    --wait: #946200; --wait-soft: #fbf1d6;
+    --prog: #2557b8; --prog-soft: #e6eefc;
+    --shadow: 0 1px 2px rgba(21, 24, 33, 0.05), 0 8px 24px rgba(21, 24, 33, 0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+      --accent: #ff7036; --accent-soft: #3a2116;
+      --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+    --accent: #ff7036; --accent-soft: #3a2116;
+    --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+    --shadow: none;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, sans-serif; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 820px; margin: 0 auto; padding-inline: 20px; padding-block: 48px 72px; display: flex; flex-direction: column; gap: 40px; }
+  h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; }
+  p { margin: 0; }
+  a { color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: 0.86em; }
+
+  header { display: flex; flex-direction: column; gap: 14px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-size: clamp(30px, 5vw, 42px); font-weight: 800; letter-spacing: -0.02em; }
+  .lede { font-size: 18px; color: var(--muted); max-width: 62ch; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: var(--muted); }
+  .meta strong { color: var(--ink); font-weight: 600; }
+
+  .summary, .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+  .summary h2, .panel h2 { font-size: 20px; font-weight: 700; }
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .stat { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
+  .stat b { font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .stat span { font-size: 13px; color: var(--muted); }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 540px; }
+  th { text-align: left; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 0 12px 10px 0; border-bottom: 1px solid var(--line); }
+  td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td.num { font-variant-numeric: tabular-nums; color: var(--muted); width: 28px; }
+  td a { color: inherit; text-decoration: none; font-weight: 600; }
+  td a:hover { color: var(--accent); }
+
+  .pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+  .p-live { color: var(--live); background: var(--live-soft); }
+  .p-live::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 6px; vertical-align: 1px; }
+  .p-wait { color: var(--wait); background: var(--wait-soft); }
+  .p-prog { color: var(--prog); background: var(--prog-soft); }
+  .p-src { color: var(--muted); background: var(--bg); border: 1px solid var(--line); }
+
+  section.item { display: flex; flex-direction: column; gap: 16px; border-top: 1px solid var(--line); }
+  .item-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 24px; }
+  .item-head .num { font-size: 14px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .item h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; width: 100%; }
+  .item h3 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .block { display: flex; flex-direction: column; gap: 8px; }
+  .block p, .block li { max-width: 66ch; }
+  ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  li::marker { color: var(--accent); }
+
+  .notice { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; font-size: 15px; display: flex; flex-direction: column; gap: 4px; }
+
+  .compare { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  .compare > div { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: var(--surface); display: flex; flex-direction: column; gap: 10px; }
+  .compare h4 { margin: 0; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .compare .before h4 { color: var(--muted); }
+  .compare .after { border-color: var(--accent); }
+  .compare .after h4 { color: var(--accent); }
+  .compare ul { font-size: 15px; }
+  .compare .before li { color: var(--muted); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 13px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 4px 11px; }
+
+  .chat { display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
+  .bubble { padding: 10px 14px; border-radius: 14px; max-width: 520px; }
+  .bubble.you { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+  .bubble.her { align-self: flex-start; background: var(--surface); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+  .chat-label { font-size: 12px; color: var(--muted); }
+
+  .steps { counter-reset: s; list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; }
+  .steps li::before { content: counter(s); font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .steps li.done::before { content: "✓"; color: var(--live); }
+  td.hash { white-space: nowrap; }
+  td.hash a { font-weight: 500; color: var(--accent); }
+  footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 20px; }
+
+  /* Screenshots */
+  figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  figure img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: var(--shadow); }
+  figcaption { font-size: 14px; color: var(--muted); }
+  .shots { display: grid; gap: 16px; }
+  .shots.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 560px) {
+    .page { padding-block: 32px 56px; gap: 32px; }
+    .stats { grid-template-columns: 1fr; }
+    .compare { grid-template-columns: 1fr; }
+    .summary, .panel { padding: 18px; }
+    .shots.two { grid-template-columns: 1fr; }
+  }
+  .muted { color: var(--muted); font-size: 13px; font-weight: 400; }
+</style>
+<body>
+<div class="page">
+
+  <header>
+    <span class="eyebrow">MadeEA Hub · Work report</span>
+    <h1>Every action tested safely, and the links between clients and the agency fixed</h1>
+    <p class="lede">The QA tester's checks so far had only looked at pages, never saved anything. To test saving, sending and inviting without touching real data, the Hub now has a separate test team. The first test of those actions came back "Not ready": time tracking misbehaved, and messages, hours and reports were not reaching the person on the other side. Two rounds of fixes and two re-tests later, the verdict is "Ready". Everything below is live on hub.madeea.io and was tested before it went out.</p>
+    <div class="meta">
+      <span>Work done <strong>23 November 2026</strong></span>
+      <span>Previous report <strong><a href="madeea-hub-report-2026-11-20.html">20 November</a></strong></span>
+      <span>Status <span class="pill p-live">Live</span></span>
+    </div>
+  </header>
+
+  <section class="summary" aria-labelledby="sum-h">
+    <h2 id="sum-h">At a glance</h2>
+    <div class="stats">
+      <div class="stat"><b>Not ready → Ready</b><span>the tester's verdict on saving, sending and inviting, after two rounds of fixes</span></div>
+      <div class="stat"><b>4 → 0</b><span>serious problems: the clock, client messages reaching nobody, clients seeing no hours or reports</span></div>
+      <div class="stat"><b>2 hidden bugs</b><span>found along the way and fixed for the whole team: routines never created their tasks, and owners could act on an assistant's clock</span></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>What was done</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td><a href="#item-1">The page checks: rated "Ready"</a></td><td><span class="pill p-live">Done</span></td></tr>
+          <tr><td class="num">2</td><td><a href="#item-2">A separate test team, so tests can't touch real data</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">3</td><td><a href="#item-3">The first test of saving and sending: "Not ready"</a></td><td><span class="pill p-live">Fixed</span></td></tr>
+          <tr><td class="num">4</td><td><a href="#item-4">Round 1: the clock, client messages, alerts and routines</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">5</td><td><a href="#item-5">Round 2: editing, task comments for clients, and names</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">6</td><td><a href="#item-6">Two re-tests, and the last fixes</a></td><td><span class="pill p-live">Ready</span></td></tr>
+          <tr><td class="num">7</td><td><a href="#item-7">Also done today</a></td><td><span class="pill p-live">Done</span></td></tr>
+          <tr><td class="num">8</td><td><a href="#item-8">What comes next</a></td><td><span class="pill p-wait">Next</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="item" id="item-1" aria-labelledby="h-1">
+    <div class="item-head"><span class="num">1</span><span class="pill p-live">Done</span>
+      <h2 id="h-1">The page checks: rated "Ready"</h2>
+    </div>
+    <div class="block">
+      <p>The tester re-checked everything fixed on 20 November: client portal addresses, Edit name for clients, the "—" placeholders while pages load, the time zone list and the faster Hub (main file 449 KB). Every item passed, and its verdict on viewing pages went from "Ready with fixes" to <b>"Ready"</b>.</p>
+      <ul>
+        <li>It found one small thing, fixed the same day: the Admin page briefly said "No team members yet" before the team loaded. It now says "Loading the team…".</li>
+        <li>The page that tells an assistant "Uploads isn't part of your access" now shows straight away, with no grey placeholder page first. Checked on a real assistant account.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="item" id="item-2" aria-labelledby="h-2">
+    <div class="item-head"><span class="num">2</span><span class="pill p-live">Live</span>
+      <h2 id="h-2">A separate test team, so tests can't touch real data</h2>
+    </div>
+    <div class="block">
+      <p>Testing saving, sending and inviting on real accounts would create real tasks, messages and logins. So the Hub now has a second team, <b>QA Sandbox</b>, with its own owner, assistant and test client. The test accounts use "+qa" versions of existing Gmail addresses, so their mail still arrives in inboxes we control. Each account sees only the sandbox: no real names, clients or data. The tester checked this in every session and never saw anything real.</p>
+      <p><b>A problem found before it happened.</b> Two parts of the live Hub assumed there would only ever be one team: filing incoming WhatsApp messages, and seating a new staff login that had no invite. A second team would have quietly stopped both. A small database update (0106) now points both at the agency's own team, whatever else exists. That was done and checked before the sandbox was created.</p>
+      <p>Screenshots are switched off for the sandbox only. The tester's browser can't show Chrome's "Choose what to share" window, and an open window it can't see blocked its clicks. The real team keeps screenshots on.</p>
+    </div>
+  </section>
+
+  <section class="item" id="item-3" aria-labelledby="h-3">
+    <div class="item-head"><span class="num">3</span><span class="pill p-live">Fixed</span>
+      <h2 id="h-3">The first test of saving and sending: "Not ready"</h2>
+    </div>
+    <div class="block">
+      <p>Most actions saved correctly: tasks, client requests, accounts and roles, clients, saved passwords and end-of-day reports. The problems were in the connections between the three roles. Four were serious:</p>
+      <ul>
+        <li><b>The clock:</b> Clock in on the Time page did nothing, and Pause ended the shift instead of pausing it.</li>
+        <li><b>Client messages reached nobody:</b> a client's message to their assistant, or an escalation to agency leadership, was saved and then read by no one, with no alert.</li>
+        <li><b>Clients saw no hours or reports:</b> their portal showed 0 hours and "No reports yet" while their assistant was working.</li>
+      </ul>
+      <p>It also listed 13 medium and 14 small problems, all covered below.</p>
+    </div>
+  </section>
+
+  <section class="item" id="item-4" aria-labelledby="h-4">
+    <div class="item-head"><span class="num">4</span><span class="pill p-live">Live</span>
+      <h2 id="h-4">Round 1: the clock, client messages, alerts and routines</h2>
+    </div>
+    <div class="block">
+      <ul>
+        <li><b>The clock works.</b> Two causes. The Time page never showed its "What is today for?" question, so the first Clock in of the day opened an invisible window. And shifts were loaded without their "paused" marker, so a break looked like the end of the shift.</li>
+        <li><b>Shifts record the client.</b> The top-bar clock never recorded one, so every shift said "No client", and that is why clients saw 0 hours. It now uses the client picked in the sidebar, or the assistant's only client. Clients see their hours and each day in Daily reports. The assistant's written end-of-day report stays private, because one report covers all of their clients.</li>
+        <li><b>A new page: Work → Client messages.</b> The assistant reads and answers each client's private channel; owners, admins and managers read and answer escalations. Neither sees the other's channel. That privacy rule was already in the database; the page to read the messages had never been built.</li>
+        <li><b>The bell</b> now shows "Message from…", "Escalation from…" and "Client request".</li>
+        <li><b>Deleting a client asks first</b>, and says what goes with it.</li>
+        <li><b>The Send button in client messages was invisible,</b> drawn in a colour the browser couldn't read, and the Madeline button caught its clicks. The same colour mistake was fixed in 17 other places in the client portal, including the client's notification count.</li>
+      </ul>
+      <p><b>Two hidden bugs, fixed for the whole team:</b></p>
+      <ul>
+        <li><b>Routines had never created their tasks on the live Hub.</b> A type error in the database stopped every one (fixed by 0107). Only tasks from today onward are created, so nobody gets a flood of old ones.</li>
+        <li><b>Owners and admins saw an assistant's running shift as their own.</b> Clicking Pause or Clock out in the top bar acted on that assistant's shift, and screen capture could attach to it. The clock now only ever shows your own shift.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="item" id="item-5" aria-labelledby="h-5">
+    <div class="item-head"><span class="num">5</span><span class="pill p-live">Live</span>
+      <h2 id="h-5">Round 2: editing, task comments for clients, and names</h2>
+    </div>
+    <div class="block">
+      <ul>
+        <li><b>Edit</b> routines, saved passwords and the client's own notes. Before, the only way to fix a mistake was to delete and start again.</li>
+        <li><b>Clients can open a task and comment on it.</b> The agency's comments stay internal unless "Visible to client" is ticked; those show a "Client sees this" tag. Every comment written before today stays internal.</li>
+        <li><b>A name field</b> when creating a team account, giving a client a login, or adding client staff. Names were guessed from email addresses before.</li>
+        <li><b>Removing a client staff member</b> asks first and hands their unfinished tasks back to the account owner.</li>
+        <li><b>The owner's Time page:</b> your own day total counts only your shifts, and a "Whose timesheet" picker shows any assistant's shifts when you need to check or correct them. Team today shows each person's hours.</li>
+        <li><b>Smaller fixes:</b>
+          <ul>
+            <li>email addresses checked before creating a login</li>
+            <li>length limits on names, titles and requests</li>
+            <li>delete confirmations</li>
+            <li>a new password hidden on screen until you click the eye</li>
+            <li>correct links for saved logins</li>
+            <li>clearer labels on the end-of-day summary</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="item" id="item-6" aria-labelledby="h-6">
+    <div class="item-head"><span class="num">6</span><span class="pill p-live">Ready</span>
+      <h2 id="h-6">Two re-tests, and the last fixes</h2>
+    </div>
+    <div class="block">
+      <p><b>The re-test</b> rated saving and sending <b>"Ready with fixes"</b>: 22 items fixed, 4 partly, none still failing. The last gaps were fixed:</p>
+      <ul>
+        <li>The "Client request" alert never fired, because the task list dropped the "requested by client" marker.</li>
+        <li>Team today kept saying "Clocked in" after someone had left. It now shows <b>On shift · client</b>, <b>On a break</b> or <b>Clocked out</b>, refreshed every minute.</li>
+        <li>Slow sends invited a second click, so some messages went twice. The box now clears at once and shows "Sending…".</li>
+        <li>Client staff are listed by name.</li>
+      </ul>
+      <p><b>The short check</b> of the clock, Team today and the bell passed everything: Pause, Resume and Clock out from the page and the top bar, as an assistant and as an owner, with each alert arriving. Its one finding came from a dropped connection that left Clock out stuck with no message. Clock actions now give up after 15 seconds, say what happened, and let you try again.</p>
+    </div>
+  </section>
+
+  <section class="item" id="item-7" aria-labelledby="h-7">
+    <div class="item-head"><span class="num">7</span><span class="pill p-live">Done</span>
+      <h2 id="h-7">Also done today</h2>
+    </div>
+    <div class="block">
+      <ul>
+        <li><b>The reports page is tidied.</b> The walkthrough guide and the 9–19 November update are pinned at the top, and older presentations are in an Archive section. Every old link still works.</li>
+        <li><b>The client portal's corner</b> shows the person's name, not their email address.</li>
+        <li><b>The duplicate team entries</b> stay. Both accounts are needed, so the item is closed.</li>
+        <li><b>Clean-up:</b> leftover test logins were deleted, and the access token used for today's deployments was deleted afterwards.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="item" id="item-8" aria-labelledby="h-8">
+    <div class="item-head"><span class="num">8</span><span class="pill p-wait">Next</span>
+      <h2 id="h-8">What comes next</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Item</th><th>Who / when</th></tr></thead>
+        <tbody>
+          <tr><td><b>An approvals page</b>, with a record of who approved each task. Tasks already have a "Needs approval" option.</td><td>Owner's decision</td></tr>
+          <tr><td><b>Faster first load and sign-in</b> (about 20 seconds in the tester's browser)</td><td>Later</td></tr>
+          <tr><td><b>Record Google's demo video</b> with the reviewer account, then submit the Gmail review</td><td>This week</td></tr>
+          <tr><td><b>Deploy Abder's Academy</b></td><td>When his code arrives</td></tr>
+          <tr><td><b>madeea.io on the approved senders list</b></td><td>madeeas.com Google admin</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="log-h">
+    <h2 id="log-h">Change log</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Update</th><th>What went live</th></tr></thead>
+        <tbody>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/3a9ddb2">3a9ddb2</a></td><td>Clock actions give up after 15 seconds and say so</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/be18ef4">be18ef4</a></td><td>"Client request" alert, Team today status, no double sends, staff names (database 0109)</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/15ad231">15ad231</a></td><td>Your own day total; "Whose timesheet" picker</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/71f29ab">71f29ab</a></td><td>Edit routines, saved passwords and client notes; task comments for clients; name fields; smaller fixes (database 0108, three updated server functions)</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/48a702f">48a702f</a></td><td>The clock, the Client messages page, bell alerts, routines, client portal colours (database 0107)</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/1c227b4">1c227b4</a></td><td>The client portal's corner shows the person's name</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/492a15a">492a15a</a></td><td>Database 0106: the agency's own team named explicitly, so a test team can't affect it</td></tr>
+          <tr><td class="hash mono"><a href="https://github.com/princeacquahandam-debug/madeea-hub/commit/fe11f42">fe11f42</a></td><td>Admin says "Loading the team…" while it loads</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>MadeEA Hub work report, 23 November 2026. Previous report: <a href="madeea-hub-report-2026-11-20.html">20 November 2026</a>.</footer>
+</div>
+</body>
+</html>
