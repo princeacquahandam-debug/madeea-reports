@@ -14,6 +14,8 @@
   a.card { margin-bottom: 10px;  display: block; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; color: inherit; text-decoration: none; }
   a.card:hover { border-color: var(--accent); }
   a.card b { display: block; }
+  h2 { margin: 32px 0 12px; font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  p.note { margin: -6px 0 12px; color: var(--muted); font-size: 14px; }
   a.card span { color: var(--muted); font-size: 14px; }
 </style>
 </head>
@@ -21,9 +23,11 @@
 <main>
   <div class="eyebrow">MadeEA Hub</div>
   <h1>Work reports</h1>
-  <a class="card" href="madeea-hub-report-2026-11-20.html">
-    <b>20 November 2026: A full QA test of the Hub, and every problem it found fixed</b>
-    <span>An automated tester went through the live Hub with four accounts and found 23 problems. The three serious ones (signed-in people told to sign in, an account flipping views, a client portal going blank) shared one cause, now fixed. A re-test confirmed it. Also live: numbers no longer flash to 0, client portal pages have their own addresses, Edit name for clients, and a main file cut from 985 KB to 448 KB.</span>
+
+  <h2>Presentations and guides</h2>
+  <a class="card" href="madeea-hub-walkthrough.html">
+    <b>Guide: MadeEA Hub, area by area (walkthrough)</b>
+    <span>A presentation for a guided tour: every part of the Hub, what it is for and how to use it step by step, plus the client portal, the Delegation Coach, the Academy, Madeline and the security behind it. Use the arrow keys to move between slides.</span>
   </a>
 
   <a class="card" href="madeea-work-update-nov-9-19.html">
@@ -31,9 +35,10 @@
     <span>Everything built and fixed over the last two weeks, as slides: the Delegation Coach app, the coach for founders, the Hub on hub.madeea.io and Google, the MadeEA Academy, and the 19 November fixes and security pre-check. What each piece does, and how to use it step by step.</span>
   </a>
 
-  <a class="card" href="madeea-hub-walkthrough.html">
-    <b>Walkthrough: MadeEA Hub, area by area</b>
-    <span>A presentation for a guided tour: every part of the Hub, what it is for and how to use it step by step, plus the client portal, the Delegation Coach, the Academy, Madeline and the security behind it. Use the arrow keys to move between slides.</span>
+  <h2>Daily reports</h2>
+  <a class="card" href="madeea-hub-report-2026-11-20.html">
+    <b>20 November 2026: A full QA test of the Hub, and every problem it found fixed</b>
+    <span>An automated tester went through the live Hub with four accounts and found 23 problems. The three serious ones (signed-in people told to sign in, an account flipping views, a client portal going blank) shared one cause, now fixed. A re-test confirmed it. Also live: numbers no longer flash to 0, client portal pages have their own addresses, Edit name for clients, and a main file cut from 985 KB to 448 KB.</span>
   </a>
 
   <a class="card" href="madeea-hub-report-2026-11-19.html">
@@ -44,11 +49,6 @@
   <a class="card" href="madeea-hub-report-2026-11-18.html">
     <b>18 November 2026: Abder&#39;s Academy documents reviewed, and the Delegation Coach emails working</b>
     <span>Abder&#39;s sign-in PRD, roadmap and screens checked in full: they describe his own Academy app, so his code will be deployed on academy.madeea.io, and the request for it is ready. The Delegation Coach&#39;s password-reset emails now send from no-reply@coach.madeea.io and pass all email checks.</span>
-  </a>
-
-  <a class="card" href="madeea-academy-guide.html">
-    <b>Guide: the MadeEA Academy, part by part</b>
-    <span>Everything from Abder&#39;s 16 November Academy call, explained: what each part does, what it&#39;s for, and where it stands. Sign-in, Studio, learning paths, the learner side, what&#39;s still to come, and the plan.</span>
   </a>
 
   <a class="card" href="madeea-hub-report-2026-11-16.html">
@@ -84,11 +84,6 @@
   <a class="card" href="madeea-hub-report-2026-11-06.html">
     <b>6 November 2026: The call, acted on the same day</b>
     <span>The Training Center paused until the new Academy design, clearer Prioritize and Find stuck actions that close when you click away, simpler task cards with the due date opening the calendar, and PostHog usage sent to the team.</span>
-  </a>
-
-  <a class="card" href="madeea-hub-weekly-2026-11-06.html">
-    <b>Weekly summary, 31 October – 6 November 2026</b>
-    <span>The Made Ready Academy live with the full HR curriculum, the EOS Master Tracker filled and sent, EOS for every role, and every gap from the October recordings fixed.</span>
   </a>
 
   <a class="card" href="madeea-hub-report-2026-11-05.html">
@@ -173,6 +168,18 @@
   <a class="card" href="madeea-hub-report-2026-10-05.html">
     <b>5 October 2026: AI actions, a new Madeline, and the audit fixes</b>
     <span>AI actions on every page, Madeline's first screen and answers, the sidebar and cleanup from the audit, and Google verification progress.</span>
+  </a>
+
+  <h2>Archive</h2>
+  <p class="note">Older presentations, kept so their links still work.</p>
+  <a class="card" href="madeea-hub-weekly-2026-11-06.html">
+    <b>Weekly summary, 31 October – 6 November 2026</b>
+    <span>Archived: replaced by the 9 to 19 November work update. The Made Ready Academy live with the full HR curriculum, the EOS Master Tracker filled and sent, EOS for every role, and every gap from the October recordings fixed.</span>
+  </a>
+
+  <a class="card" href="madeea-academy-guide.html">
+    <b>Guide: the MadeEA Academy, part by part</b>
+    <span>Archived: the Academy is being replaced by Abder&#39;s own app, so this describes the earlier version. Everything from Abder&#39;s 16 November Academy call, explained: what each part does, what it&#39;s for, and where it stands. Sign-in, Studio, learning paths, the learner side, what&#39;s still to come, and the plan.</span>
   </a>
 </main>
 </body>
