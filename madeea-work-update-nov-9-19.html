@@ -594,7 +594,7 @@
   var ov = document.getElementById("overview"), list = document.getElementById("list");
 
   slides.forEach(function (s, k) {
-    var f = s.querySelector(".foot span:last-child");
+    var f = s.querySelector(".foot > span:last-child");
     if (f) f.textContent = (k + 1) + " / " + n;
     var b = document.createElement("button");
     b.innerHTML = "<small>" + (k + 1) + "</small>" + (s.getAttribute("data-title") || "Slide");

@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MadeEA Work Update, 18–25 Nov</title>
+<meta name="description" content="A walkthrough of everything built, fixed and tested for MadeEA from 18 to 25 November 2026: what changed, why, and how to use it step by step.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f6f7; --surface: #ffffff; --surface-2: #f1f1f3; --text: #1c1c1e; --muted: #5f5f66; --faint: #74747a;
+    --line: #e5e5e9; --accent: #d2562b; --accent-ink: #b8471f; --accent-soft: #fbece5; --good: #16804b; --good-soft: #e6f4ec;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 30px rgba(0,0,0,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #111113; --surface: #1c1c1f; --surface-2: #27272b; --text: #ededef; --muted: #a8a8b0; --faint: #8b8b93;
+      --line: #2e2e33; --accent: #e8693c; --accent-ink: #f08a62; --accent-soft: #3a2219; --good: #4cc98d; --good-soft: #143024;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #111113; --surface: #1c1c1f; --surface-2: #27272b; --text: #ededef; --muted: #a8a8b0; --faint: #8b8b93;
+    --line: #2e2e33; --accent: #e8693c; --accent-ink: #f08a62; --accent-soft: #3a2219; --good: #4cc98d; --good-soft: #143024;
+    --shadow: none;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--text); font: 16px/1.55 "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent-ink); }
+
+  /* ── deck chrome ── */
+  .bar { position: fixed; inset: 0 0 auto 0; height: 56px; display: flex; align-items: center; gap: 12px; padding: 0 20px;
+    background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); z-index: 10; }
+  .brand { font-weight: 800; letter-spacing: .02em; }
+  .brand b { color: var(--accent); }
+  .bar .spacer { flex: 1; }
+  .bar .count { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 14px; }
+  .btn { appearance: none; border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 8px;
+    height: 34px; padding: 0 12px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .btn:hover { border-color: var(--accent); }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .progress { position: fixed; top: 56px; left: 0; height: 3px; background: var(--accent); width: 0; transition: width .25s; z-index: 10; }
+
+  .deck { padding: 80px 20px 40px; }
+  .slide { max-width: 1080px; margin: 0 auto; background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+    box-shadow: var(--shadow); padding: 44px 52px; min-height: calc(100vh - 140px); display: flex; flex-direction: column; }
+  .js .slide { display: none; }
+  .js .slide.on { display: flex; animation: in .25s ease; }
+  @keyframes in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink); margin: 0 0 10px; }
+  h1 { font-size: clamp(32px, 4.4vw, 52px); line-height: 1.08; margin: 0 0 14px; letter-spacing: -.02em; }
+  h2 { font-size: clamp(26px, 3.2vw, 36px); line-height: 1.15; margin: 0 0 8px; letter-spacing: -.01em; }
+  .lede { font-size: 19px; color: var(--muted); margin: 0 0 26px; max-width: 64ch; }
+  h2 + .cols, h2 + table, h2 + .grid { margin-top: 18px; }
+  .where { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; color: var(--muted); background: var(--surface-2);
+    border-radius: 999px; padding: 4px 12px; margin: 0 0 22px; width: fit-content; }
+  .where b { color: var(--text); font-weight: 600; }
+
+  .cols { display: grid; grid-template-columns: 1.15fr .85fr; gap: 28px; align-items: start; }
+  .panel { background: var(--surface-2); border-radius: 14px; padding: 20px 22px; }
+  .panel h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .1em; color: var(--faint); margin: 0 0 12px; }
+  ol.steps { list-style: none; counter-reset: s; margin: 0; padding: 0; }
+  ol.steps li { counter-increment: s; position: relative; padding: 0 0 12px 40px; }
+  ol.steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; display: grid; place-items: center; }
+  ol.steps li:last-child { padding-bottom: 0; }
+  ul.dots { margin: 0; padding: 0 0 0 18px; }
+  ul.dots li { margin-bottom: 8px; }
+  ul.dots li::marker { color: var(--accent); }
+  .tip { margin-top: 18px; background: var(--accent-soft); border-radius: 12px; padding: 14px 16px; font-size: 15px; }
+  .tip b { color: var(--accent-ink); }
+  .ok { background: var(--good-soft); color: var(--good); border-radius: 999px; padding: 2px 10px; font-size: 12px; font-weight: 700; }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .tile { background: var(--surface-2); border-radius: 14px; padding: 18px; }
+  .tile b { display: block; margin-bottom: 4px; }
+  .tile span { color: var(--muted); font-size: 14px; }
+  .tile .n { color: var(--accent-ink); font-weight: 800; font-size: 13px; letter-spacing: .08em; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--faint); padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td:first-child { font-weight: 600; white-space: nowrap; }
+  table.wrap td:first-child { white-space: normal; width: 46%; }
+  .foot { margin-top: auto; padding-top: 22px; color: var(--faint); font-size: 13px; display: flex; justify-content: space-between; gap: 12px; }
+  .section { justify-content: center; }
+  .section .big { font-size: 15px; font-weight: 800; color: var(--accent-ink); letter-spacing: .14em; }
+  .kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px; padding: 0 6px; font-size: 13px; background: var(--surface); }
+
+  /* ── overview ── */
+  .overview { position: fixed; inset: 56px 0 0 0; background: var(--bg); overflow: auto; padding: 24px 20px; display: none; z-index: 9; }
+  .overview.open { display: block; }
+  .overview .list { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+  .overview button { text-align: left; border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 10px; padding: 12px 14px; font: inherit; font-size: 14px; cursor: pointer; }
+  .overview button:hover { border-color: var(--accent); }
+  .overview button small { display: block; color: var(--faint); font-size: 12px; }
+
+  /* ── phone: no deck, one long page ── */
+  @media (max-width: 860px) {
+    .js .slide { display: flex; animation: none; }
+    .slide { padding: 26px 18px; min-height: 0; margin-bottom: 14px; border-radius: 14px; }
+    .cols, .grid { grid-template-columns: 1fr; }
+    .bar .nav, .bar .count, .progress { display: none; }
+    .lede { font-size: 17px; }
+    td:first-child { white-space: normal; }
+  }
+  @media print {
+    .bar, .progress, .overview { display: none !important; }
+    .deck { padding: 0; }
+    .js .slide, .slide { display: flex !important; break-after: page; min-height: 0; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="bar">
+  <span class="brand">MADE<b>/</b>EA · Work update, 18–25 Nov</span>
+  <span class="spacer"></span>
+  <span class="count" id="count" aria-live="polite"></span>
+  <button class="btn nav" id="prev" aria-label="Previous slide">‹ Back</button>
+  <button class="btn nav" id="next" aria-label="Next slide">Next ›</button>
+  <button class="btn" id="all">All slides</button>
+  <button class="btn" id="theme" aria-label="Switch light or dark">◐</button>
+</div>
+<div class="progress" id="progress"></div>
+<div class="overview" id="overview" role="dialog" aria-label="All slides"><div class="list" id="list"></div></div>
+
+<main class="deck" id="deck">
+
+<section class="slide" data-title="Title">
+  <p class="eyebrow">Work update · 18 to 25 November 2026</p>
+  <h1>A week of testing, and the Hub rated "Ready"</h1>
+  <p class="lede">Everything from 18 to 25 November: what changed, why, and how to use it step by step. An AI tester (Grokbot) went through the whole Hub, Claude fixed everything it found, and several new pieces came out of it. Everything here is live on hub.madeea.io and was tested before and after it went out.</p>
+  <div class="grid">
+    <div class="tile"><span class="n">TESTED</span><b>Not ready → Ready</b><span>Seven test rounds on the live Hub, in a separate test team so no real data was touched.</span></div>
+    <div class="tile"><span class="n">NEW IN THE HUB</span><b>Approvals, Client messages, edits</b><span>Sign off work, answer clients, edit what you saved, and give clients a say on their tasks.</span></div>
+    <div class="tile"><span class="n">BEHIND THE SCENES</span><b>Emails, costs, security</b><span>End-of-day reports emailed to the team leads, AI cost in dollars, and a security pre-check closed.</span></div>
+  </div>
+  <div class="foot"><span>Use <span class="kbd">←</span> <span class="kbd">→</span> or the buttons to move. "All slides" jumps anywhere.</span><span></span></div>
+</section>
+
+<section class="slide" data-title="The week at a glance">
+  <p class="eyebrow">At a glance</p>
+  <h2>Day by day</h2>
+  <table>
+    <thead><tr><th>Date</th><th>What shipped</th></tr></thead>
+    <tbody>
+      <tr><td>18 Nov</td><td>Abder's Academy documents reviewed; decision to deploy his code; Delegation Coach emails verified.</td></tr>
+      <tr><td>19 Nov</td><td>Google reviewer account ready; five Hub fixes; Hub emails sent from mail.madeea.io; security pre-check fully closed.</td></tr>
+      <tr><td>20 Nov</td><td>Grokbot's first full test of the Hub: 3 serious problems traced to one cause and fixed; 20 smaller fixes; the Hub's main file halved.</td></tr>
+      <tr><td>23 Nov</td><td>A separate test team; saving and sending tested for every role; the clock, client messages and client hours fixed; editing everywhere; the new Approvals page.</td></tr>
+      <tr><td>24 Nov</td><td>End-of-day reports emailed to the team leads; AI cost in dollars with an alert; the madeeas.com Spam cause found; QA overview published; test team cleaned.</td></tr>
+      <tr><td>25 Nov</td><td>Approvals checked by Grokbot; three finishing touches; test team cleaned again for the next round.</td></tr>
+    </tbody>
+  </table>
+  <div class="foot"><span>At a glance</span><span></span></div>
+</section>
+
+<!-- ───── QA ───── -->
+<section class="slide section" data-title="Section: Testing the Hub">
+  <p class="big">01 · TESTING THE HUB</p>
+  <h1>From "Not ready" to "Ready"</h1>
+  <p class="lede">An AI tester, Grokbot, went through the live Hub seven times between 20 and 25 November. Each round, Claude found the cause of every problem, fixed it, and checked the fix before anything went live.</p>
+</section>
+
+<section class="slide" data-title="How the testing worked">
+  <p class="eyebrow">Testing · 20–25 Nov</p>
+  <h2>How the testing worked</h2>
+  <div class="cols">
+    <div class="panel"><h3>Each round</h3>
+      <ol class="steps">
+        <li><b>Grokbot tests</b> with real accounts and reports each problem with steps, a screenshot and a severity.</li>
+        <li><b>Claude fixes</b>: reproduces it, finds the cause, fixes it, tests the fix.</li>
+        <li><b>The team checks</b> the fix on a local copy, then says "push it".</li>
+        <li><b>Claude checks it live</b> and writes a short re-test brief covering only what changed.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Kept safe</h3>
+        <ul class="dots">
+          <li>The first rounds only <b>looked</b> at pages, never saved anything.</li>
+          <li>Saving, sending and inviting were tested in <b>QA Sandbox</b>, a separate team with its own owner, assistant and test client. It can't see any real client or record.</li>
+          <li>Everything the tester creates starts with "QA-", and the sandbox is cleaned after each round.</li>
+        </ul>
+      </div>
+      <div class="tip"><b>The full story</b>, round by round, is in the <a href="madeea-hub-qa-overview.html">QA overview</a>.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Testing the Hub</span><span></span></div>
+</section>
+
+<section class="slide" data-title="The seven rounds">
+  <p class="eyebrow">Testing · 20–25 Nov</p>
+  <h2>Seven rounds, and the verdicts</h2>
+  <table>
+    <thead><tr><th>Round</th><th>What was tested</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td>1 · 20 Nov</td><td>Every page, four accounts (owner, assistant, client, client staff)</td><td>Not ready: 23 problems, 3 serious</td></tr>
+      <tr><td>2 · 20 Nov</td><td>Re-test of round 1's fixes</td><td>Ready with fixes</td></tr>
+      <tr><td>3 · 23 Nov</td><td>Client portal addresses, names, loading, speed</td><td><span class="ok">Ready</span></td></tr>
+      <tr><td>4 · 23 Nov</td><td>Saving, sending, inviting and deleting, every role, in the test team</td><td>Not ready: 31 problems, 4 serious</td></tr>
+      <tr><td>5 · 23 Nov</td><td>Re-test of round 4's fixes</td><td>Ready with fixes</td></tr>
+      <tr><td>6 · 23 Nov</td><td>Clock, Team today, the bell</td><td><span class="ok">Ready</span></td></tr>
+      <tr><td>7 · 25 Nov</td><td>The new Approvals page</td><td>15 of 16 passed; the one gap fixed the same day</td></tr>
+    </tbody>
+  </table>
+  <div class="foot"><span>Testing the Hub</span><span></span></div>
+</section>
+
+<section class="slide" data-title="The serious problems">
+  <p class="eyebrow">Testing · 20–23 Nov</p>
+  <h2>The serious problems, and what fixed them</h2>
+  <table class="wrap">
+    <thead><tr><th>Problem</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr><td>Signed-in people told to "Sign in" on the end-of-day form; the owner's menus vanishing; the client portal going blank</td><td>One cause: 24 sign-in checks waiting in a single queue and timing out. They now read the sign-in the browser already holds, which is instant.</td></tr>
+      <tr><td>Clock in on the Time page did nothing; Pause ended the shift</td><td>The page's "What is today for?" question was invisible, and breaks were loaded as ends of shifts. Both fixed.</td></tr>
+      <tr><td>Client messages reached nobody</td><td>A new <b>Work → Client messages</b> page, and bell alerts for messages, escalations and client requests.</td></tr>
+      <tr><td>Clients saw 0 hours and no reports</td><td>Shifts now record which client they were for.</td></tr>
+    </tbody>
+  </table>
+  <div class="tip"><b>Five hidden bugs</b> affecting the real team were found along the way and fixed: routines had never created their tasks; owners could pause an assistant's shift from their own top bar; approvals didn't record who approved; invisible buttons in the client portal; and two parts of the Hub that would have broken with a second team.</div>
+  <div class="foot"><span>Testing the Hub</span><span></span></div>
+</section>
+
+<!-- ───── New in the Hub ───── -->
+<section class="slide section" data-title="Section: New in the Hub">
+  <p class="big">02 · NEW IN THE HUB</p>
+  <h1>What's new, and how to use it</h1>
+  <p class="lede">The pieces the testing showed were missing: signing off work, answering clients, fixing what you saved, and letting clients comment on their tasks.</p>
+</section>
+
+<section class="slide" data-title="Approvals: for owners and admins">
+  <p class="eyebrow">Work → Approvals · 23–25 Nov</p>
+  <h2>Approvals: signing off work</h2>
+  <p class="where">For <b>owners and admins</b></p>
+  <div class="cols">
+    <div class="panel"><h3>Step by step</h3>
+      <ol class="steps">
+        <li>The bell shows <b>"Waiting for approval"</b> when someone submits work that needs sign-off.</li>
+        <li>Open <b>Work → Approvals</b>. Three lists: <b>Waiting for approval</b> (work in Review first), <b>Sent back</b>, and <b>Approved in the last 30 days</b> with who approved and when.</li>
+        <li>Happy with it? Click <b>Approve</b>.</li>
+        <li>Needs changes? Click <b>Send back</b>, type what needs changing, and send. The task goes back to In progress with your note on it and in its comments.</li>
+        <li>When the assistant resubmits, it's back under Waiting with a <b>Resubmitted</b> tag and your earlier note.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Good to know</h3>
+        <ul class="dots">
+          <li>Only owners and admins can approve. The database itself now refuses anyone else, including the person who did the work.</li>
+          <li>The send-back note is never shown to the client.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>New in the Hub</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Approvals: for assistants">
+  <p class="eyebrow">Tasks · 23–25 Nov</p>
+  <h2>Approvals: doing work that needs sign-off</h2>
+  <p class="where">For <b>assistants</b></p>
+  <div class="cols">
+    <div class="panel"><h3>Step by step</h3>
+      <ol class="steps">
+        <li>In a task's edit window, tick <b>Needs approval before it can be completed</b>. The card shows a <b>Needs approval</b> tag.</li>
+        <li>When the work is ready, move it to <b>Review</b>. The owners and admins are told.</li>
+        <li>If it's sent back, the bell shows <b>"Sent back"</b> with the reason, and the card has an amber <b>Sent back</b> tag. Make the changes, then move it to Review again; the tag becomes <b>Resubmitted</b>.</li>
+        <li>Once it shows <b>Approved</b>, move it to Done.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>New on 25 Nov</h3><p style="margin:0">Trying to move an unapproved task to Done (dragging, the tick, the edit window or an AI suggestion) now says why it can't, instead of the card silently sliding back:</p></div>
+      <div class="tip">"…needs an owner or admin to approve it before it can be marked Done. Move it to Review and they'll see it in Approvals."</div>
+    </div>
+  </div>
+  <div class="foot"><span>New in the Hub</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Client messages">
+  <p class="eyebrow">Work → Client messages · 23 Nov</p>
+  <h2>Reading and answering clients</h2>
+  <div class="cols">
+    <div class="panel"><h3>Step by step</h3>
+      <ol class="steps">
+        <li>The bell shows <b>"Message from…"</b>, <b>"Escalation from…"</b> or <b>"Client request"</b>.</li>
+        <li>Open <b>Work → Client messages</b>.</li>
+        <li>Assistants see each of their clients' private channels; owners, admins and managers see escalations to leadership.</li>
+        <li>Pick the conversation, type the reply and click <b>Send</b>. The box clears straight away and shows "Sending…", so nothing goes twice.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Why it's new</h3><p style="margin:0">Clients could already write to their assistant, or escalate to leadership, from their portal. The messages were saved, but there was no page in the Hub to read them and no alert, so they reached nobody.</p></div>
+      <div class="tip"><b>Private by design:</b> an assistant doesn't see escalations about them, and leadership doesn't see the assistant's private channel.</div>
+    </div>
+  </div>
+  <div class="foot"><span>New in the Hub</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Time and the clock">
+  <p class="eyebrow">Time &amp; Reports · 23 Nov</p>
+  <h2>The clock, Team today and timesheets</h2>
+  <div class="cols">
+    <div class="panel"><h3>For assistants</h3>
+      <ol class="steps">
+        <li>Pick the client in the sidebar, then <b>Clock in</b> (top bar or Time page). The first time each day it asks what the day is for.</li>
+        <li><b>Pause</b> for a break and <b>Resume</b> after; <b>Clock out</b> at the end. Your shift records the client, so the client sees your hours.</li>
+        <li>On a bad connection, a clock action gives up after 15 seconds, says so, and lets you try again.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>For owners and admins</h3>
+        <ul class="dots">
+          <li><b>Team today</b> shows each person as <b>On shift · client</b>, <b>On a break</b> or <b>Clocked out</b>, with their hours, refreshed every minute.</li>
+          <li>The Time page shows <b>your own</b> day total. Use <b>Whose timesheet</b> to check or correct an assistant's shifts.</li>
+          <li>Your top-bar clock only ever shows your own shift.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>New in the Hub</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Edit what you saved">
+  <p class="eyebrow">Hub · 19–23 Nov</p>
+  <h2>Edit what you saved, and real names</h2>
+  <div class="cols">
+    <div class="panel"><h3>Edit instead of delete-and-redo</h3>
+      <ul class="dots">
+        <li><b>Routines</b>: Tasks → Routines, then the pencil on a routine. Routines now create their tasks (they never had on the live Hub).</li>
+        <li><b>Saved passwords</b>: the pencil on a saved login. New passwords stay hidden until you click the eye.</li>
+        <li><b>Client notes</b>: clients edit or delete their own notes in their portal.</li>
+        <li>Deleting a client or removing a client staff member now asks first.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="panel"><h3>Names, not email addresses</h3>
+        <ul class="dots">
+          <li><b>Settings → Account → Edit name</b> changes your own name everywhere. Client logins have the same card in their portal Settings.</li>
+          <li>Creating a team account, a client login or client staff now asks for the person's <b>name</b>.</li>
+          <li>The starting password on People shows as dots until you click Show.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>New in the Hub</span><span></span></div>
+</section>
+
+<section class="slide" data-title="The client portal">
+  <p class="eyebrow">Client portal · 20–23 Nov</p>
+  <h2>The client portal</h2>
+  <div class="cols">
+    <div class="panel"><h3>Comments on tasks</h3>
+      <ol class="steps">
+        <li>A client opens a task in their portal and can read and add comments.</li>
+        <li>On the Hub side, the agency's comments stay <b>internal</b> unless you tick <b>Visible to client</b>. Those show a "Client sees this" tag.</li>
+        <li>Every comment written before 23 Nov stays internal.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Also</h3>
+        <ul class="dots">
+          <li>Clients see their assistant's <b>hours</b> and each day in <b>Daily reports</b>. The assistant's written end-of-day report stays private.</li>
+          <li>Each section has its own address (/tasks, /people…): reload stays put, Back works, and a section can be bookmarked.</li>
+          <li>Removing a client staff member hands their open tasks back to the account owner.</li>
+          <li>Buttons that were invisible (Send, the notification count) now show.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>New in the Hub</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Smaller things">
+  <p class="eyebrow">Hub · 19–23 Nov</p>
+  <h2>Smaller things you may notice</h2>
+  <div class="grid">
+    <div class="tile"><span class="n">FASTER</span><b>Half the download</b><span>The Hub's main file went from 985 KB to 448 KB, and its core libraries stay cached between updates. Sign-in takes about 2 seconds.</span></div>
+    <div class="tile"><span class="n">LOADING</span><b>"—" instead of 0</b><span>Numbers show a grey dash until they've loaded, instead of a misleading 0.</span></div>
+    <div class="tile"><span class="n">YOUR WORK</span><b>Your own follow-ups</b><span>Assistants see their own follow-ups and Priorities; managers still see the team's.</span></div>
+    <div class="tile"><span class="n">CALENDAR</span><b>Your time zone</b><span>The calendar follows your time zone, with a small list to switch.</span></div>
+    <div class="tile"><span class="n">ADDRESSES</span><b>"Page not found"</b><span>A mistyped address says so, instead of jumping to the Dashboard.</span></div>
+    <div class="tile"><span class="n">MADELINE</span><b>Empty, not disconnected</b><span>With nothing booked, she says the calendar is empty rather than not connected.</span></div>
+  </div>
+  <div class="foot"><span>New in the Hub</span><span></span></div>
+</section>
+
+<!-- ───── Behind the scenes ───── -->
+<section class="slide section" data-title="Section: Behind the scenes">
+  <p class="big">03 · BEHIND THE SCENES</p>
+  <h1>Emails, costs, security and the Academy</h1>
+  <p class="lede">Work outside the Hub's pages: who gets told what, what AI costs, how safe the Hub is, and where the Academy stands.</p>
+</section>
+
+<section class="slide" data-title="End-of-day reports by email">
+  <p class="eyebrow">Automation · 24 Nov</p>
+  <h2>End-of-day reports, emailed to the team leads</h2>
+  <div class="cols">
+    <div class="panel"><h3>How it works</h3>
+      <ol class="steps">
+        <li>An assistant submits their end-of-day report in the Hub, as usual.</li>
+        <li>Within a minute, Reichelle and Rowena get an email from <b>MadeEA Hub</b>: the assistant's name, the date, what was done, blockers, and the plan for tomorrow, with a link to the reports.</li>
+        <li>One email per assistant per day. A later correction updates the Hub without a second email.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Good to know</h3>
+        <ul class="dots">
+          <li>Asked for on 19 October; built in the team's automation service (n8n) and secured with a shared key.</li>
+          <li>Tested end to end. It stays off for the test team, so tests never email the team leads.</li>
+        </ul>
+      </div>
+      <div class="tip"><b>It only sends when reports are submitted.</b> None had been in the last week, so the team has been reminded to file them in the Hub.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Behind the scenes</span><span></span></div>
+</section>
+
+<section class="slide" data-title="AI costs">
+  <p class="eyebrow">Analytics · 24 Nov</p>
+  <h2>AI costs in dollars, with alerts</h2>
+  <div class="cols">
+    <div class="panel"><h3>What changed</h3>
+      <ul class="dots">
+        <li>Every AI action records its cost in dollars (each model has been priced since 6 Nov).</li>
+        <li>The AI dashboard's "cost per user per day" was counting words processed; it now shows <b>dollars</b>. The most anyone has spent in a day is <b>under one cent</b>.</li>
+        <li>Each person already has a <b>$0.50 daily cap</b> on AI.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="panel"><h3>The three alerts</h3>
+        <ul class="dots">
+          <li><b>End-of-day reports</b> under 60% of the team.</li>
+          <li><b>AI errors</b> over 2% in an hour.</li>
+          <li><b>AI cost</b> averaging over $0.25 a day per person, checked every morning.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Behind the scenes</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Security and Google">
+  <p class="eyebrow">Security · 19 Nov</p>
+  <h2>Security pre-check, and Google's review</h2>
+  <div class="cols">
+    <div class="panel"><h3>Closed before Google's assessment</h3>
+      <ul class="dots">
+        <li>Two team name lists could be read from outside: <b>closed</b>.</li>
+        <li>An old unencrypted copy of 6 Google tokens: <b>deleted</b>, and a rule refuses new ones. Nobody had to reconnect.</li>
+        <li>7 known library issues (3 high): <b>0 left</b>.</li>
+        <li>Server functions answer only MadeEA's own sites; 5 old sign-in functions removed.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="panel"><h3>Google's Gmail review</h3>
+        <ul class="dots">
+          <li>A reviewer account is set up and tested end to end: inbox, replies and calendar.</li>
+          <li>Hub emails now come from <b>no-reply@mail.madeea.io</b>, up to 100 an hour, passing all email checks.</li>
+        </ul>
+      </div>
+      <div class="tip"><b>Next week:</b> record the demo video, then submit the review. Google's paid security assessment (CASA) follows.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Behind the scenes</span><span></span></div>
+</section>
+
+<section class="slide" data-title="madeeas.com Spam">
+  <p class="eyebrow">Email · 24 Nov</p>
+  <h2>Hub emails in madeeas.com Spam</h2>
+  <div class="cols">
+    <div class="panel"><h3>One-minute fix for each person</h3>
+      <ol class="steps">
+        <li>In madeeas.com Gmail on a computer: <b>gear icon → See all settings</b>.</li>
+        <li><b>Filters and Blocked Addresses → Create a new filter</b>.</li>
+        <li>In <b>From</b>, type <b>madeea.io</b>, then <b>Create filter</b>.</li>
+        <li>Tick <b>Never send it to Spam</b>, then <b>Create filter</b>.</li>
+        <li>Search <b>in:spam from:madeea.io</b> and click <b>Report not spam</b> on anything found.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Why it happens</h3><p style="margin:0">Hub mail passes every sender check. But madeea.io looks very like madeeas.com, so Gmail treats it as a possible fake and may show a red "This message might be dangerous" warning.</p></div>
+      <div class="tip"><b>The fix for everyone</b> is two settings in the madeeas.com Google Admin console: approve madeea.io as a sender, and stop the lookalike warning for it. The request is with the admin.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Behind the scenes</span><span></span></div>
+</section>
+
+<section class="slide" data-title="The Academy">
+  <p class="eyebrow">Academy · 18 Nov</p>
+  <h2>The Academy: Abder's version next</h2>
+  <div class="cols">
+    <div class="panel"><h3>Decided</h3>
+      <ul class="dots">
+        <li>Abder's three documents (sign-in PRD, roadmap, sign-in screens) describe his own, already-built Academy.</li>
+        <li><b>His code will be deployed</b> on academy.madeea.io. Ours stays live until then, so there's no gap.</li>
+        <li>The Hub signs people in with Supabase, his fastest option for one sign-in.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="panel"><h3>Waiting on Abder</h3>
+        <ul class="dots">
+          <li>Access to the code, and setup notes.</li>
+          <li>An AI key for "Create with AI".</li>
+          <li>The pilot group and date, and PRDs 2 and 3.</li>
+        </ul>
+      </div>
+      <div class="tip"><b>Asked on 19 Nov.</b> A follow-up is due next week.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Behind the scenes</span><span></span></div>
+</section>
+
+<section class="slide" data-title="What comes next">
+  <p class="eyebrow">Next</p>
+  <h2>What comes next</h2>
+  <table>
+    <thead><tr><th>Item</th><th>Who / when</th></tr></thead>
+    <tbody>
+      <tr><td>Record Google's demo video, then submit the Gmail review</td><td>Next week</td></tr>
+      <tr><td>Follow up with Abder on the Academy code, AI key and pilot date</td><td>Next week</td></tr>
+      <tr><td>Approve madeea.io and stop the lookalike warning</td><td>madeeas.com Google admin</td></tr>
+      <tr><td>Gmail filter for madeea.io, in the meantime</td><td>Each team member, 1 minute</td></tr>
+      <tr><td>File end-of-day reports in the Hub, so the team leads get them by email</td><td>Every assistant, daily</td></tr>
+      <tr><td>Next Grokbot round in the clean test team</td><td>When new work lands</td></tr>
+    </tbody>
+  </table>
+  <div class="tip"><b>Daily detail:</b> the <a href="index.html">reports page</a> has a report for each day, and the <a href="madeea-hub-qa-overview.html">QA overview</a> has the full testing story.</div>
+  <div class="foot"><span>Next</span><span></span></div>
+</section>
+
+</main>
+
+<script>
+(function () {
+  document.documentElement.classList.add("js");
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var n = slides.length, i = 0;
+  var count = document.getElementById("count"), bar = document.getElementById("progress");
+  var ov = document.getElementById("overview"), list = document.getElementById("list");
+
+  slides.forEach(function (s, k) {
+    var f = s.querySelector(".foot > span:last-child");
+    if (f) f.textContent = (k + 1) + " / " + n;
+    var b = document.createElement("button");
+    b.innerHTML = "<small>" + (k + 1) + "</small>" + (s.getAttribute("data-title") || "Slide");
+    b.addEventListener("click", function () { show(k); ov.classList.remove("open"); });
+    list.appendChild(b);
+  });
+
+  function show(k) {
+    i = Math.max(0, Math.min(n - 1, k));
+    slides.forEach(function (s, j) { s.classList.toggle("on", j === i); });
+    count.textContent = (i + 1) + " / " + n;
+    bar.style.width = ((i + 1) / n * 100) + "%";
+    if (history.replaceState) history.replaceState(null, "", "#" + (i + 1));
+    window.scrollTo(0, 0);
+  }
+  document.getElementById("prev").addEventListener("click", function () { show(i - 1); });
+  document.getElementById("next").addEventListener("click", function () { show(i + 1); });
+  document.getElementById("all").addEventListener("click", function () { ov.classList.toggle("open"); });
+  document.getElementById("theme").addEventListener("click", function () {
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark" ||
+      (!root.getAttribute("data-theme") && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.target && /input|textarea|select/i.test(e.target.tagName)) return;
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); show(i + 1); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); show(i - 1); }
+    else if (e.key === "Home") show(0);
+    else if (e.key === "End") show(n - 1);
+    else if (e.key === "Escape") ov.classList.remove("open");
+    else if (e.key === "g" || e.key === "G") ov.classList.toggle("open");
+  });
+  var start = parseInt((location.hash || "").slice(1), 10);
+  show(isNaN(start) ? 0 : start - 1);
+})();
+</script>
+</body>
+</html>
