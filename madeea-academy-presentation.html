@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MadeEA Academy Presentation</title>
+<meta name="description" content="The MadeEA Academy on academy.madeea.io: how every part works, step by step, and the changes made to get the Made Ready course ready.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f6f7; --surface: #ffffff; --surface-2: #f1f1f3; --text: #1c1c1e; --muted: #5f5f66; --faint: #74747a;
+    --line: #e5e5e9; --accent: #d2562b; --accent-ink: #b8471f; --accent-soft: #fbece5; --good: #16804b; --good-soft: #e6f4ec;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 30px rgba(0,0,0,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #111113; --surface: #1c1c1f; --surface-2: #27272b; --text: #ededef; --muted: #a8a8b0; --faint: #8b8b93;
+      --line: #2e2e33; --accent: #e8693c; --accent-ink: #f08a62; --accent-soft: #3a2219; --good: #4cc98d; --good-soft: #143024;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #111113; --surface: #1c1c1f; --surface-2: #27272b; --text: #ededef; --muted: #a8a8b0; --faint: #8b8b93;
+    --line: #2e2e33; --accent: #e8693c; --accent-ink: #f08a62; --accent-soft: #3a2219; --good: #4cc98d; --good-soft: #143024;
+    --shadow: none;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--text); font: 16px/1.55 "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent-ink); }
+
+  /* ── deck chrome ── */
+  .bar { position: fixed; inset: 0 0 auto 0; height: 56px; display: flex; align-items: center; gap: 12px; padding: 0 20px;
+    background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); z-index: 10; }
+  .brand { font-weight: 800; letter-spacing: .02em; }
+  .brand b { color: var(--accent); }
+  .bar .spacer { flex: 1; }
+  .bar .count { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 14px; }
+  .btn { appearance: none; border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 8px;
+    height: 34px; padding: 0 12px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .btn:hover { border-color: var(--accent); }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .progress { position: fixed; top: 56px; left: 0; height: 3px; background: var(--accent); width: 0; transition: width .25s; z-index: 10; }
+
+  .deck { padding: 80px 20px 40px; }
+  .slide { max-width: 1080px; margin: 0 auto; background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+    box-shadow: var(--shadow); padding: 44px 52px; min-height: calc(100vh - 140px); display: flex; flex-direction: column; }
+  .js .slide { display: none; }
+  .js .slide.on { display: flex; animation: in .25s ease; }
+  @keyframes in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink); margin: 0 0 10px; }
+  h1 { font-size: clamp(32px, 4.4vw, 52px); line-height: 1.08; margin: 0 0 14px; letter-spacing: -.02em; }
+  h2 { font-size: clamp(26px, 3.2vw, 36px); line-height: 1.15; margin: 0 0 8px; letter-spacing: -.01em; }
+  .lede { font-size: 19px; color: var(--muted); margin: 0 0 26px; max-width: 64ch; }
+  h2 + .cols, h2 + table, h2 + .grid { margin-top: 18px; }
+  .where { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; color: var(--muted); background: var(--surface-2);
+    border-radius: 999px; padding: 4px 12px; margin: 0 0 22px; width: fit-content; }
+  .where b { color: var(--text); font-weight: 600; }
+
+  .cols { display: grid; grid-template-columns: 1.15fr .85fr; gap: 28px; align-items: start; }
+  .panel { background: var(--surface-2); border-radius: 14px; padding: 20px 22px; }
+  .panel h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .1em; color: var(--faint); margin: 0 0 12px; }
+  ol.steps { list-style: none; counter-reset: s; margin: 0; padding: 0; }
+  ol.steps li { counter-increment: s; position: relative; padding: 0 0 12px 40px; }
+  ol.steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; display: grid; place-items: center; }
+  ol.steps li:last-child { padding-bottom: 0; }
+  ul.dots { margin: 0; padding: 0 0 0 18px; }
+  ul.dots li { margin-bottom: 8px; }
+  ul.dots li::marker { color: var(--accent); }
+  .tip { margin-top: 18px; background: var(--accent-soft); border-radius: 12px; padding: 14px 16px; font-size: 15px; }
+  .tip b { color: var(--accent-ink); }
+  .ok { background: var(--good-soft); color: var(--good); border-radius: 999px; padding: 2px 10px; font-size: 12px; font-weight: 700; }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .tile { background: var(--surface-2); border-radius: 14px; padding: 18px; }
+  .tile b { display: block; margin-bottom: 4px; }
+  .tile span { color: var(--muted); font-size: 14px; }
+  .tile .n { color: var(--accent-ink); font-weight: 800; font-size: 13px; letter-spacing: .08em; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--faint); padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td:first-child { font-weight: 600; white-space: nowrap; }
+  table.wrap td:first-child { white-space: normal; width: 50%; }
+  .foot { margin-top: auto; padding-top: 22px; color: var(--faint); font-size: 13px; display: flex; justify-content: space-between; gap: 12px; }
+  .section { justify-content: center; }
+  .section .big { font-size: 15px; font-weight: 800; color: var(--accent-ink); letter-spacing: .14em; }
+  .kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px; padding: 0 6px; font-size: 13px; background: var(--surface); }
+
+  /* ── overview ── */
+  .overview { position: fixed; inset: 56px 0 0 0; background: var(--bg); overflow: auto; padding: 24px 20px; display: none; z-index: 9; }
+  .overview.open { display: block; }
+  .overview .list { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+  .overview button { text-align: left; border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 10px; padding: 12px 14px; font: inherit; font-size: 14px; cursor: pointer; }
+  .overview button:hover { border-color: var(--accent); }
+  .overview button small { display: block; color: var(--faint); font-size: 12px; }
+
+  /* ── phone: no deck, one long page ── */
+  @media (max-width: 860px) {
+    .js .slide { display: flex; animation: none; }
+    .slide { padding: 26px 18px; min-height: 0; margin-bottom: 14px; border-radius: 14px; }
+    .cols, .grid { grid-template-columns: 1fr; }
+    .bar .nav, .bar .count, .progress { display: none; }
+    .lede { font-size: 17px; }
+    td:first-child { white-space: normal; }
+  }
+  @media print {
+    .bar, .progress, .overview { display: none !important; }
+    .deck { padding: 0; }
+    .js .slide, .slide { display: flex !important; break-after: page; min-height: 0; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="bar">
+  <span class="brand">MADE<b>/</b>EA · Academy</span>
+  <span class="spacer"></span>
+  <span class="count" id="count" aria-live="polite"></span>
+  <button class="btn nav" id="prev" aria-label="Previous slide">‹ Back</button>
+  <button class="btn nav" id="next" aria-label="Next slide">Next ›</button>
+  <button class="btn" id="all">All slides</button>
+  <button class="btn" id="theme" aria-label="Switch light or dark">◐</button>
+</div>
+<div class="progress" id="progress"></div>
+<div class="overview" id="overview" role="dialog" aria-label="All slides"><div class="list" id="list"></div></div>
+
+<main class="deck" id="deck">
+
+<section class="slide" data-title="Title">
+  <p class="eyebrow">MadeEA Academy · academy.madeea.io</p>
+  <h1>The MadeEA Academy: how it works, and what's ready</h1>
+  <p class="lede">Every part of the Academy and how to use it step by step, for admins, trainers and EAs. Plus everything changed to get the Made Ready course ready to show. Everything here is live and was checked on the live site.</p>
+  <div class="grid">
+    <div class="tile"><span class="n">LIVE</span><b>academy.madeea.io</b><span>Its own site, with the same sign-in as the Hub. Nobody needs a second password.</span></div>
+    <div class="tile"><span class="n">READY TO REVIEW</span><b>Made Ready course</b><span>10 modules, 47 lessons, 50 flashcards, 10 quizzes and 4 practical tasks. Still a draft.</span></div>
+    <div class="tile"><span class="n">NEXT</span><b>Choose the pilot group</b><span>Then the course is published in a learning path for those people.</span></div>
+  </div>
+  <div class="foot"><span>Use <span class="kbd">←</span> <span class="kbd">→</span> or the buttons to move. "All slides" jumps anywhere.</span><span></span></div>
+</section>
+
+<section class="slide" data-title="What changed, and when">
+  <p class="eyebrow">At a glance</p>
+  <h2>What changed, and when</h2>
+  <table>
+    <thead><tr><th>Date</th><th>What happened</th></tr></thead>
+    <tbody>
+      <tr><td>16 Nov</td><td>The Academy built from Abder's roadmap on the 16 November call and put live on academy.madeea.io, with one sign-in from the Hub. Made Ready copied in as a draft. Full live test passed: course, path, exam, certificate.</td></tr>
+      <tr><td>18 Nov</td><td>Abder's documents reviewed. Decision: his own Academy app will replace this one once his code is shared. This version stays live until then, so there is no gap.</td></tr>
+      <tr><td>26 Nov</td><td>Made Ready checked page by page and made ready to present: test items removed, a proper course description, garbled characters repaired, 50 flashcards added, and the team's sign-ins confirmed.</td></tr>
+    </tbody>
+  </table>
+  <div class="foot"><span>At a glance</span><span></span></div>
+</section>
+
+<!-- ───── 01 Getting in ───── -->
+<section class="slide section" data-title="Section: Getting in">
+  <p class="big">01 · GETTING IN</p>
+  <h1>One sign-in for the Hub and the Academy</h1>
+  <p class="lede">The Academy is a separate, focused site, but it uses the same accounts as the Hub.</p>
+</section>
+
+<section class="slide" data-title="Signing in">
+  <p class="eyebrow">Getting in</p>
+  <h2>How to open the Academy</h2>
+  <div class="cols">
+    <div class="panel"><h3>Step by step</h3>
+      <ol class="steps">
+        <li>From the Hub: click <b>Learn → MadeEA Academy</b>. A new tab opens, <b>already signed in</b>.</li>
+        <li>Or go straight to <b>academy.madeea.io</b> and click <b>Continue with MadeEA Hub</b>.</li>
+        <li>Or sign in there with your usual <b>Hub email and password</b>.</li>
+        <li>Admins and trainers switch between <b>Learn</b> and <b>Studio</b> at the top.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Who gets in, and as what</h3>
+        <ul class="dots">
+          <li>The MadeEA team only. Client portal accounts are refused.</li>
+          <li>Hub owners and admins are <b>Academy admins</b>. Everyone else is a <b>learner</b>.</li>
+          <li>To make someone a trainer or admin in the Academy only: <b>Studio → Learners</b>. It does not change their role in the Hub.</li>
+        </ul>
+      </div>
+      <div class="tip"><b>Passwords</b> are the Hub's: change yours in the Hub under <b>Settings → Account</b>.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Getting in</span><span></span></div>
+</section>
+
+<!-- ───── 02 Made Ready ───── -->
+<section class="slide section" data-title="Section: The Made Ready course">
+  <p class="big">02 · THE MADE READY COURSE</p>
+  <h1>MadeEA's own curriculum, ready to review</h1>
+  <p class="lede">Written from HR's outline, "Made Ready Academy: AI-Powered EA Foundations": three days that get every EA ready for their first client.</p>
+</section>
+
+<section class="slide" data-title="What's in Made Ready">
+  <p class="eyebrow">Made Ready · 10 modules over 3 days</p>
+  <h2>What's inside</h2>
+  <table>
+    <thead><tr><th>Day</th><th>Modules</th></tr></thead>
+    <tbody>
+      <tr><td>Day 1</td><td>1 · The MadeEA Standard (5 lessons) · 2 · Modern Executive Assistant Essentials (7) · 3 · Google Workspace + AI Workflow (5, incl. a practical)</td></tr>
+      <tr><td>Day 2</td><td>4 · AI Foundations for Professionals (5) · 5 · Prompt Engineering for EAs (3, incl. a practical) · 6 · AI Toolkit Every Modern EA Should Know (4) · 7 · AI Workflow Systems (6, incl. the Day 2 assessment)</td></tr>
+      <tr><td>Day 3</td><td>8 · Client Tech Stack (4) · 9 · AI Workflow Integration (2) · 10 · Client Communication Excellence (6, ending in the 90-minute client simulation)</td></tr>
+    </tbody>
+  </table>
+  <div class="grid" style="margin-top:18px">
+    <div class="tile"><span class="n">47</span><b>Lessons</b><span>Reading, examples and step-by-step workflows.</span></div>
+    <div class="tile"><span class="n">50 + 64</span><b>Flashcards and quiz questions</b><span>5 cards and a quiz per module; 80% to pass each quiz.</span></div>
+    <div class="tile"><span class="n">4</span><b>Practical tasks</b><span>Workspace set-up, prompt writing, the Day 2 assessment and the final simulation.</span></div>
+  </div>
+  <div class="foot"><span>The Made Ready course</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Changes made on 26 November">
+  <p class="eyebrow">Made Ready · 26 Nov</p>
+  <h2>What was changed to get it ready</h2>
+  <table class="wrap">
+    <thead><tr><th>Before</th><th>Now</th></tr></thead>
+    <tbody>
+      <tr><td>A "Test course" and "Test path" from the 16 Nov trial were published, so a learner saw only test material.</td><td>Both deleted. Studio shows only Made Ready.</td></tr>
+      <tr><td>The course card described itself as "brought across from the Hub's Training Center".</td><td>A learner-facing description: three days of hands-on training, ending in a 90-minute client simulation.</td></tr>
+      <tr><td>Bullets, dashes and arrows showed as garbled characters (for example "â€¢" instead of "•").</td><td>Repaired across every lesson, title and quiz question, and checked: none left.</td></tr>
+      <tr><td>No flashcards: the old Training Center never had them.</td><td>50 flashcards, 5 per module, written from each module's own lessons and reviewed before adding.</td></tr>
+      <tr><td>Team sign-ins unconfirmed.</td><td>All seven team members have Hub accounts, so they can open the Academy.</td></tr>
+    </tbody>
+  </table>
+  <div class="foot"><span>The Made Ready course</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Flashcards">
+  <p class="eyebrow">Made Ready · new 26 Nov</p>
+  <h2>Flashcards in every module</h2>
+  <div class="cols">
+    <div class="panel"><h3>How they work</h3>
+      <ol class="steps">
+        <li>After each module's last lesson comes a <b>Flashcards</b> step, then the <b>Quiz</b>.</li>
+        <li>The card shows the <b>question</b>. Tap it or click <b>Flip</b> to see the answer.</li>
+        <li><b>Next card</b> and <b>Previous</b> move through the 5 cards.</li>
+        <li><b>Next</b> at the bottom moves on to the quiz.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>An example, Module 1</h3>
+        <p style="margin:0 0 8px"><b>Question:</b> Task execution vs ownership</p>
+        <p style="margin:0"><b>Answer:</b> Task execution is doing what was asked. Ownership is making sure the outcome happens, including saying early when something is at risk.</p>
+      </div>
+      <div class="tip"><b>Editable:</b> admins can change or add cards in Studio, in each module of the course.</div>
+    </div>
+  </div>
+  <div class="foot"><span>The Made Ready course</span><span></span></div>
+</section>
+
+<!-- ───── 03 Studio ───── -->
+<section class="slide section" data-title="Section: Studio">
+  <p class="big">03 · STUDIO, FOR ADMINS AND TRAINERS</p>
+  <h1>Build courses, assign them, follow progress</h1>
+  <p class="lede">Studio is where courses are built by hand, grouped into learning paths for the right people, and tracked.</p>
+</section>
+
+<section class="slide" data-title="Studio overview and courses">
+  <p class="eyebrow">Studio · Overview and Courses</p>
+  <h2>Finding your way around Studio</h2>
+  <div class="grid">
+    <div class="tile"><span class="n">OVERVIEW</span><b>The Academy at a glance</b><span>Published courses and drafts, live paths, how many are learning, certificates issued, who hasn't started, and the latest reviews.</span></div>
+    <div class="tile"><span class="n">COURSES</span><b>The course library</b><span>Every course with its status, level and paths. Filter All, Published or Drafts. <b>Edit</b>, <b>Preview</b> or <b>Duplicate</b> from each card.</span></div>
+    <div class="tile"><span class="n">LEARNING PATHS</span><b>Who learns what</b><span>Courses grouped for the right people, with an optional final assessment.</span></div>
+    <div class="tile"><span class="n">LEARNERS</span><b>The team</b><span>Roles, regions, teams, progress, certificates and last activity.</span></div>
+    <div class="tile"><span class="n">REPORTS · REVIEWS</span><b>How it's going</b><span>Progress by path and person, exam scores, and course ratings.</span></div>
+    <div class="tile"><span class="n">SETTINGS</span><b>The certificate</b><span>Academy name, who signs certificates, and their signature.</span></div>
+  </div>
+  <div class="foot"><span>Studio</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Building a course">
+  <p class="eyebrow">Studio → Courses</p>
+  <h2>Building a course</h2>
+  <div class="cols">
+    <div class="panel"><h3>Step by step</h3>
+      <ol class="steps">
+        <li><b>Courses → New course</b>. It starts with Module 1 and Lesson 1 ready.</li>
+        <li>Set the <b>title</b>, <b>description</b>, <b>level</b>, <b>icon</b> and a <b>cover image</b>.</li>
+        <li>Write each lesson from blocks, in any order: <b>Text</b>, <b>Image</b>, <b>Video</b> (upload, or a YouTube, Vimeo or Loom link) and <b>Table</b>.</li>
+        <li>Add <b>flashcards</b> and a <b>quiz</b> to each module: multiple choice, or free text with a model answer, plus an explanation.</li>
+        <li><b>Preview</b> it as a learner sees it.</li>
+        <li><b>Save</b> keeps it a draft; <b>Save and publish</b> makes it available to paths.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Good to know</h3>
+        <ul class="dots">
+          <li>Modules and lessons reorder with the arrows; the bin removes them.</li>
+          <li><b>Duplicate</b> copies a course to start a variation.</li>
+          <li>"Create with AI" is shown as <b>soon</b>: it waits on Abder's prompts.</li>
+        </ul>
+      </div>
+      <div class="tip"><b>Manual first, AI second</b>, as Abder asked on the 16 Nov call.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Studio</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Learning paths">
+  <p class="eyebrow">Studio → Learning paths</p>
+  <h2>Learning paths: who learns what</h2>
+  <div class="cols">
+    <div class="panel"><h3>Step by step</h3>
+      <ol class="steps">
+        <li><b>Learning paths → New learning path</b>: title, type (for example Onboarding) and an optional due date.</li>
+        <li><b>+ Add a course…</b> and put the courses in order. Only published courses can be added.</li>
+        <li>Tick <b>Final assessment</b>: pass mark, questions per attempt, time limit and attempts allowed.</li>
+        <li>Fill the <b>question bank</b>, each question tagged easy, medium or hard.</li>
+        <li><b>Who it's for</b>: everyone, or chosen people, regions or teams.</li>
+        <li><b>Save and publish</b>. To pause a path later, <b>Take offline</b>.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Why paths matter</h3><p style="margin:0">Learners only see courses through a path assigned to them. A course on its own is just content; the path decides who takes it and how it is assessed.</p></div>
+      <div class="tip"><b>Fair by design:</b> each exam attempt draws a random set across the three levels, and learners only ever see their score, never the answers.</div>
+    </div>
+  </div>
+  <div class="foot"><span>Studio</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Learners, reports and reviews">
+  <p class="eyebrow">Studio → Learners · Reports · Reviews</p>
+  <h2>Following the team's progress</h2>
+  <div class="cols">
+    <div class="panel"><h3>Learners</h3>
+      <ul class="dots">
+        <li>Everyone on the team, with their Academy role (learner, trainer or admin), region and team.</li>
+        <li>Progress, certificates and last activity for each person.</li>
+        <li>Filter those not progressing and <b>email them a reminder</b>.</li>
+        <li>Set region and team here, so paths can target them.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="panel"><h3>Reports and Reviews</h3>
+        <ul class="dots">
+          <li><b>Reports:</b> for each path, how many are assigned, started and certified, and the average exam score; progress by person; ratings by course.</li>
+          <li><b>Reviews:</b> the star rating and comment each learner leaves at the end of a course.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Studio</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Settings: the certificate">
+  <p class="eyebrow">Studio → Settings</p>
+  <h2>Setting up the certificate</h2>
+  <div class="cols">
+    <div class="panel"><h3>Step by step</h3>
+      <ol class="steps">
+        <li>Open <b>Studio → Settings</b>.</li>
+        <li>Set the <b>Academy name</b> shown on certificates.</li>
+        <li>Enter <b>who signs</b> the certificate and their <b>title</b>.</li>
+        <li>Add the <b>signature</b>: upload an image, or draw it on screen.</li>
+        <li><b>Save</b>.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>On every certificate</h3><p style="margin:0">The learner's name, the path, their score, the date, a certificate number and the signature, as Rowena asked. Learners can print it or save it as a PDF.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Studio</span><span></span></div>
+</section>
+
+<!-- ───── 04 Learner side ───── -->
+<section class="slide section" data-title="Section: The learner side">
+  <p class="big">04 · THE LEARNER SIDE, FOR EAS</p>
+  <h1>Learn, practise, pass, get certified</h1>
+  <p class="lede">A distraction-free player: "only the content needs to be there, nothing else", as Abder put it.</p>
+</section>
+
+<section class="slide" data-title="Taking a learning path">
+  <p class="eyebrow">Learn</p>
+  <h2>Taking a learning path</h2>
+  <div class="cols">
+    <div class="panel"><h3>Step by step</h3>
+      <ol class="steps">
+        <li>On <b>Overview</b>, open the learning path and click <b>Start</b>, or <b>Continue</b> where you left off.</li>
+        <li>Read each lesson and click <b>Next</b>. The <b>≡ outline</b> jumps to any module.</li>
+        <li><b>Flip</b> the flashcards, then take the <b>quiz</b>: marked straight away, with the right answer explained. Retry any time.</li>
+        <li>At the end of a course, rate it and leave a comment.</li>
+        <li>When every lesson is done, <b>Start the final assessment</b>, answer and <b>Submit</b>.</li>
+        <li>Pass, then <b>View your certificate</b>.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Good to know</h3>
+        <ul class="dots">
+          <li>Progress is saved as you go.</li>
+          <li>The final assessment can have a timer and a limited number of attempts.</li>
+          <li>Certificates earned stay on the Overview.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>The learner side</span><span></span></div>
+</section>
+
+<section class="slide" data-title="The practical tasks">
+  <p class="eyebrow">Made Ready · practical tasks</p>
+  <h2>The four practical tasks, today</h2>
+  <div class="cols">
+    <div class="panel"><h3>What they are</h3>
+      <ul class="dots">
+        <li><b>Module 3:</b> organize a client workspace.</li>
+        <li><b>Module 5:</b> prompt writing.</li>
+        <li><b>Module 7:</b> the Day 2 practical assessment.</li>
+        <li><b>Module 10:</b> the 90-minute final client simulation.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="panel"><h3>How they work now</h3><p style="margin:0">In this Academy they are <b>reading pages with the full brief</b>. There is no answer box or trainer review screen yet, so learners share their work with their trainer directly, for example as a Google Doc link.</p></div>
+      <div class="tip"><b>Worth deciding:</b> whether submissions and trainer review should be built here, or wait for Abder's Academy.</div>
+    </div>
+  </div>
+  <div class="foot"><span>The learner side</span><span></span></div>
+</section>
+
+<!-- ───── 05 Next ───── -->
+<section class="slide section" data-title="Section: What's next">
+  <p class="big">05 · WHAT'S NEXT</p>
+  <h1>Decisions, and what's still to come</h1>
+  <p class="lede">The course is ready to review. Releasing it needs a few decisions from the team.</p>
+</section>
+
+<section class="slide" data-title="Decisions needed">
+  <p class="eyebrow">Next</p>
+  <h2>Decisions needed from the team</h2>
+  <table>
+    <thead><tr><th>Decision</th><th>Who</th></tr></thead>
+    <tbody>
+      <tr><td>The pilot group and start date for Made Ready</td><td>Prince, Abder and HR</td></tr>
+      <tr><td>Who becomes an Academy admin or trainer</td><td>Prince, Abder and HR</td></tr>
+      <tr><td>What HR data may be shared with the Academy (department, job title, manager, start date)</td><td>Prince and HR</td></tr>
+      <tr><td>Practical tasks: build submissions and trainer review here, or wait for Abder's Academy</td><td>Prince and Abder</td></tr>
+      <tr><td>Abder's Academy: his code, an AI key for "Create with AI", and the pilot date</td><td>Abder</td></tr>
+    </tbody>
+  </table>
+  <div class="foot"><span>What's next</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Releasing Made Ready">
+  <p class="eyebrow">Next · once the pilot group is chosen</p>
+  <h2>Releasing Made Ready to the pilot group</h2>
+  <div class="cols">
+    <div class="panel"><h3>Step by step</h3>
+      <ol class="steps">
+        <li><b>Studio → Courses → Made Ready → Save and publish</b>.</li>
+        <li><b>Learning paths → New learning path</b>: title "Made Ready", type Onboarding.</li>
+        <li><b>+ Add a course…</b> → Made Ready.</li>
+        <li>Optional: tick <b>Final assessment</b> and fill the question bank.</li>
+        <li><b>Who it's for</b> → the chosen pilot people.</li>
+        <li><b>Save and publish</b>. The pilot group sees it on their Overview straight away.</li>
+      </ol>
+    </div>
+    <div>
+      <div class="panel"><h3>Afterwards</h3>
+        <ul class="dots">
+          <li>Follow progress in <b>Reports</b>.</li>
+          <li>Nudge anyone not progressing from <b>Learners</b>.</li>
+          <li>Read feedback in <b>Reviews</b> and improve the lessons.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>What's next</span><span></span></div>
+</section>
+
+<section class="slide" data-title="Still to come">
+  <p class="eyebrow">Next</p>
+  <h2>Still to come</h2>
+  <table>
+    <thead><tr><th>Part</th><th>What it will do</th><th>Waiting on</th></tr></thead>
+    <tbody>
+      <tr><td>Create with AI</td><td>A full course, with content, flashcards and quizzes, from a topic or an uploaded document.</td><td>Abder's flow and prompts</td></tr>
+      <tr><td>AI question bank</td><td>Generate the exam bank from a path's courses, split by difficulty.</td><td>Abder's prompts</td></tr>
+      <tr><td>Final page designs</td><td>Abder's designs for every page, in light and dark.</td><td>Abder</td></tr>
+      <tr><td>Video summaries</td><td>AI video summaries of a course, for visual learners.</td><td>Abder, checking cost</td></tr>
+      <tr><td>Mobile app</td><td>The Academy on the App Store and Google Play.</td><td>A decision on timing</td></tr>
+      <tr><td>Abder's own Academy</td><td>Replaces this version once his code is shared and deployed.</td><td>Abder's code</td></tr>
+    </tbody>
+  </table>
+  <div class="foot"><span>What's next</span><span></span></div>
+</section>
+
+</main>
+
+<script>
+(function () {
+  document.documentElement.classList.add("js");
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var n = slides.length, i = 0;
+  var count = document.getElementById("count"), bar = document.getElementById("progress");
+  var ov = document.getElementById("overview"), list = document.getElementById("list");
+
+  slides.forEach(function (s, k) {
+    var f = s.querySelector(".foot > span:last-child");
+    if (f) f.textContent = (k + 1) + " / " + n;
+    var b = document.createElement("button");
+    b.innerHTML = "<small>" + (k + 1) + "</small>" + (s.getAttribute("data-title") || "Slide");
+    b.addEventListener("click", function () { show(k); ov.classList.remove("open"); });
+    list.appendChild(b);
+  });
+
+  function show(k) {
+    i = Math.max(0, Math.min(n - 1, k));
+    slides.forEach(function (s, j) { s.classList.toggle("on", j === i); });
+    count.textContent = (i + 1) + " / " + n;
+    bar.style.width = ((i + 1) / n * 100) + "%";
+    if (history.replaceState) history.replaceState(null, "", "#" + (i + 1));
+    window.scrollTo(0, 0);
+  }
+  document.getElementById("prev").addEventListener("click", function () { show(i - 1); });
+  document.getElementById("next").addEventListener("click", function () { show(i + 1); });
+  document.getElementById("all").addEventListener("click", function () { ov.classList.toggle("open"); });
+  document.getElementById("theme").addEventListener("click", function () {
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark" ||
+      (!root.getAttribute("data-theme") && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.target && /input|textarea|select/i.test(e.target.tagName)) return;
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); show(i + 1); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); show(i - 1); }
+    else if (e.key === "Home") show(0);
+    else if (e.key === "End") show(n - 1);
+    else if (e.key === "Escape") ov.classList.remove("open");
+    else if (e.key === "g" || e.key === "G") ov.classList.toggle("open");
+  });
+  var start = parseInt((location.hash || "").slice(1), 10);
+  show(isNaN(start) ? 0 : start - 1);
+})();
+</script>
+</body>
+</html>
