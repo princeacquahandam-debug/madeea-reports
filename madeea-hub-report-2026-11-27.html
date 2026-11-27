@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MadeEA Hub Work Report, 27 November</title>
+<meta name="description" content="MadeEA Hub work report, 27 November 2026: Made Ready Day 1 tested as a learner, the course review suggestion added as a scenario lesson, the client prototypes compared with the live Academy, and Abder code requested.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Same look as the 30 September report, so the series reads as one. */
+  :root {
+    --bg: #f5f6f8; --surface: #ffffff; --ink: #151821; --muted: #5a6172; --line: #e0e3e9;
+    --accent: #d84e0f; --accent-soft: #fdeee6;
+    --live: #17804f; --live-soft: #e3f4ec;
+    --wait: #946200; --wait-soft: #fbf1d6;
+    --prog: #2557b8; --prog-soft: #e6eefc;
+    --shadow: 0 1px 2px rgba(21, 24, 33, 0.05), 0 8px 24px rgba(21, 24, 33, 0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+      --accent: #ff7036; --accent-soft: #3a2116;
+      --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0f1218; --surface: #171b24; --ink: #eceef3; --muted: #9ba3b4; --line: #2a303d;
+    --accent: #ff7036; --accent-soft: #3a2116;
+    --live: #4cc98d; --live-soft: #143024; --wait: #e8c25a; --wait-soft: #332a12; --prog: #8fb2ff; --prog-soft: #18233a;
+    --shadow: none;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, sans-serif; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 820px; margin: 0 auto; padding-inline: 20px; padding-block: 48px 72px; display: flex; flex-direction: column; gap: 40px; }
+  h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; }
+  p { margin: 0; }
+  a { color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: 0.86em; }
+
+  header { display: flex; flex-direction: column; gap: 14px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-size: clamp(30px, 5vw, 42px); font-weight: 800; letter-spacing: -0.02em; }
+  .lede { font-size: 18px; color: var(--muted); max-width: 62ch; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: var(--muted); }
+  .meta strong { color: var(--ink); font-weight: 600; }
+
+  .summary, .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+  .summary h2, .panel h2 { font-size: 20px; font-weight: 700; }
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .stat { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
+  .stat b { font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .stat span { font-size: 13px; color: var(--muted); }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 540px; }
+  th { text-align: left; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 0 12px 10px 0; border-bottom: 1px solid var(--line); }
+  td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td.num { font-variant-numeric: tabular-nums; color: var(--muted); width: 28px; }
+  td a { color: inherit; text-decoration: none; font-weight: 600; }
+  td a:hover { color: var(--accent); }
+
+  .pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+  .p-live { color: var(--live); background: var(--live-soft); }
+  .p-live::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 6px; vertical-align: 1px; }
+  .p-wait { color: var(--wait); background: var(--wait-soft); }
+  .p-prog { color: var(--prog); background: var(--prog-soft); }
+  .p-src { color: var(--muted); background: var(--bg); border: 1px solid var(--line); }
+
+  section.item { display: flex; flex-direction: column; gap: 16px; border-top: 1px solid var(--line); }
+  .item-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 24px; }
+  .item-head .num { font-size: 14px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .item h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; width: 100%; }
+  .item h3 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .block { display: flex; flex-direction: column; gap: 8px; }
+  .block p, .block li { max-width: 66ch; }
+  ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  li::marker { color: var(--accent); }
+
+  .notice { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; font-size: 15px; display: flex; flex-direction: column; gap: 4px; }
+
+  .compare { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  .compare > div { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: var(--surface); display: flex; flex-direction: column; gap: 10px; }
+  .compare h4 { margin: 0; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .compare .before h4 { color: var(--muted); }
+  .compare .after { border-color: var(--accent); }
+  .compare .after h4 { color: var(--accent); }
+  .compare ul { font-size: 15px; }
+  .compare .before li { color: var(--muted); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 13px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 4px 11px; }
+
+  .chat { display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
+  .bubble { padding: 10px 14px; border-radius: 14px; max-width: 520px; }
+  .bubble.you { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+  .bubble.her { align-self: flex-start; background: var(--surface); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+  .chat-label { font-size: 12px; color: var(--muted); }
+
+  .steps { counter-reset: s; list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; }
+  .steps li::before { content: counter(s); font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .steps li.done::before { content: "✓"; color: var(--live); }
+  td.hash { white-space: nowrap; }
+  td.hash a { font-weight: 500; color: var(--accent); }
+  footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 20px; }
+
+  /* Screenshots */
+  figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  figure img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: var(--shadow); }
+  figcaption { font-size: 14px; color: var(--muted); }
+  .shots { display: grid; gap: 16px; }
+  .shots.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 560px) {
+    .page { padding-block: 32px 56px; gap: 32px; }
+    .stats { grid-template-columns: 1fr; }
+    .compare { grid-template-columns: 1fr; }
+    .summary, .panel { padding: 18px; }
+    .shots.two { grid-template-columns: 1fr; }
+  }
+  .muted { color: var(--muted); font-size: 13px; font-weight: 400; }
+</style>
+<body>
+<div class="page">
+
+  <header>
+    <span class="eyebrow">MadeEA Hub · Work report</span>
+    <h1>The Academy tested as a learner, the review's idea added, and Abder's features mapped</h1>
+    <p class="lede">The team was told the Academy is open. Day 1 of Made Ready was taken end to end with a learner account, which worked and showed one gap: the certificate does not yet need any quiz passed. The course review's one suggestion is now a new lesson. The client's two prototypes were compared screen by screen with the live Academy, and Abder's code was requested so his features can be brought in.</p>
+    <div class="meta">
+      <span>Work done <strong>27 November 2026</strong></span>
+      <span>Previous report <strong><a href="madeea-hub-report-2026-11-26.html">26 November</a></strong></span>
+      <span>Status <span class="pill p-live">Live</span></span>
+    </div>
+  </header>
+
+  <section class="summary" aria-labelledby="sum-h">
+    <h2 id="sum-h">At a glance</h2>
+    <div class="stats">
+      <div class="stat"><b>Day 1 passed</b><span>taken end to end as a learner: lessons, flashcards, quizzes, progress and review all saved</span></div>
+      <div class="stat"><b>48 lessons</b><span>a new prioritisation scenario added to Day 1, from the course review</span></div>
+      <div class="stat"><b>7 gaps</b><span>found between the client's prototypes and the live Academy, ready to build</span></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>What was done</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td><a href="#item-1">The team told the Academy is open</a></td><td><span class="pill p-live">Done</span></td></tr>
+          <tr><td class="num">2</td><td><a href="#item-2">Day 1 tested as a learner, and one gap</a></td><td><span class="pill p-wait">Decision</span></td></tr>
+          <tr><td class="num">3</td><td><a href="#item-3">The course review, and a new scenario lesson</a></td><td><span class="pill p-live">Live</span></td></tr>
+          <tr><td class="num">4</td><td><a href="#item-4">The client's prototypes, compared with the live Academy</a></td><td><span class="pill p-wait">Next</span></td></tr>
+          <tr><td class="num">5</td><td><a href="#item-5">Abder's code requested</a></td><td><span class="pill p-wait">Waiting</span></td></tr>
+          <tr><td class="num">6</td><td><a href="#item-6">What comes next</a></td><td><span class="pill p-wait">Next</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="item" id="item-1" aria-labelledby="h-1">
+    <div class="item-head"><span class="num">1</span><span class="pill p-live">Done</span>
+      <h2 id="h-1">The team told the Academy is open</h2>
+    </div>
+    <div class="block">
+      <p>The message announcing the Academy went to the team: how to open it (Learn → MadeEA Academy in the Hub, or academy.madeea.io with their Hub sign-in), what Made Ready covers, how the flashcards and quizzes work, and who reviews the practical tasks. Everyone on the team can start Made Ready now.</p>
+    </div>
+  </section>
+
+  <section class="item" id="item-2" aria-labelledby="h-2">
+    <div class="item-head"><span class="num">2</span><span class="pill p-wait">Decision</span>
+      <h2 id="h-2">Day 1 tested as a learner, and one gap</h2>
+    </div>
+    <div class="block">
+      <p>Nobody had yet taken the course as a learner: the client's review covered the content but skipped the exercises. So Day 1 was taken from start to finish with a learner account.</p>
+      <ul>
+        <li><b>Working:</b> every lesson, the flashcards, and each module quiz, which marks answers straight away ("7 of 10 right · not yet" below the 80% pass mark, "passed" above it) and allows a retry. Day 1 showed as complete, the Made Ready path moved to 36%, Day 2 and Day 3 were ready to start, and the course review saved.</li>
+        <li><b>The gap:</b> a day counts as finished once its lessons are read, whether or not the quizzes were passed. And because the Made Ready path has no final exam, the certificate unlocks after reading every lesson. In the old Training Center, Made Ready needed every quiz passed at 80% and the practical tasks reviewed.</li>
+        <li><b>The fix, ready to build:</b> turn on the path's final exam (80% pass mark, a set of questions per attempt, a time limit and a number of attempts) and fill its question bank from the 64 quiz questions the course already has. No code change is needed. This is a decision for Prince and Abder, together with whether practical tasks should be submitted and reviewed in the Academy.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="item" id="item-3" aria-labelledby="h-3">
+    <div class="item-head"><span class="num">3</span><span class="pill p-live">Live</span>
+      <h2 id="h-3">The course review, and a new scenario lesson</h2>
+    </div>
+    <div class="block">
+      <p>A colleague who finished every course wrote a review. It was very positive: the lessons were detailed and easy to follow, the focus on supporting a client well stood out, the AI lessons were practical (especially on when to use your own judgment), and the questions helped check understanding. They would recommend it to anyone preparing for a first client.</p>
+      <p>It had one suggestion: <i>a short scenario where a learner has to prioritise several client requests and explain what they'd handle first.</i> That is now a lesson:</p>
+      <ul>
+        <li><b>"Scenario: five requests before 10 AM"</b>, in Day 1 right after "Task prioritization framework". A CEO's morning brings five requests: a board deck error, an investor reschedule, a client invoice, an offsite booking and a flight fare that rises at noon.</li>
+        <li>The learner writes their order and reasoning first, then compares it with a worked answer and what makes an answer strong.</li>
+        <li>Tested on a copy before it went in. Made Ready now has <b>48 lessons</b>, with Day 1 at 18.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="item" id="item-4" aria-labelledby="h-4">
+    <div class="item-head"><span class="num">4</span><span class="pill p-wait">Next</span>
+      <h2 id="h-4">The client's prototypes, compared with the live Academy</h2>
+    </div>
+    <div class="block">
+      <p>The client shared two clickable prototypes, one for admins and one for learners, made from Abder's documents and code. Their buttons show demo messages rather than working features, so they show the target design. Compared screen by screen with the live Academy:</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>In the prototypes</th><th>In the live Academy</th></tr></thead>
+        <tbody>
+          <tr><td>Admin overview, courses, course builder, learning paths, learners, reports, settings</td><td><span class="pill p-live">Already there</span></td></tr>
+          <tr><td>Learning paths with final assessment, pass mark, time limit, attempts and assigned people</td><td><span class="pill p-live">Already there</span></td></tr>
+          <tr><td>Learner dashboard, learning path, course player and certificates</td><td><span class="pill p-live">Already there</span></td></tr>
+          <tr><td>Course categories (Core Competencies, Professional Development, Technology &amp; AI, Client-specific Training)</td><td><span class="pill p-wait">To build</span></td></tr>
+          <tr><td>Courses as a table, with learner counts and one-click publish</td><td><span class="pill p-wait">To build</span></td></tr>
+          <tr><td>Admin certificates page: issued list, MA-XXXX-XXXX codes, public verification</td><td><span class="pill p-wait">To build</span></td></tr>
+          <tr><td>Learner Course Catalogue, Learning Paths page and My Profile</td><td><span class="pill p-wait">To build</span></td></tr>
+          <tr><td>Reports with "needs attention" and export</td><td><span class="pill p-wait">To build</span></td></tr>
+          <tr><td>Settings: invitation-only or open sign-up, and theme</td><td><span class="pill p-wait">To build</span></td></tr>
+          <tr><td>The prototypes' light look, navy and orange</td><td><span class="pill p-wait">After Abder's code</span></td></tr>
+          <tr><td>Create with AI</td><td><span class="pill p-wait">Needs Abder's prompts</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="block">
+      <p>The restyle comes last, once Abder's code has been seen, in case it brings its own design.</p>
+    </div>
+  </section>
+
+  <section class="item" id="item-5" aria-labelledby="h-5">
+    <div class="item-head"><span class="num">5</span><span class="pill p-wait">Waiting</span>
+      <h2 id="h-5">Abder's code requested</h2>
+    </div>
+    <div class="block">
+      <p>The aim is to have Abder's own features running in the Academy before it is presented to him. The prototypes were made from his code, but the code itself has not been shared with us yet. A message asks the client for it: the GitHub link with access for princeacquahandam-debug, or a zip, plus any setup notes, and any AI key sent separately and privately. Once it arrives, it will be reviewed and its features brought into the live Academy, keeping the Made Ready course, the Hub sign-in and everyone's progress.</p>
+    </div>
+  </section>
+
+  <section class="item" id="item-6" aria-labelledby="h-6">
+    <div class="item-head"><span class="num">6</span><span class="pill p-wait">Next</span>
+      <h2 id="h-6">What comes next</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Item</th><th>Who / when</th></tr></thead>
+        <tbody>
+          <tr><td><b>Abder's code</b>: review it and bring his features into the Academy</td><td>When the client sends it</td></tr>
+          <tr><td><b>Build the prototype features</b> the Academy is missing, tested before going live</td><td>Next</td></tr>
+          <tr><td><b>Final exam for Made Ready</b>, and practical task submissions</td><td>Prince and Abder to decide</td></tr>
+          <tr><td><b>Check the first end-of-day report emails</b> to the team leads</td><td>Next week</td></tr>
+          <tr><td><b>Record Google's demo video</b>, then submit the Gmail review</td><td>Next week</td></tr>
+          <tr><td><b>Approve madeea.io and stop the lookalike warning</b> in the madeeas.com Google Admin console</td><td>madeeas.com admin, next week</td></tr>
+          <tr><td><b>Scan the Hub database</b> for any other garbled text</td><td>Next week</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="log-h">
+    <h2 id="log-h">Change log</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Where</th><th>What changed</th></tr></thead>
+        <tbody>
+          <tr><td>Supabase</td><td>New lesson "Scenario: five requests before 10 AM" added to Made Ready Day 1 (no Hub code changes)</td></tr>
+          <tr><td>Team</td><td>Academy announcement sent</td></tr>
+          <tr><td>Reports site</td><td>This report</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>MadeEA Hub work report, 27 November 2026. Previous report: <a href="madeea-hub-report-2026-11-26.html">26 November 2026</a>.</footer>
+</div>
+</body>
+</html>
